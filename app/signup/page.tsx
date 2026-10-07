@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import PasswordField from "@/components/PasswordField";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -97,21 +98,14 @@ export default function SignupPage() {
                 placeholder="you@business.com"
               />
             </div>
-            <div className="field">
-              <label htmlFor="su-password">Password</label>
-              <input
-                id="su-password" type="password" autoComplete="new-password" required
-                value={password} onChange={(e) => setPassword(e.target.value)} maxLength={72}
-                placeholder="Min. 8 characters, letters + numbers"
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="su-confirm">Confirm password</label>
-              <input
-                id="su-confirm" type="password" autoComplete="new-password" required
-                value={confirm} onChange={(e) => setConfirm(e.target.value)} maxLength={72}
-              />
-            </div>
+            <PasswordField
+              id="su-password" label="Password" autoComplete="new-password"
+              value={password} onChange={setPassword}
+            />
+            <PasswordField
+              id="su-confirm" label="Confirm password" autoComplete="new-password"
+              value={confirm} onChange={setConfirm}
+            />
             <button type="submit" className="btn btn-navy" style={{ width: "100%" }} disabled={busy}>
               {busy ? "Creating account…" : "Sign up"}
             </button>

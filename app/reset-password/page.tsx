@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import PasswordField from "@/components/PasswordField";
 
 /** /reset-password — set a new password (arrived via the email reset link). */
 export default function ResetPasswordPage() {
@@ -41,21 +42,14 @@ export default function ResetPasswordPage() {
       <div className="admin-card">
         <h1>Choose a new password</h1>
         <form onSubmit={onSubmit}>
-          <div className="field">
-            <label htmlFor="rp-password">New password</label>
-            <input
-              id="rp-password" type="password" autoComplete="new-password" required
-              value={password} onChange={(e) => setPassword(e.target.value)} maxLength={72}
-              placeholder="Min. 8 characters, letters + numbers"
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="rp-confirm">Confirm new password</label>
-            <input
-              id="rp-confirm" type="password" autoComplete="new-password" required
-              value={confirm} onChange={(e) => setConfirm(e.target.value)} maxLength={72}
-            />
-          </div>
+          <PasswordField
+            id="rp-password" label="New password" autoComplete="new-password"
+            value={password} onChange={setPassword}
+          />
+          <PasswordField
+            id="rp-confirm" label="Confirm new password" autoComplete="new-password"
+            value={confirm} onChange={setConfirm}
+          />
           <button type="submit" className="btn btn-navy" style={{ width: "100%" }} disabled={busy}>
             {busy ? "Saving…" : "Set new password"}
           </button>

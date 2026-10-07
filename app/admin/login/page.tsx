@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import PasswordField from "@/components/PasswordField";
 
 /**
  * /admin/login — sign in with the admin email + password
@@ -54,17 +55,13 @@ export default function AdminLoginPage() {
               required
             />
           </div>
-          <div className="field">
-            <label htmlFor="al-password">Password</label>
-            <input
-              id="al-password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          <PasswordField
+            id="al-password"
+            label="Password"
+            autoComplete="current-password"
+            value={password}
+            onChange={setPassword}
+          />
           <button
             type="submit"
             className="btn btn-navy"

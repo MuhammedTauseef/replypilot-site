@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import PasswordField from "@/components/PasswordField";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -80,13 +81,10 @@ export default function LoginPage() {
               value={email} onChange={(e) => setEmail(e.target.value)} maxLength={160}
             />
           </div>
-          <div className="field">
-            <label htmlFor="li-password">Password</label>
-            <input
-              id="li-password" type="password" autoComplete="current-password" required
-              value={password} onChange={(e) => setPassword(e.target.value)} maxLength={72}
-            />
-          </div>
+          <PasswordField
+            id="li-password" label="Password" autoComplete="current-password"
+            value={password} onChange={setPassword}
+          />
           <button type="submit" className="btn btn-navy" style={{ width: "100%" }} disabled={busy}>
             {busy ? "Logging in…" : "Log in"}
           </button>

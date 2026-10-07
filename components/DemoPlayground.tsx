@@ -174,73 +174,6 @@ export default function DemoPlayground({
           >
             <p className="demo-note">Loading demo…</p>
           </div>
-        ) : loggedIn ? (
-          <>
-        <div className="chat-head" style={{ borderRadius: 0 }}>
-          <span className="ava">{demo ? demo.name.charAt(0) : "R"}</span>
-          <div>
-            <b>{demo ? `${demo.name} Assistant` : "ReplyPilot Assistant"}</b>
-            <small>
-              <i /> Online — replies instantly
-            </small>
-          </div>
-          <button onClick={clear} aria-label="Clear chat" title="Clear chat">
-            ⟳
-          </button>
-        </div>
-        <div
-          className="chat-body"
-          ref={bodyRef}
-          style={{ minHeight: 380, maxHeight: 480 }}
-        >
-          {msgs.map((m, i) => (
-            <div key={i} className={`cmsg ${m.role}`}>
-              {m.text}
-            </div>
-          ))}
-          {busy && (
-            <div className="ctyping" aria-label="Assistant is typing">
-              <i />
-              <i />
-              <i />
-            </div>
-          )}
-        </div>
-        <div className="cchips">
-          {SUGGESTIONS.map((s) => (
-            <button key={s} type="button" onClick={() => send(s)}>
-              {s}
-            </button>
-          ))}
-        </div>
-        <form className="chat-input" onSubmit={onSubmit}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask anything…"
-            aria-label="Type your message"
-            maxLength={800}
-          />
-          <button
-            type="submit"
-            disabled={busy || !input.trim()}
-            aria-label="Send message"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="22" y1="2" x2="11" y2="13" />
-              <polygon points="22 2 15 22 11 13 2 9 22 2" />
-            </svg>
-          </button>
-        </form>
-          </>
         ) : (
           <>
             <div className="chat-head" style={{ borderRadius: 0 }}>
@@ -251,45 +184,126 @@ export default function DemoPlayground({
                   <i /> Online — replies instantly
                 </small>
               </div>
+              <button onClick={clear} aria-label="Clear chat" title="Clear chat">
+                ⟳
+              </button>
             </div>
             <div
               className="chat-body"
-              style={{
-                minHeight: 380,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: 32,
-              }}
+              ref={bodyRef}
+              style={{ minHeight: 380, maxHeight: 480 }}
             >
-              <div>
-                <div style={{ fontSize: 44, marginBottom: 12 }}>🔒</div>
-                <h3 style={{ margin: "0 0 10px" }}>Log in to try the live demo</h3>
-                <p
-                  className="demo-note"
-                  style={{ maxWidth: 400, margin: "0 auto 22px" }}
-                >
-                  Create a free account or log in to chat with the AI assistant
-                  and see exactly how it would handle your customers.
-                </p>
+              {msgs.map((m, i) => (
+                <div key={i} className={`cmsg ${m.role}`}>
+                  {m.text}
+                </div>
+              ))}
+              {busy && (
+                <div className="ctyping" aria-label="Assistant is typing">
+                  <i />
+                  <i />
+                  <i />
+                </div>
+              )}
+              {!loggedIn && (
                 <div
                   style={{
-                    display: "flex",
-                    gap: 12,
-                    justifyContent: "center",
-                    flexWrap: "wrap",
+                    marginTop: 16,
+                    padding: "18px 16px",
+                    borderRadius: 12,
+                    border: "1px dashed rgba(201,162,39,.7)",
+                    textAlign: "center",
                   }}
                 >
-                  <a href="/login" className="btn btn-gold">
-                    Log in
-                  </a>
-                  <a href="/signup" className="btn btn-ghost">
-                    Create free account
-                  </a>
+                  <div style={{ fontSize: 28, marginBottom: 6 }}>🔒</div>
+                  <p className="demo-note" style={{ margin: "0 0 14px" }}>
+                    Log in to start chatting with the live AI demo.
+                  </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <a
+                      href="/login"
+                      className="btn btn-gold"
+                      style={{ minHeight: 44, padding: "0 22px" }}
+                    >
+                      Log in
+                    </a>
+                    <a
+                      href="/signup"
+                      className="btn btn-ghost"
+                      style={{ minHeight: 44, padding: "0 22px" }}
+                    >
+                      Create free account
+                    </a>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
+            <div className="cchips">
+              {SUGGESTIONS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() =>
+                    loggedIn ? send(s) : (window.location.href = "/login")
+                  }
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            {loggedIn ? (
+              <form className="chat-input" onSubmit={onSubmit}>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask anything…"
+                  aria-label="Type your message"
+                  maxLength={800}
+                />
+                <button
+                  type="submit"
+                  disabled={busy || !input.trim()}
+                  aria-label="Send message"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                </button>
+              </form>
+            ) : (
+              <div className="chat-input" style={{ gap: 10 }}>
+                <a
+                  href="/login"
+                  className="btn btn-gold"
+                  style={{ flex: 1, minHeight: 50 }}
+                >
+                  Log in to chat
+                </a>
+                <a
+                  href="/signup"
+                  className="btn btn-ghost"
+                  style={{ flex: 1, minHeight: 50 }}
+                >
+                  Sign up free
+                </a>
+              </div>
+            )}
           </>
         )}
       </div>
