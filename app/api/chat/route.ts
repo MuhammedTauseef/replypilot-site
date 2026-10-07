@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateText, tool, stepCountIs } from "ai";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
@@ -377,6 +377,9 @@ export async function POST(req: Request) {
   }
 
   try {
+    // NOTE: the @ai-sdk/google provider reads GOOGLE_GENERATIVE_AI_API_KEY
+    // by default — we pass our GEMINI_API_KEY explicitly so the key is found.
+    const google = createGoogleGenerativeAI({ apiKey });
     const { text } = await generateText({
       model: google(GEMINI_MODEL),
       system: systemText,
@@ -393,7 +396,12 @@ export async function POST(req: Request) {
     const reply = (text ?? "").trim();
     if (!reply) throw new Error("Empty reply from model");
     return NextResponse.json({ reply: reply.slice(0, 1200) });
-  } catch {
+  } catch (err) {
+    // Log the real cause server-side (never exposed to the visitor).
+    console.error(
+      "chat route failed:",
+      err instanceof Error ? err.message.slice(0, 300) : String(err).slice(0, 300)
+    );
     return NextResponse.json({
       reply:
         "Sorry, I had trouble thinking just now — please try again, or leave your details in the contact form and Tauseef will reply personally.",
