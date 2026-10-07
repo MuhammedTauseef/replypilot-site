@@ -1,11 +1,12 @@
 /**
- * The 12 ReplyPilot demo concepts, shared by the home page and the /demo
+ * The 13 ReplyPilot demo concepts, shared by the home page and the /demo
  * AI playground. Each demo is a fictional sample business used to show
  * how an AI agent would behave for that niche.
  */
 export interface DemoPersona {
   tag: string;
   name: string;
+  slug: string;
   text: string;
   group: "website" | "whatsapp" | "instagram";
   /** One-line business description used by the AI persona. */
@@ -19,6 +20,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Boutique",
     name: "Velvet & Vine",
+    slug: "velvet-vine",
     text: "Product discovery, sizing, delivery, and guided purchase questions.",
     group: "website",
     business: "a women's fashion boutique",
@@ -30,6 +32,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Restaurant",
     name: "Casa Verde Kitchen",
+    slug: "casa-verde-kitchen",
     text: "Menu guidance, dietary questions, reservations, and warm service.",
     group: "website",
     business: "a family restaurant",
@@ -41,6 +44,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Salon",
     name: "Luxe Locks Studio",
+    slug: "luxe-locks-studio",
     text: "Service matching, availability questions, and booking guidance.",
     group: "website",
     business: "a hair & beauty salon",
@@ -52,6 +56,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Real estate",
     name: "Harborline Realty",
+    slug: "harborline-realty",
     text: "Property discovery, viewing enquiries, and qualified lead capture.",
     group: "website",
     business: "a real estate agency",
@@ -63,6 +68,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "E-commerce",
     name: "NovaKart",
+    slug: "novakart",
     text: "Product search, order tracking, returns, and checkout help.",
     group: "website",
     business: "an online e-commerce store",
@@ -74,6 +80,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Bakery",
     name: "Crumb & Craft",
+    slug: "crumb-craft",
     text: "Order questions, product suggestions, and collection details.",
     group: "whatsapp",
     business: "an artisan bakery",
@@ -85,6 +92,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Fitness",
     name: "IronPulse Fitness",
+    slug: "ironpulse-fitness",
     text: "Membership guidance, class matching, and visit enquiries.",
     group: "whatsapp",
     business: "a fitness studio",
@@ -96,6 +104,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Dental",
     name: "BrightSmile Dental Studio",
+    slug: "brightsmile-dental",
     text: "Treatment questions, appointment guidance, and human handoff.",
     group: "whatsapp",
     business: "a dental clinic",
@@ -107,6 +116,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Home services",
     name: "FixRight Plumbing Co.",
+    slug: "fixright-plumbing",
     text: "Job triage, availability, and clear next-step guidance.",
     group: "whatsapp",
     business: "a plumbing service company",
@@ -118,6 +128,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Events",
     name: "EverAfter Events",
+    slug: "everafter-events",
     text: "Package discovery, event details, and enquiry qualification.",
     group: "instagram",
     business: "a wedding & event planning studio",
@@ -129,6 +140,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Spa",
     name: "Serene Glow Spa",
+    slug: "serene-glow-spa",
     text: "Treatment matching, availability questions, and booking intent.",
     group: "instagram",
     business: "a day spa",
@@ -140,6 +152,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Coffee",
     name: "Daily Grind Coffee House",
+    slug: "daily-grind-coffee",
     text: "Menu help, recommendations, and location questions in DMs.",
     group: "instagram",
     business: "a specialty coffee house",
@@ -151,6 +164,7 @@ export const DEMOS: DemoPersona[] = [
   {
     tag: "Cosmetics",
     name: "Lumière Cosmetics",
+    slug: "lumiere-cosmetics",
     text: "Product matching, routine guidance, and purchase questions.",
     group: "instagram",
     business: "a cosmetics brand",
@@ -185,4 +199,8 @@ export const DEMO_GROUPS: {
 
 export function demosByGroup(group: "website" | "whatsapp" | "instagram") {
   return DEMOS.filter((d) => d.group === group);
+}
+
+export function getDemoBySlug(slug: string) {
+  return DEMOS.find((d) => d.slug === slug) ?? null;
 }

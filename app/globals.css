@@ -172,6 +172,11 @@ h2.display{font-size:clamp(2.1rem,4.4vw,3.6rem);line-height:1.08;letter-spacing:
 .demo-card button.req{background:none;border:0;padding:12px 0;font:inherit;font-weight:700;color:var(--navy);font-size:.95rem;cursor:pointer;text-align:left;width:fit-content;min-height:44px}
 .demo-card button.req:hover{color:var(--blue)}
 .demo-card button.req .arrow{color:var(--gold-deep)}
+.demo-card a.demo-open{display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--gold-deep);
+  font-size:.95rem;text-decoration:none;margin-bottom:6px;min-height:44px}
+.demo-card a.demo-open:hover{color:var(--navy)}
+[data-theme="dark"] .demo-card a.demo-open:hover{color:var(--gold)}
+.demo-card a.demo-open .arrow{font-size:1.05rem}
 .honesty{margin-top:8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.94rem}
 .honesty strong{color:var(--gold-deep)}
 
@@ -262,6 +267,19 @@ h2.display{font-size:clamp(2.1rem,4.4vw,3.6rem);line-height:1.08;letter-spacing:
 @media (max-width:820px){
   .mobile-nav{display:block}
 }
+
+/* ---------- demo detail page ---------- */
+.demo-detail-card{background:var(--paper-2);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(24px,3.5vw,36px);box-shadow:var(--shadow)}
+.demo-detail-kicker{font-weight:800;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold-deep);margin:0 0 8px}
+.demo-detail-card p{margin:0 0 20px;color:var(--ink);font-size:1rem}
+.demo-detail-card p:last-child{margin-bottom:0}
+.demo-detail-note{color:var(--muted)!important;font-size:.88rem!important}
+.demo-cta-card{margin-top:36px;background:#0a172a;color:#fff;border-radius:18px;
+  padding:clamp(28px,4vw,44px);display:grid;gap:18px;align-items:center}
+.demo-cta-card h2{margin:0;font-size:1.7rem;letter-spacing:-.02em;color:#fff}
+.demo-cta-card p{margin:0;color:#b9c6e2}
 
 /* ---------- faq ---------- */
 .faq{border-top:1px solid var(--line)}

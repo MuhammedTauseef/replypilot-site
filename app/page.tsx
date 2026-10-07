@@ -292,6 +292,12 @@ export default function Home() {
                       <small>{c.tag}</small>
                       <h4>{c.name}</h4>
                       <p>{c.text}</p>
+                      <a className="demo-open" href={`/demo/${c.slug}`}>
+                        Open live demo{" "}
+                        <span className="arrow" aria-hidden="true">
+                          →
+                        </span>
+                      </a>
                       <DemoRequestButton demoName={c.name} />
                     </div>
                   ))}
