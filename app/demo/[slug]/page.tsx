@@ -12,8 +12,9 @@ export function generateStaticParams() {
   return DEMOS.map((d) => ({ slug: d.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const demo = getDemoBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const demo = getDemoBySlug(slug);
   return {
     title: demo ? `${demo.name} — Live AI Demo | ReplyPilot` : "Demo | ReplyPilot",
     description: demo
@@ -22,8 +23,9 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-export default function DemoDetailPage({ params }: { params: { slug: string } }) {
-  const demo = getDemoBySlug(params.slug);
+export default async function DemoDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const demo = getDemoBySlug(slug);
   if (!demo) notFound();
 
   return (
