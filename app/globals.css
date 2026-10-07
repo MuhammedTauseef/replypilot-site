@@ -49,6 +49,11 @@
 [data-theme="dark"] .demo-card button.req:hover{color:var(--gold)}
 [data-theme="dark"] .demo-card button.req .arrow{color:var(--gold)}
 [data-theme="dark"] .legal-body a{color:var(--gold-soft)}
+.auth-alt{margin-top:18px;font-size:.92rem;color:#4b5563}
+.auth-alt a{color:var(--navy-2);font-weight:700}
+.auth-alt a:hover{text-decoration:underline}
+[data-theme="dark"] .auth-alt{color:#aeb9cc}
+[data-theme="dark"] .auth-alt a{color:var(--gold-soft)}
 [data-theme="dark"] .field input:focus,[data-theme="dark"] .field select:focus,
 [data-theme="dark"] .field textarea:focus{background:#0e1626;border-color:var(--gold)}
 .theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;
@@ -334,6 +339,11 @@ footer{background:var(--navy-2);color:#aeb9d4;padding:64px 0 34px}
 .legal-body ul{padding-left:22px;margin:8px 0;display:grid;gap:8px}
 .legal-body a{color:var(--navy);font-weight:600}
 [data-theme="dark"] .legal-body a{color:var(--gold-soft)}
+.auth-alt{margin-top:18px;font-size:.92rem;color:#4b5563}
+.auth-alt a{color:var(--navy-2);font-weight:700}
+.auth-alt a:hover{text-decoration:underline}
+[data-theme="dark"] .auth-alt{color:#aeb9cc}
+[data-theme="dark"] .auth-alt a{color:var(--gold-soft)}
 
 /* ---------- admin ---------- */
 .admin-wrap{max-width:1060px;margin:0 auto;padding:60px 22px 90px}

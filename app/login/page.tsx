@@ -104,7 +104,7 @@ export default function LoginPage() {
               {resent && <span style={{ color: "#1c7a3d" }}> — sent!</span>}
             </p>
           )}
-          <p style={{ marginTop: 18, fontSize: ".92rem", color: "#4b5563" }}>
+          <p className="auth-alt">
             <Link href="/forgot-password">Forgot password?</Link>
             <br />
             New here? <Link href="/signup">Create an account</Link>

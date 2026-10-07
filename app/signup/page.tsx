@@ -112,7 +112,7 @@ export default function SignupPage() {
             <div className={`form-status${error ? " err" : ""}`} role="status" aria-live="polite">
               {error}
             </div>
-            <p style={{ marginTop: 18, fontSize: ".92rem", color: "#4b5563" }}>
+            <p className="auth-alt">
               Already have an account? <Link href="/login">Log in</Link>
             </p>
           </form>
