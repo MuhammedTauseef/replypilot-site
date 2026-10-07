@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { DEMO_GROUPS, demosByGroup, type DemoPersona } from "@/lib/demos";
+import { createClient } from "@/lib/supabase/client";
 
 type Msg = { role: "user" | "assistant"; text: string };
 
@@ -40,7 +41,21 @@ export default function DemoPlayground({
   ]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null); // null = checking
   const bodyRef = useRef<HTMLDivElement>(null);
+
+  // Live demos require an account — marketing pages stay public,
+  // but chatting with the AI needs a login (lead capture).
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedIn(!!session?.user);
+    });
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight });
@@ -62,7 +77,7 @@ export default function DemoPlayground({
 
   async function send(text: string) {
     const clean = text.trim().slice(0, 800);
-    if (!clean || busy) return;
+    if (!clean || busy || !loggedIn) return;
     const next = [...msgs, { role: "user" as const, text: clean }];
     setMsgs(next);
     setInput("");
@@ -147,6 +162,20 @@ export default function DemoPlayground({
       )}
 
       <div className="chat-shell">
+        {loggedIn === null ? (
+          <div
+            className="chat-body"
+            style={{
+              minHeight: 380,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <p className="demo-note">Loading demo…</p>
+          </div>
+        ) : loggedIn ? (
+          <>
         <div className="chat-head" style={{ borderRadius: 0 }}>
           <span className="ava">{demo ? demo.name.charAt(0) : "R"}</span>
           <div>
@@ -211,6 +240,58 @@ export default function DemoPlayground({
             </svg>
           </button>
         </form>
+          </>
+        ) : (
+          <>
+            <div className="chat-head" style={{ borderRadius: 0 }}>
+              <span className="ava">{demo ? demo.name.charAt(0) : "R"}</span>
+              <div>
+                <b>{demo ? `${demo.name} Assistant` : "ReplyPilot Assistant"}</b>
+                <small>
+                  <i /> Online — replies instantly
+                </small>
+              </div>
+            </div>
+            <div
+              className="chat-body"
+              style={{
+                minHeight: 380,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                padding: 32,
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 44, marginBottom: 12 }}>🔒</div>
+                <h3 style={{ margin: "0 0 10px" }}>Log in to try the live demo</h3>
+                <p
+                  className="demo-note"
+                  style={{ maxWidth: 400, margin: "0 auto 22px" }}
+                >
+                  Create a free account or log in to chat with the AI assistant
+                  and see exactly how it would handle your customers.
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <a href="/login" className="btn btn-gold">
+                    Log in
+                  </a>
+                  <a href="/signup" className="btn btn-ghost">
+                    Create free account
+                  </a>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

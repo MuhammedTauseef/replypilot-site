@@ -325,6 +325,19 @@ export async function POST(req: Request) {
     });
   }
 
+  // Live demos are gated behind login (lead capture) — the client UI shows
+  // a login prompt, and this server check stops direct API bypasses.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json(
+      { error: "Please log in to use the live demo." },
+      { status: 401 }
+    );
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
 
   let body: { messages?: ChatMessage[]; persona?: Persona };
