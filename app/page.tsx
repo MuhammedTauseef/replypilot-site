@@ -72,7 +72,7 @@ const FAQS = [
   },
   {
     q: "What does the $75/month cover?",
-    a: "Hosting, updates, and support. It keeps the system maintained after launch and gives you a direct route for practical improvements.",
+    a: "Hosting of the agent, updates, and support — that's my service fee. Your AI API usage and WhatsApp Business messaging charges (if used) are separate and billed directly by those providers, and I'll estimate them for you during the free demo.",
   },
 ];
 
@@ -412,8 +412,9 @@ export default function Home() {
                 <span className="arrow" aria-hidden="true">→</span>
               </a>
               <p className="fine">
-                Third-party platform or messaging fees, if needed, are paid
-                directly by the client.
+                Service fee only. Your AI API usage and WhatsApp Business
+                messaging charges (if used) are billed separately by those
+                providers — I estimate them for you during the free demo.
               </p>
             </div>
           </div>
