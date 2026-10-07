@@ -71,7 +71,7 @@ export default function MobileNav() {
     window.location.href = "/";
   }
 
-  const authLink =
+  const authLink: { label: string; href: string; external?: boolean } =
     role === "admin"
       ? { label: "Admin panel", href: "/admin" }
       : role

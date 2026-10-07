@@ -413,9 +413,11 @@ export default function Home() {
                 <span className="arrow" aria-hidden="true">→</span>
               </a>
               <p className="fine">
-                Service fee only. Your AI API usage and WhatsApp Business
-                messaging charges (if used) are billed separately by those
-                providers — I estimate them for you during the free demo.
+                Fixed pricing: $200 one-time build, $75/month care — that's
+                it. Your AI API usage and WhatsApp Business messaging charges
+                (if used) are billed separately by those providers, and larger
+                fully-custom builds are quoted separately. I estimate all of
+                this for you during the free demo.
               </p>
             </div>
           </div>
