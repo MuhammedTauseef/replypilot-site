@@ -3,6 +3,7 @@ import ContactForm from "@/components/ContactForm";
 import DemoRequestButton from "@/components/DemoRequestButton";
 import ChatWidget from "@/components/ChatWidget";
 import ThemeToggle from "@/components/ThemeToggle";
+import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS, demosByGroup } from "@/lib/demos";
 
@@ -99,6 +100,7 @@ export default function Home() {
               Get Your AI Agent — $200
             </a>
             <ThemeToggle />
+            <MobileNav />
           </nav>
         </div>
       </header>
@@ -129,6 +131,9 @@ export default function Home() {
                 Try Live Demo
               </a>
             </div>
+            <p className="hero-price-note">
+              $200 one-time setup · $75/month care · free custom demo first
+            </p>
           </div>
         </section>
 
