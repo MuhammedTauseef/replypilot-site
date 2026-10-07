@@ -109,32 +109,48 @@ export default function Home() {
       <main id="main">
         {/* HERO */}
         <section className="hero" id="top" aria-labelledby="hero-title">
-          <div className="wrap hero-inner">
-            <span className="eyebrow">Muhammad Tauseef · AI automation specialist</span>
-            <h1 className="hero-statement" id="hero-title">
-              <RotatingWord />
-              <span className="dot">.</span>
-            </h1>
-            <p className="hero-sub">
-              Practical AI systems that turn customer interest into action.
-            </p>
-            <p className="hero-lede">
-              I&rsquo;m Tauseef, an AI automation specialist. I build practical
-              sales agents, customer-response systems, and workflows that help
-              growing businesses reply faster — and convert more enquiries.
-            </p>
-            <div className="hero-actions">
-              <a className="btn btn-gold" href="#contact">
-                Get Your AI Agent — $200{" "}
-                <span className="arrow" aria-hidden="true">→</span>
-              </a>
-              <a className="btn btn-ghost" href="/demo">
-                Try Live Demo
-              </a>
+          <div className="wrap hero-inner hero-grid">
+            <div className="hero-copy">
+              <span className="eyebrow">Muhammad Tauseef · AI automation specialist</span>
+              <h1 className="hero-statement" id="hero-title">
+                <RotatingWord />
+                <span className="dot">.</span>
+              </h1>
+              <p className="hero-sub">
+                Practical AI systems that turn customer interest into action.
+              </p>
+              <p className="hero-lede">
+                I&rsquo;m Tauseef, an AI automation specialist. I build practical
+                sales agents, customer-response systems, and workflows that help
+                growing businesses reply faster — and convert more enquiries.
+              </p>
+              <div className="hero-actions">
+                <a className="btn btn-gold" href="#contact">
+                  Get Your AI Agent — $200{" "}
+                  <span className="arrow" aria-hidden="true">→</span>
+                </a>
+                <a className="btn btn-ghost" href="/demo">
+                  Try Live Demo
+                </a>
+              </div>
+              <p className="hero-price-note">
+                $200 one-time setup · $75/month care · free custom demo first
+              </p>
             </div>
-            <p className="hero-price-note">
-              $200 one-time setup · $75/month care · free custom demo first
-            </p>
+            <div className="hero-photo">
+              <Image
+                src="/founder.jpg"
+                alt="Muhammad Tauseef, founder of ReplyPilot"
+                fill
+                sizes="(max-width: 900px) 100vw, 420px"
+                className="hero-img"
+                priority
+              />
+              <div className="hero-tag">
+                <strong>Muhammad Tauseef</strong>
+                <span>Founder, ReplyPilot</span>
+              </div>
+            </div>
           </div>
         </section>
 
