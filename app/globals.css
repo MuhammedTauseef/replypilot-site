@@ -80,6 +80,12 @@ img{display:block;max-width:100%}
 .site-nav{margin-left:auto;display:flex;align-items:center;gap:26px}
 .site-nav a.nav-link{text-decoration:none;color:var(--muted);font-weight:600;font-size:.93rem}
 .site-nav a.nav-link:hover{color:var(--navy)}
+.site-nav button.nav-link{background:none;border:0;cursor:pointer;font:inherit;padding:0}
+[data-theme="dark"] .site-nav button.nav-link:hover{color:var(--gold-soft)}
+.mobile-menu button[role="menuitem"]{background:none;border:0;cursor:pointer;width:100%;text-align:left;
+  color:var(--ink);font-weight:600;font-size:.95rem;padding:12px 14px;border-radius:9px;min-height:44px;
+  display:flex;align-items:center;font-family:inherit}
+.mobile-menu button[role="menuitem"]:hover{background:var(--light-blue);color:var(--gold-deep)}
 .nav-cta{display:inline-flex;align-items:center;min-height:46px;padding:0 22px;border-radius:8px;
   background:var(--navy);color:#fff;text-decoration:none;font-weight:700;font-size:.93rem}
 .nav-cta:hover{background:var(--blue)}

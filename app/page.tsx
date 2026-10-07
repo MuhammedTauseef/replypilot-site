@@ -3,6 +3,7 @@ import ContactForm from "@/components/ContactForm";
 import DemoRequestButton from "@/components/DemoRequestButton";
 import ChatWidget from "@/components/ChatWidget";
 import ThemeToggle from "@/components/ThemeToggle";
+import AuthNav from "@/components/AuthNav";
 import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS, demosByGroup } from "@/lib/demos";
@@ -95,7 +96,7 @@ export default function Home() {
             <a className="nav-link" href="#process">Process</a>
             <a className="nav-link" href="#pricing">Pricing</a>
             <a className="nav-link" href="#faq">FAQ</a>
-            <a className="nav-link" href="/login">Log in</a>
+            <AuthNav />
             <a className="nav-cta" href="#contact">
               Get Your AI Agent — $200
             </a>
