@@ -230,6 +230,10 @@ h2.display{font-size:clamp(2.1rem,4.4vw,3.6rem);line-height:1.08;letter-spacing:
 .pricing-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(40px,6vw,88px);align-items:start}
 .pricing-copy p{color:var(--muted);max-width:480px}
 .price-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(30px,4vw,50px);box-shadow:var(--shadow)}
+.price-cards{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,32px);margin-top:44px;align-items:start}
+.price-tag{display:inline-block;font-size:.75rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold-deep);border:1px solid var(--gold);border-radius:999px;padding:6px 16px;margin-bottom:20px}
+[data-theme="dark"] .price-tag{color:var(--gold-soft)}
 .price-line{display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:24px 0;border-bottom:1px solid var(--line)}
 .price-line:first-child{padding-top:0}
 .price-line span{color:var(--muted)}
@@ -428,7 +432,7 @@ footer{background:var(--navy-2);color:#aeb9d4;padding:64px 0 34px}
   .site-nav a.nav-link{display:none}
   .site-nav .nav-cta{display:none}
   .site-header .wrap{min-height:64px}
-  .section-head,.split,.pricing-grid,.contact-grid{grid-template-columns:1fr}
+  .section-head,.split,.pricing-grid,.price-cards,.contact-grid{grid-template-columns:1fr}
   .section-head{gap:18px}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .stat{border-bottom:1px solid var(--line);padding:26px 22px}

@@ -383,8 +383,8 @@ export default function Home() {
 
         {/* PRICING */}
         <section className="block" id="pricing" aria-labelledby="pricing-title">
-          <div className="wrap pricing-grid">
-            <div className="pricing-copy">
+          <div className="wrap">
+            <div className="pricing-copy" style={{ maxWidth: 760 }}>
               <div className="kicker">Pricing</div>
               <h2 className="display" id="pricing-title">
                 Clear enough to decide. Flexible enough to fit.
@@ -395,47 +395,86 @@ export default function Home() {
                 begins — no hidden setup surprises.
               </p>
             </div>
-            <div className="price-card">
-              <div className="price-line">
-                <span>One-time build</span>
-                <strong>$200</strong>
+            <div className="price-cards">
+              <div className="price-card">
+                <div className="price-tag">Standard</div>
+                <div className="price-line">
+                  <span>One-time build</span>
+                  <strong>$200</strong>
+                </div>
+                <div className="price-line">
+                  <span>Ongoing care</span>
+                  <strong>
+                    $75 <em>/ month</em>
+                  </strong>
+                </div>
+                <ul className="included">
+                  <li>
+                    <span className="check">✓</span>Business-specific setup and
+                    conversation flow
+                  </li>
+                  <li>
+                    <span className="check">✓</span>Testing, revisions, and
+                    human-handoff logic
+                  </li>
+                  <li>
+                    <span className="check">✓</span>Ongoing monitoring and
+                    practical improvements
+                  </li>
+                </ul>
+                <a
+                  className="btn btn-gold"
+                  style={{ width: "100%" }}
+                  href="#contact"
+                >
+                  Request a custom demo{" "}
+                  <span className="arrow" aria-hidden="true">→</span>
+                </a>
               </div>
-              <div className="price-line">
-                <span>Ongoing care</span>
-                <strong>
-                  $75 <em>/ month</em>
-                </strong>
+              <div className="price-card">
+                <div className="price-tag">Custom build</div>
+                <div className="price-line">
+                  <span>Project build</span>
+                  <strong>
+                    Custom <em>quote</em>
+                  </strong>
+                </div>
+                <div className="price-line">
+                  <span>Ongoing care</span>
+                  <strong>
+                    $150+ <em>/ month</em>
+                  </strong>
+                </div>
+                <ul className="included">
+                  <li>
+                    <span className="check">✓</span>Multi-channel or complex
+                    workflows
+                  </li>
+                  <li>
+                    <span className="check">✓</span>Custom integrations — CRM,
+                    booking, payments
+                  </li>
+                  <li>
+                    <span className="check">✓</span>Dedicated build with
+                    priority support
+                  </li>
+                </ul>
+                <a
+                  className="btn btn-ghost"
+                  style={{ width: "100%" }}
+                  href="#contact"
+                >
+                  Discuss your project{" "}
+                  <span className="arrow" aria-hidden="true">→</span>
+                </a>
               </div>
-              <ul className="included">
-                <li>
-                  <span className="check">✓</span>Business-specific setup and
-                  conversation flow
-                </li>
-                <li>
-                  <span className="check">✓</span>Testing, revisions, and
-                  human-handoff logic
-                </li>
-                <li>
-                  <span className="check">✓</span>Ongoing monitoring and
-                  practical improvements
-                </li>
-              </ul>
-              <a
-                className="btn btn-gold"
-                style={{ width: "100%" }}
-                href="#contact"
-              >
-                Request a custom demo{" "}
-                <span className="arrow" aria-hidden="true">→</span>
-              </a>
-              <p className="fine">
-                Fixed pricing: $200 one-time build, $75/month care — that's
-                it. Your AI API usage and WhatsApp Business messaging charges
-                (if used) are billed separately by those providers, and larger
-                fully-custom builds are quoted separately. I estimate all of
-                this for you during the free demo.
-              </p>
             </div>
+            <p className="fine" style={{ maxWidth: 760 }}>
+              Fixed pricing means fixed pricing: $200 one-time, $75/month for
+              the standard agent. Your AI API usage and WhatsApp Business
+              messaging charges (if used) are billed separately by those
+              providers. I estimate everything for you during the free demo.
+            </p>
           </div>
         </section>
 
