@@ -110,6 +110,10 @@ img{display:block;max-width:100%}
 
 /* ---------- stats ---------- */
 .stats{background:#fff;border-bottom:1px solid var(--line)}
+[data-theme="dark"] .stats{background:#0d1526}
+[data-theme="dark"] .form-card,[data-theme="dark"] .admin-card,
+[data-theme="dark"] .leads-table,[data-theme="dark"] .empty{background:var(--paper-2);border-color:var(--line)}
+[data-theme="dark"] .leads-table th,[data-theme="dark"] .leads-table td{border-color:var(--line);color:var(--ink)}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
 .stat{padding:36px 30px;border-right:1px solid var(--line)}
 .stat:last-child{border-right:0}
