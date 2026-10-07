@@ -29,6 +29,28 @@
 [data-theme="dark"] .field input,[data-theme="dark"] .field textarea,[data-theme="dark"] .field select{background:#0e1626;border-color:var(--line);color:var(--ink)}
 [data-theme="dark"] .site-footer{background:#080d18}
 [data-theme="dark"] input,[data-theme="dark"] textarea{background:#0e1626;color:var(--ink);border-color:var(--line)}
+/* ---------- dark mode: dark text must turn light on dark surfaces ---------- */
+[data-theme="dark"] .brand,
+[data-theme="dark"] h2.display,
+[data-theme="dark"] .stat strong,
+[data-theme="dark"] .service-card h3,
+[data-theme="dark"] .demo-group-head h3,
+[data-theme="dark"] .demo-card h4,
+[data-theme="dark"] .price-line strong,
+[data-theme="dark"] .meet-copy blockquote,
+[data-theme="dark"] .faq summary,
+[data-theme="dark"] .form-card h3,
+[data-theme="dark"] .field label,
+[data-theme="dark"] .legal-body h2,
+[data-theme="dark"] .admin-card h1,
+[data-theme="dark"] .admin-top h1{color:#f2f6fc}
+[data-theme="dark"] .site-nav a.nav-link:hover,
+[data-theme="dark"] .demo-card button.req{color:var(--gold-soft)}
+[data-theme="dark"] .demo-card button.req:hover{color:var(--gold)}
+[data-theme="dark"] .demo-card button.req .arrow{color:var(--gold)}
+[data-theme="dark"] .legal-body a{color:var(--gold-soft)}
+[data-theme="dark"] .field input:focus,[data-theme="dark"] .field select:focus,
+[data-theme="dark"] .field textarea:focus{background:#0e1626;border-color:var(--gold)}
 .theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;
   border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;flex:none}
 .theme-toggle:hover{border-color:var(--gold)}
@@ -201,6 +223,20 @@ h2.display{font-size:clamp(2.1rem,4.4vw,3.6rem);line-height:1.08;letter-spacing:
 .meet-copy blockquote{margin:0 0 28px;font-size:clamp(1.45rem,2.7vw,2.3rem);line-height:1.28;letter-spacing:-.02em;font-weight:600;color:var(--navy-2)}
 .meet-copy blockquote .q{color:var(--gold-deep)}
 .meet-copy p{color:var(--muted);max-width:680px;font-size:1.03rem}
+
+/* ---------- demo page: theme-aware picker + chat shell ---------- */
+.demo-picker{margin-bottom:26px}
+.demo-picker-kicker{font-weight:800;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px}
+.demo-group-label{font-size:.85rem;font-weight:700;color:var(--navy-2);margin-bottom:8px}
+[data-theme="dark"] .demo-group-label{color:#f2f6fc}
+.demo-chips{display:flex;flex-wrap:wrap;gap:8px}
+.demo-chip{border:1.5px solid var(--line);background:var(--paper-2);color:var(--ink);border-radius:999px;
+  padding:9px 16px;font-size:.86rem;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px}
+.demo-chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+[data-theme="dark"] .demo-chip.active{background:var(--gold);border-color:var(--gold);color:#111}
+.demo-note{color:var(--muted);font-size:.92rem;margin-top:14px}
+.chat-shell{background:var(--paper-2);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+[data-theme="dark"] .chat-shell{background:#0e1626}
 
 /* ---------- faq ---------- */
 .faq{border-top:1px solid var(--line)}

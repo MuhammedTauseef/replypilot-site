@@ -124,34 +124,18 @@ export default function DemoPage() {
 
       <section className="block" style={{ paddingTop: 56 }}>
         <div className="wrap" style={{ maxWidth: 860 }}>
-          {/* Demo picker — all 12 previous demos */}
-          <div style={{ marginBottom: 26 }}>
-            <div
-              style={{
-                fontWeight: 800,
-                fontSize: ".8rem",
-                letterSpacing: ".16em",
-                textTransform: "uppercase",
-                color: "#9a7c4e",
-                marginBottom: 14,
-              }}
-            >
+          {/* Demo picker — all 13 demos */}
+          <div className="demo-picker">
+            <div className="demo-picker-kicker">
               Choose a demo business
             </div>
             <div style={{ display: "grid", gap: 18 }}>
               {DEMO_GROUPS.map((g) => (
                 <div key={g.key}>
-                  <div
-                    style={{
-                      fontSize: ".85rem",
-                      fontWeight: 700,
-                      color: "#1b2653",
-                      marginBottom: 8,
-                    }}
-                  >
+                  <div className="demo-group-label">
                     {g.heading}
                   </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  <div className="demo-chips">
                     {demosByGroup(g.key).map((d) => {
                       const active = demo?.name === d.name;
                       return (
@@ -160,17 +144,7 @@ export default function DemoPage() {
                           type="button"
                           onClick={() => pick(active ? null : d)}
                           aria-pressed={active}
-                          style={{
-                            border: `1.5px solid ${active ? "#0a172a" : "#e5e7eb"}`,
-                            background: active ? "#0a172a" : "#fff",
-                            color: active ? "#fff" : "#1b2653",
-                            borderRadius: 999,
-                            padding: "9px 16px",
-                            fontSize: ".86rem",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            fontFamily: "inherit",
-                          }}
+                          className={`demo-chip${active ? " active" : ""}`}
                         >
                           {d.name}
                         </button>
@@ -181,7 +155,7 @@ export default function DemoPage() {
               ))}
             </div>
             {demo && (
-              <p style={{ color: "#4b5563", fontSize: ".92rem", marginTop: 14 }}>
+              <p className="demo-note">
                 You&apos;re chatting with the AI assistant of{" "}
                 <strong>{demo.name}</strong> ({demo.business}). Tap again to go
                 back to ReplyPilot mode.
@@ -189,15 +163,7 @@ export default function DemoPage() {
             )}
           </div>
 
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: 18,
-              overflow: "hidden",
-              boxShadow: "0 22px 60px rgba(0,45,115,.12)",
-            }}
-          >
+          <div className="chat-shell">
             <div className="chat-head" style={{ borderRadius: 0 }}>
               <span className="ava">{demo ? demo.name.charAt(0) : "R"}</span>
               <div>
