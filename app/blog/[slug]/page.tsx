@@ -29,6 +29,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/** Render paragraph/list text with [label](url) converted to real links. */
+function renderInline(text: string, keyPrefix: string) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return parts.map((part, j) => {
+    const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (m) {
+      const href = m[2];
+      const external = /^https?:\/\//.test(href);
+      return (
+        <a
+          key={`${keyPrefix}-${j}`}
+          href={href}
+          {...(external
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
+          {m[1]}
+        </a>
+      );
+    }
+    return <span key={`${keyPrefix}-${j}`}>{part}</span>;
+  });
+}
+
 function renderBlock(block: Block, i: number) {
   switch (block.type) {
     case "h2":
@@ -37,7 +61,7 @@ function renderBlock(block: Block, i: number) {
       return (
         <ul key={i}>
           {block.items.map((item, j) => (
-            <li key={j}>{item}</li>
+            <li key={j}>{renderInline(item, `ul${i}`)}</li>
           ))}
         </ul>
       );
@@ -59,7 +83,7 @@ function renderBlock(block: Block, i: number) {
         </figure>
       );
     default:
-      return <p key={i}>{block.text}</p>;
+      return <p key={i}>{renderInline(block.text, `p${i}`)}</p>;
   }
 }
 
