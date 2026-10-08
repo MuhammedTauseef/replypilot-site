@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...posts.map((p) => `/blog/${p.slug}`),
     "/about",
     "/contact",
+    "/faq",
     "/privacy",
     "/terms",
   ];

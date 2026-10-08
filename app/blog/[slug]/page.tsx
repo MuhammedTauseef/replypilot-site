@@ -95,8 +95,36 @@ export default async function BlogPostPage({ params }: Props) {
 
   const related = posts.filter((p) => p.slug !== slug).slice(0, 3);
 
+  // Article schema — Neil Patel 2026 rule: schema markup so AI can scrape and cite content
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    url: `https://replypilot-site.vercel.app/blog/${post.slug}`,
+    datePublished: post.date,
+    author: {
+      "@type": "Organization",
+      name: "ReplyPilot",
+      url: "https://replypilot-site.vercel.app",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "ReplyPilot",
+      url: "https://replypilot-site.vercel.app",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://replypilot-site.vercel.app/blog/${post.slug}`,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <PageHeader />
       <main>
         <section className="article-hero">
