@@ -94,6 +94,8 @@ export default function Home() {
             <a className="nav-link" href="#about">About</a>
             <a className="nav-link" href="#services">Services</a>
             <a className="nav-link" href="#demos">Demos</a>
+            <a className="nav-link" href="/videos">Videos</a>
+            <a className="nav-link" href="/blog">Blog</a>
             <a className="nav-link" href="#process">Process</a>
             <a className="nav-link" href="#pricing">Pricing</a>
             <a className="nav-link" href="#faq">FAQ</a>
@@ -612,6 +614,8 @@ export default function Home() {
               <a href="#about">About</a>
               <a href="#services">Services</a>
               <a href="#demos">Live demos</a>
+              <a href="/videos">Demo videos</a>
+              <a href="/blog">Blog</a>
               <a href="#process">Process</a>
               <a href="#pricing">Pricing</a>
             </div>

@@ -13,6 +13,8 @@ const BASE_LINKS: { label: string; href: string; external?: boolean }[] = [
   { label: "About", href: "#about" },
   { label: "Services", href: "#services" },
   { label: "Live demos", href: "#demos" },
+  { label: "Demo videos", href: "/videos" },
+  { label: "Blog", href: "/blog" },
   { label: "Process", href: "#process" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },

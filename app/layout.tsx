@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "ReplyPilot — AI Automation by Muhammad Tauseef",
   description:
     "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses. Get your AI agent for $249. Free custom demo.",
+  verification: {
+    google: "jXx7jWarPskM3UN7e2YihwpzUjZAzKJim_fvKRz-kw8",
+  },
   keywords: [
     "AI sales agent",
     "AI agent for small business",
