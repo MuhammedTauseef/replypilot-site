@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
+import { getPublishedVideos } from "@/lib/videos";
 
 export const metadata: Metadata = {
   title: "Demo Videos — AI Agents in Action | ReplyPilot",
@@ -26,72 +27,10 @@ interface DemoVideo {
   description: string;
 }
 
-const videos: DemoVideo[] = [
-  {
-    file: "/videos/demo-boutique-whatsapp.mp4",
-    niche: "Boutique",
-    channel: "WhatsApp DM automation",
-    title: "Never Miss a Customer Again",
-    description:
-      "Meet Noor — a demo AI sales agent for boutiques. It shares the price list instantly, answers sizing and stock questions, and keeps shoppers engaged around the clock.",
-  },
-  {
-    file: "/videos/demo-restaurant-whatsapp.mp4",
-    niche: "Restaurant",
-    channel: "WhatsApp DM automation",
-    title: "Never Miss a Table Again",
-    description:
-      "Meet Remy — a demo AI booking agent for restaurants. It confirms tables in seconds, answers menu and hours questions, and sends reminders that cut no-shows.",
-  },
-  {
-    file: "/videos/demo-salon-whatsapp.mp4",
-    poster: "/videos/demo-salon-whatsapp.png",
-    niche: "Salon & Spa",
-    channel: "WhatsApp DM automation",
-    title: "Never Miss Another Booking",
-    description:
-      "Meet Glam — a demo AI receptionist for salons and spas. It books appointments instantly, quotes services and prices, and follows up so clients rebook.",
-  },
-  {
-    file: "/videos/demo-realestate-website.mp4",
-    poster: "/videos/demo-realestate-website.png",
-    niche: "Real Estate",
-    channel: "Website chatbot",
-    title: "Never Lose Another Listing",
-    description:
-      "Meet Ridge — a demo AI chatbot for real-estate websites. It answers listing questions instantly, captures buyer details, and books viewings while you sleep.",
-  },
-  {
-    file: "/videos/demo-dental-instagram.mp4",
-    poster: "/videos/demo-dental-instagram.png",
-    niche: "Dental Clinic",
-    channel: "Instagram DM automation",
-    title: "Never Miss Another Appointment",
-    description:
-      "Meet Clara — a demo AI assistant for dental clinics. It answers treatment and pricing questions in Instagram DMs, books appointments automatically, and sends reminders.",
-  },
-  {
-    file: "/videos/demo-gym-ecommerce.mp4",
-    poster: "/videos/demo-gym-ecommerce.png",
-    niche: "Gym & Fitness",
-    channel: "E-commerce store assistant",
-    title: "Turn Browsers Into Members",
-    description:
-      "Meet Bolt — a demo AI store assistant for gyms. It compares membership plans, matches supplements to fitness goals, and guides shoppers to checkout.",
-  },
-  {
-    file: "/videos/demo-blog-website.mp4",
-    poster: "/videos/demo-blog-website.png",
-    niche: "Blog & Content",
-    channel: "Website chatbot",
-    title: "Never Miss Another Contributor",
-    description:
-      "Meet Bridge — a demo AI website chatbot for blog submissions. It answers guest-posting pricing, dofollow-link policy, and word-count questions instantly, filters off-topic pitches, and captures contributor details while you sleep. Watch how a 24/7 AI chatbot turns your submission page into a contributor pipeline.",
-  },
-];
 
 /** /videos — gallery of 30-second AI agent demo videos. */
-export default function VideosPage() {
+export default async function VideosPage() {
+  const videos = await getPublishedVideos();
   return (
     <>
       <PageHeader />
@@ -124,7 +63,7 @@ export default function VideosPage() {
                     controls
                     preload="none"
                     playsInline
-                    poster={v.poster}
+                    poster={v.poster || undefined}
                     src={v.file}
                     aria-label={`${v.niche} AI agent demo video`}
                   />
