@@ -45,9 +45,9 @@ const wrap = (body: string) => `
 </div>`;
 
 export const emails = {
-  welcome: (name: string, businessName: string) =>
+  welcome: (to: string, name: string, businessName: string) =>
     sendEmail({
-      to: "",
+      to,
       subject: `Welcome to ReplyPilot, ${name}! 🎉`,
       html: wrap(`
         <h2>Hi ${name}!</h2>
@@ -117,6 +117,21 @@ export const emails = {
           <a href="https://replypilot-site.vercel.app/#contact" style="background: #f59e0b; color: #111827; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: bold;">Get my free demo →</a>
         </p>
         <p>— Tauseef, ReplyPilot</p>
+      `),
+    }),
+
+  bookingConfirmed: (to: string, name: string, date: string, time: string, businessName: string) =>
+    sendEmail({
+      to,
+      subject: `Booking confirmed — ${businessName} 📅`,
+      html: wrap(`
+        <h2>Hi ${name}!</h2>
+        <p>Your appointment with <strong>${businessName}</strong> is confirmed:</p>
+        <p style="font-size: 1.2rem; text-align: center; margin: 20px 0;">
+          <strong>${date}</strong> at <strong>${time}</strong> (Pakistan time)
+        </p>
+        <p>We'll send you a reminder before your slot. Need to reschedule? Just reply to this email.</p>
+        <p>— ${businessName} (powered by ReplyPilot)</p>
       `),
     }),
 };

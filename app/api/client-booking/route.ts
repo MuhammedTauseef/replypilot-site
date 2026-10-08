@@ -142,8 +142,25 @@ export async function POST(req: NextRequest) {
 
     if (error) throw error;
 
+    // Confirmation email — best-effort, never blocks the booking.
+    // (Delivers once a sending domain is verified in Resend.)
+    if (cleanContact.includes("@")) {
+      try {
+        const { emails } = await import("@/lib/emails");
+        await emails.bookingConfirmed(
+          cleanContact,
+          cleanName,
+          date,
+          time,
+          client.business_name
+        );
+      } catch {
+        /* email is optional */
+      }
+    }
+
     // TODO: Google Calendar sync when credentials are configured
-    // TODO: Send confirmation email/WhatsApp
+    // TODO: Send confirmation WhatsApp
 
     return NextResponse.json({
       ok: true,

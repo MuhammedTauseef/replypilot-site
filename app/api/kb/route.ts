@@ -1,6 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createHash } from "crypto";
+import { embed } from "ai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+
+/** Generate a 768-dim embedding with Gemini (free tier). */
+async function embedText(value: string): Promise<number[] | null> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const google = createGoogleGenerativeAI({ apiKey });
+    const { embedding } = await embed({
+      model: google.textEmbeddingModel("text-embedding-004"),
+      value: value.slice(0, 8000),
+    });
+    return embedding;
+  } catch (e) {
+    console.error("embedding error:", e instanceof Error ? e.message.slice(0, 200) : e);
+    return null;
+  }
+}
 
 async function getClientId(supabase: Awaited<ReturnType<typeof createClient>>) {
   const {
@@ -62,18 +81,23 @@ export async function POST(req: NextRequest) {
     }
     if (current.trim()) chunks.push(current.trim());
 
+    // Generate embeddings for semantic search (null when API key missing —
+    // chunks still save and keyword matching keeps working).
+    const embeddings = await Promise.all(chunks.map((c) => embedText(c)));
+
     const rows = chunks.map((chunk, i) => ({
       client_id: clientId,
       filename: chunks.length > 1 ? `${filename.trim()} (part ${i + 1})` : filename.trim(),
       content: chunk,
       content_hash: `${hash}-${i}`,
-      embedding: null, // embeddings generated in background step
+      embedding: embeddings[i],
     }));
 
     const { error } = await supabase.from("kb_documents").insert(rows);
     if (error) throw error;
 
-    return NextResponse.json({ ok: true, chunks: rows.length });
+    const withEmbeddings = embeddings.filter(Boolean).length;
+    return NextResponse.json({ ok: true, chunks: rows.length, embeddings: withEmbeddings });
   } catch (e) {
     console.error("kb upload error:", e);
     return NextResponse.json({ error: "Upload failed." }, { status: 500 });

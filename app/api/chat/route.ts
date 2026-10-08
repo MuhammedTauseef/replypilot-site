@@ -306,6 +306,14 @@ const bookDemo = tool({
         source: "chat",
       });
       if (insErr) throw insErr;
+      // Confirmation email — best-effort, never blocks the booking.
+      // (Delivers once a sending domain is verified in Resend.)
+      try {
+        const { emails } = await import("@/lib/emails");
+        await emails.bookingConfirmed(cleanEmail, cleanName, dayStr, fmtTimePkt(slot), "ReplyPilot");
+      } catch {
+        /* email is optional */
+      }
       return (
         `Demo booked for ${cleanName} — ${fmtPkt(slot)} (Pakistan time), 30 minutes. ` +
         `Confirm warmly: Tauseef will personally host the call and send a reminder. ` +
@@ -396,6 +404,19 @@ export async function POST(req: Request) {
 
     const reply = (text ?? "").trim();
     if (!reply) throw new Error("Empty reply from model");
+
+    // Save transcript for review/analytics (never blocks the reply).
+    try {
+      await supabase.from("chat_transcripts").insert({
+        user_id: user.id,
+        persona_name:
+          typeof body.persona?.name === "string" ? body.persona.name.slice(0, 120) : null,
+        messages: [...history, { role: "assistant", text: reply.slice(0, 1200) }].slice(-13),
+      });
+    } catch {
+      // Transcript saving is best-effort — the reply still goes through.
+    }
+
     return NextResponse.json({ reply: reply.slice(0, 1200) });
   } catch (err) {
     // Log the real cause server-side (never exposed to the visitor).
