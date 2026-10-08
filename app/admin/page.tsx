@@ -38,6 +38,24 @@ type Client = {
   created_at: string;
 };
 
+type ChatMessage = { role: string; text: string };
+
+type Transcript = {
+  id: string;
+  user_id: string | null;
+  persona_name: string | null;
+  messages: ChatMessage[];
+  created_at: string;
+  profiles: { full_name: string | null } | { full_name: string | null }[] | null;
+};
+
+function transcriptName(t: Transcript): string {
+  const p = t.profiles;
+  if (!p) return "—";
+  if (Array.isArray(p)) return p[0]?.full_name || "—";
+  return p.full_name || "—";
+}
+
 function formatDate(iso: string): string {
   try {
     return new Date(iso).toLocaleString("en-GB", {
@@ -104,6 +122,55 @@ function LeadsTable({ rows }: { rows: Lead[] }) {
             <td className="msg">{l.message}</td>
             <td>
               <DeleteButton type="lead" id={l.id} label={l.name} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function TranscriptsTable({ rows }: { rows: Transcript[] }) {
+  if (rows.length === 0) {
+    return (
+      <div className="empty">
+        No chats yet. When visitors use the AI demo, their conversations will
+        appear here.
+      </div>
+    );
+  }
+  return (
+    <table className="leads-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Visitor</th>
+          <th>Demo</th>
+          <th>Conversation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((t) => (
+          <tr key={t.id}>
+            <td style={{ whiteSpace: "nowrap" }}>{formatDate(t.created_at)}</td>
+            <td>{transcriptName(t)}</td>
+            <td>{t.persona_name || "ReplyPilot"}</td>
+            <td className="msg">
+              <details>
+                <summary style={{ cursor: "pointer", color: "var(--accent, #f59e0b)" }}>
+                  {t.messages.length} messages — view
+                </summary>
+                <div style={{ marginTop: 8, maxHeight: 300, overflowY: "auto" }}>
+                  {t.messages.map((m, i) => (
+                    <div key={i} style={{ marginBottom: 8 }}>
+                      <strong style={{ fontSize: ".8rem", color: m.role === "user" ? "#60a5fa" : "#34d399" }}>
+                        {m.role === "user" ? "Visitor" : "AI"}:
+                      </strong>{" "}
+                      <span style={{ fontSize: ".85rem" }}>{m.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </details>
             </td>
           </tr>
         ))}
@@ -226,7 +293,7 @@ async function AdminContent() {
     redirect("/admin/login");
   }
 
-  const [{ data: leads, error: leadsError }, { data: bookings, error: bookingsError }, { data: clients, error: clientsError }] =
+  const [{ data: leads, error: leadsError }, { data: bookings, error: bookingsError }, { data: clients, error: clientsError }, { data: transcripts }] =
     await Promise.all([
       supabase
         .from("leads")
@@ -243,6 +310,11 @@ async function AdminContent() {
         .select("id, business_name, industry, website, business_description, services, faqs, whatsapp_number, agent_status, created_at")
         .order("created_at", { ascending: false })
         .limit(200),
+      supabase
+        .from("chat_transcripts")
+        .select("id, user_id, persona_name, messages, created_at, profiles(full_name)")
+        .order("created_at", { ascending: false })
+        .limit(100),
     ]);
 
   if (leadsError || bookingsError || clientsError) {
@@ -303,6 +375,22 @@ async function AdminContent() {
           Upcoming demo calls booked through the chat, soonest first.
         </p>
         <BookingsTable rows={(bookings ?? []) as Booking[]} />
+      </section>
+
+      <section style={{ marginTop: 48 }}>
+        <h2
+          style={{
+            fontSize: "1.25rem",
+            letterSpacing: "-.01em",
+            marginBottom: 6,
+          }}
+        >
+          Chat transcripts
+        </h2>
+        <p style={{ color: "var(--muted)", fontSize: ".92rem", margin: "0 0 18px" }}>
+          AI demo conversations, newest first. Click “view” to read the full chat.
+        </p>
+        <TranscriptsTable rows={(transcripts ?? []) as Transcript[]} />
       </section>
     </>
   );
