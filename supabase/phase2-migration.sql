@@ -102,7 +102,8 @@ CREATE POLICY clients_select_own ON clients FOR SELECT
 CREATE POLICY clients_insert_own ON clients FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 CREATE POLICY clients_update_own ON clients FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 CREATE POLICY clients_admin_all ON clients FOR ALL
   USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
 
