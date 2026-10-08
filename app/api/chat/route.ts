@@ -24,13 +24,13 @@ GROUND RULE: Answer every question strictly according to this website's content 
 
 Website facts (your only source of truth):
 - Services: AI sales agents for websites, Instagram DMs and WhatsApp; WhatsApp automation; Instagram DM automation; n8n workflow automation connecting existing tools; review follow-up systems; free custom demos.
-- Pricing: fixed $200 one-time AI agent setup, fixed $75/month ongoing care (covers hosting of the agent, updates, support). These are ReplyPilot's service fees — that's it. Larger, fully-custom builds are quoted separately.
-- Be transparent about total cost: the customer's agent also uses third-party services that bill the CUSTOMER directly (not ReplyPilot) — e.g. the AI model's API usage (pay-per-use, typically small for a small business) and, if they use WhatsApp, Meta's WhatsApp Business API conversation charges. Always clarify: "$200 + $75/month is my fixed service fee; your AI API and WhatsApp usage are billed separately by those providers, and bigger custom work is quoted separately." Never hide this. During the free demo, Tauseef explains the exact expected running costs for their specific setup.
-- How it works: free custom demo for your business → 50% upfront ($100) → built and tested in 48 hours → you approve every response & flow → 50% on go-live ($100). You don't pay the second 50% until it's live and working.
+- Pricing: fixed $249 one-time AI agent setup, fixed $99/month ongoing care (covers hosting of the agent, updates, support). These are ReplyPilot's service fees — that's it. Larger, fully-custom builds are quoted separately.
+- Be transparent about total cost: the customer's agent also uses third-party services that bill the CUSTOMER directly (not ReplyPilot) — e.g. the AI model's API usage (pay-per-use, typically small for a small business) and, if they use WhatsApp, Meta's WhatsApp Business API conversation charges. Always clarify: "$249 + $99/month is my fixed service fee; your AI API and WhatsApp usage are billed separately by those providers, and bigger custom work is quoted separately." Never hide this. During the free demo, Tauseef explains the exact expected running costs for their specific setup.
+- How it works: free custom demo for your business → 50% upfront ($125) → built and tested in 48 hours → you approve every response & flow → 50% on go-live ($124). You don't pay the second 50% until it's live and working.
 - Process: 1) Understand (find the slow/revenue-critical part of the process), 2) Prototype (tailored flow around offers, brand voice, customer questions), 3) Test (responses, edge cases, human handoff, channels), 4) Improve (refine using real conversations).
 - 13 live demo concepts across website, WhatsApp and Instagram channels: Velvet & Vine (boutique), Casa Verde Kitchen (restaurant), Luxe Locks Studio (salon), Harborline Realty (real estate), NovaKart (e-commerce), Crumb & Craft (bakery), IronPulse Fitness, BrightSmile Dental Studio, FixRight Plumbing Co., EverAfter Events, Serene Glow Spa, Daily Grind Coffee House, Lumière Cosmetics. Each has its own live demo page at /demo/[name].
 - Human handoff is always built in — the agent handles routine questions and passes to a person when judgment is needed. No technical skills required from the client.
-- FAQ answers: No technical skills needed (Tauseef handles build, setup, testing). Customers who prefer humans get handed over. $75/month covers hosting, updates, support.
+- FAQ answers: No technical skills needed (Tauseef handles build, setup, testing). Customers who prefer humans get handed over. $99/month covers hosting, updates, support.
 - Contact: the contact form on this page, or email muhammadtauseef714@gmail.com.
 
 Your tools:
@@ -61,7 +61,7 @@ About this business: ${blurb}
 - Greet and serve visitors as this business's own assistant, in character.
 - Answer product/service questions helpfully. For exact facts you don't have (precise prices, live availability), offer to check with the team or arrange a callback — never invent them.
 - If a visitor shares their name and email/phone and wants a demo or callback, use the saveLead tool to capture them.
-- If asked how they can get an agent like you for their own business: that's ReplyPilot — $200 one-time setup, $75/month care, free custom demo first, via the contact form on this site.`.trim();
+- If asked how they can get an agent like you for their own business: that's ReplyPilot — $249 one-time setup, $99/month care, free custom demo first, via the contact form on this site.`.trim();
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -373,7 +373,7 @@ export async function POST(req: Request) {
   if (!apiKey) {
     return NextResponse.json({
       reply:
-        "Thanks for reaching out! I'm ReplyPilot's assistant. Getting your own AI agent is a $200 one-time setup plus $75/month care — and every project starts with a free custom demo. Drop your details in the contact form below and Muhammad Tauseef will get back to you personally.",
+        "Thanks for reaching out! I'm ReplyPilot's assistant. Getting your own AI agent is a $249 one-time setup plus $99/month care — and every project starts with a free custom demo. Drop your details in the contact form below and Muhammad Tauseef will get back to you personally.",
     });
   }
 

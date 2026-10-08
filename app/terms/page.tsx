@@ -45,11 +45,11 @@ export default function TermsPage() {
             <h2>Services &amp; pricing</h2>
             <ul>
               <li>
-                <strong>Setup:</strong> $200 one-time per AI agent, with 50%
-                ($100) due upfront and 50% ($100) on go-live.
+                <strong>Setup:</strong> $249 one-time per AI agent, with 50%
+                ($125) due upfront and 50% ($124) on go-live.
               </li>
               <li>
-                <strong>Ongoing care:</strong> $75/month for hosting, updates,
+                <strong>Ongoing care:</strong> $99/month for hosting, updates,
                 and support, cancellable anytime.
               </li>
               <li>

@@ -95,7 +95,7 @@ async function DashboardContent() {
             Free demo
           </div>
           <p style={{ color: "#4b5563", fontSize: ".9rem", margin: "8px 0 0" }}>
-            Your AI agent setup is <strong>$200</strong> one-time.
+            Your AI agent setup is <strong>$249</strong> one-time.
           </p>
         </div>
         <div className="price-card" style={{ padding: 26 }}>

@@ -82,14 +82,14 @@ export default async function DemoDetailPage({ params }: { params: Promise<{ slu
           <DemoPlayground initialDemo={demo} showPicker={false} />
 
           <div className="demo-cta-card">
-            <h2>Want one like this for your business? — $200.</h2>
+            <h2>Want one like this for your business? — $249.</h2>
             <p>
               Trained on your products, your prices, your FAQs. Live in 48
               hours, with a free custom demo first.
             </p>
             <div>
               <Link href="/#contact" className="btn btn-gold">
-                Get Your AI Agent — $200{" "}
+                Get Your AI Agent — $249{" "}
                 <span className="arrow" aria-hidden="true">
                   →
                 </span>

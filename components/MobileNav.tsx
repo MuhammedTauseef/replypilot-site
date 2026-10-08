@@ -118,7 +118,7 @@ export default function MobileNav() {
             role="menuitem"
             onClick={() => setOpen(false)}
           >
-            Get Your AI Agent — $200
+            Get Your AI Agent — $249
           </a>
         </div>
       )}
