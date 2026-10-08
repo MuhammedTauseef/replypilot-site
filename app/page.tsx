@@ -486,21 +486,7 @@ export default function Home() {
           aria-labelledby="meet-title"
           style={{ paddingTop: 0 }}
         >
-          <div className="wrap split">
-            <div className="meet-card meet-photo">
-              <Image
-                src="/founder.jpg"
-                alt="Muhammad Tauseef, founder of ReplyPilot"
-                fill
-                sizes="(max-width: 900px) 100vw, 420px"
-                className="meet-img"
-                priority={false}
-              />
-              <div className="meet-tag">
-                <strong>Tauseef</strong>
-                <span>Founder &amp; builder, ReplyPilot</span>
-              </div>
-            </div>
+          <div className="wrap" style={{ maxWidth: 780 }}>
             <div className="meet-copy">
               <div className="kicker">Meet Tauseef</div>
               <h2 className="display" id="meet-title" style={{ marginBottom: 28 }}>
