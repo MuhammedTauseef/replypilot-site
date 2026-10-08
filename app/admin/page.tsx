@@ -426,6 +426,9 @@ export default function AdminPage() {
           <a href="/admin/pages" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             Pages →
           </a>
+          <a href="/admin/payments" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            Payments →
+          </a>
           <a href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             ← Home
           </a>

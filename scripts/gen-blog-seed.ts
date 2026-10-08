@@ -10,17 +10,16 @@ sql += "-- Generated from app/blog/posts.ts\n\n";
 
 for (const post of posts) {
   const contentJson = escapeSql(JSON.stringify(post.content));
-  const keywordsJson = escapeSql(JSON.stringify(post.keywords));
+  const keywordsArray = `ARRAY[${post.keywords.map(k => `'${escapeSql(k)}'`).join(", ")}]`;
   
-  sql += `INSERT INTO blog_posts (slug, title, excerpt, content, keywords, published, published_at)\n`;
+  sql += `INSERT INTO blog_posts (slug, title, excerpt, content, keywords, published)\n`;
   sql += `VALUES (\n`;
   sql += `  '${escapeSql(post.slug)}',\n`;
   sql += `  '${escapeSql(post.title)}',\n`;
   sql += `  '${escapeSql(post.excerpt)}',\n`;
   sql += `  '${contentJson}'::jsonb,\n`;
-  sql += `  '${keywordsJson}'::jsonb,\n`;
-  sql += `  TRUE,\n`;
-  sql += `  NOW()\n`;
+  sql += `  ${keywordsArray}::text[],\n`;
+  sql += `  TRUE\n`;
   sql += `)\n`;
   sql += `ON CONFLICT (slug) DO UPDATE SET\n`;
   sql += `  title = EXCLUDED.title,\n`;
