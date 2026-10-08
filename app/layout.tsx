@@ -25,6 +25,23 @@ export const metadata: Metadata = {
     description:
       "Turn your website into an AI sales & support agent. Free custom demo.",
     type: "website",
+    url: "https://replypilot-site.vercel.app",
+    siteName: "ReplyPilot",
+    images: [
+      {
+        url: "https://replypilot-site.vercel.app/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ReplyPilot — AI Sales Agents for Small Business",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ReplyPilot — AI Automation by Muhammad Tauseef",
+    description:
+      "Turn your website into an AI sales & support agent. Free custom demo.",
+    images: ["https://replypilot-site.vercel.app/og-image.jpg"],
   },
 };
 
