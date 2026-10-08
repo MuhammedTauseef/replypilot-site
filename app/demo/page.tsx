@@ -1,5 +1,6 @@
 import Link from "next/link";
 import DemoPlayground from "@/components/DemoPlayground";
+import PriceValue from "@/components/PriceValue";
 
 /**
  * /demo — full-page live AI demo with all 13 demo businesses.
@@ -47,7 +48,7 @@ export default function DemoPage() {
             <h2
               style={{ margin: 0, fontSize: "1.7rem", letterSpacing: "-.02em" }}
             >
-              Like what you see? Get one for your business — $249.
+              Like what you see? Get one for your business<PriceValue> — $249</PriceValue>.
             </h2>
             <p style={{ margin: 0, color: "#b9c6e2" }}>
               Trained on your products, your prices, your FAQs. Live in 48
@@ -55,7 +56,7 @@ export default function DemoPage() {
             </p>
             <div>
               <Link href="/#contact" className="btn btn-gold">
-                Get Your AI Agent — $249{" "}
+                Get Your AI Agent<PriceValue> — $249</PriceValue>{" "}
                 <span className="arrow" aria-hidden="true">
                   →
                 </span>

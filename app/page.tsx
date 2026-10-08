@@ -4,6 +4,7 @@ import DemoRequestButton from "@/components/DemoRequestButton";
 import ChatWidget from "@/components/ChatWidget";
 import ThemeToggle from "@/components/ThemeToggle";
 import AuthNav from "@/components/AuthNav";
+import PriceValue from "@/components/PriceValue";
 import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS, demosByGroup } from "@/lib/demos";
@@ -72,7 +73,7 @@ const FAQS = [
     a: "Human handoff is built in. The agent handles routine questions and passes the conversation to you or your team when a customer wants a person — or the situation needs judgment.",
   },
   {
-    q: "What does the $99/month cover?",
+    q: "What does the monthly care cover?",
     a: "Hosting of the agent, updates, and support — that's my service fee. Your AI API usage and WhatsApp Business messaging charges (if used) are separate and billed directly by those providers, and I'll estimate them for you during the free demo.",
   },
 ];
@@ -98,7 +99,7 @@ export default function Home() {
             <a className="nav-link" href="#faq">FAQ</a>
             <AuthNav />
             <a className="nav-cta" href="#contact">
-              Get Your AI Agent — $249
+              Get Your AI Agent<PriceValue> — $249</PriceValue>
             </a>
             <ThemeToggle />
             <MobileNav />
@@ -126,7 +127,7 @@ export default function Home() {
               </p>
               <div className="hero-actions">
                 <a className="btn btn-gold" href="#contact">
-                  Get Your AI Agent — $249{" "}
+                  Get Your AI Agent<PriceValue> — $249</PriceValue>{" "}
                   <span className="arrow" aria-hidden="true">→</span>
                 </a>
                 <a className="btn btn-ghost" href="/demo">
@@ -134,7 +135,7 @@ export default function Home() {
                 </a>
               </div>
               <p className="hero-price-note">
-                $249 one-time setup · $99/month care · free custom demo first
+                <PriceValue>$249 one-time setup · $99/month care · </PriceValue>free custom demo first
               </p>
             </div>
             <div className="hero-photo">
@@ -170,7 +171,7 @@ export default function Home() {
               <span>Focused first build, tested before handoff</span>
             </div>
             <div className="stat">
-              <strong>$249</strong>
+              <strong><PriceValue>$249</PriceValue></strong>
               <span>Clear one-time starting price, no surprises</span>
             </div>
           </div>
@@ -400,12 +401,12 @@ export default function Home() {
                 <div className="price-tag">Standard</div>
                 <div className="price-line">
                   <span>One-time build</span>
-                  <strong>$249</strong>
+                  <strong><PriceValue>$249</PriceValue></strong>
                 </div>
                 <div className="price-line">
                   <span>Ongoing care</span>
                   <strong>
-                    $99 <em>/ month</em>
+                    <PriceValue>$99 <em>/ month</em></PriceValue>
                   </strong>
                 </div>
                 <ul className="included">
@@ -442,7 +443,7 @@ export default function Home() {
                 <div className="price-line">
                   <span>Ongoing care</span>
                   <strong>
-                    $150+ <em>/ month</em>
+                    <PriceValue>$150+ <em>/ month</em></PriceValue>
                   </strong>
                 </div>
                 <ul className="included">
@@ -470,7 +471,7 @@ export default function Home() {
               </div>
             </div>
             <p className="fine" style={{ maxWidth: 760 }}>
-              Fixed pricing means fixed pricing: $249 one-time, $99/month for
+              Fixed pricing means fixed pricing: <PriceValue>$249 one-time, $99/month</PriceValue> for
               the standard agent. Your AI API usage and WhatsApp Business
               messaging charges (if used) are billed separately by those
               providers. I estimate everything for you during the free demo.

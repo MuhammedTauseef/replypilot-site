@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DEMOS, getDemoBySlug } from "@/lib/demos";
 import DemoPlayground from "@/components/DemoPlayground";
+import PriceValue from "@/components/PriceValue";
 
 /**
  * /demo/[slug] — dedicated live demo page per business, like the old
@@ -82,14 +83,14 @@ export default async function DemoDetailPage({ params }: { params: Promise<{ slu
           <DemoPlayground initialDemo={demo} showPicker={false} />
 
           <div className="demo-cta-card">
-            <h2>Want one like this for your business? — $249.</h2>
+            <h2>Want one like this for your business?<PriceValue> — $249</PriceValue>.</h2>
             <p>
               Trained on your products, your prices, your FAQs. Live in 48
               hours, with a free custom demo first.
             </p>
             <div>
               <Link href="/#contact" className="btn btn-gold">
-                Get Your AI Agent — $249{" "}
+                Get Your AI Agent<PriceValue> — $249</PriceValue>{" "}
                 <span className="arrow" aria-hidden="true">
                   →
                 </span>
