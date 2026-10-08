@@ -29,6 +29,52 @@ function getServiceClient() {
   return createClient(url, key);
 }
 
+const ADMIN_EMAIL = "muhammadtauseef714@gmail.com";
+
+const emailWrap = (body: string) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1f2937;">
+  <div style="text-align: center; margin-bottom: 24px;">
+    <strong style="font-size: 1.5rem; color: #1e3a5f;">ReplyPilot</strong>
+  </div>
+  ${body}
+  <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 0.85rem; color: #9ca3af; text-align: center;">
+    ReplyPilot — AI Automation<br>
+    <a href="https://replypilot-site.vercel.app" style="color: #f59e0b;">replypilot-site.vercel.app</a>
+  </div>
+</div>`;
+
+/** Send an email via Resend. Fire-and-forget: never blocks the webhook. */
+async function sendEmail(to: string, subject: string, htmlBody: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log(`[EMAIL:DEV] To: ${to} | Subject: ${subject}`);
+    return;
+  }
+  const from = process.env.RESEND_FROM || "ReplyPilot <hello@replypilot-site.vercel.app>";
+  try {
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from, to, subject, html: emailWrap(htmlBody) }),
+    });
+  } catch (e) {
+    console.error("[webhook-email] send failed:", e);
+  }
+}
+
+function formatMoney(cents: number, currency: string): string {
+  return `$${(cents / 100).toFixed(2)} ${currency.toUpperCase()}`;
+}
+
+const PLAN_LABELS: Record<string, string> = {
+  build_deposit: "Build Deposit ($125)",
+  build_go_live: "Go-Live Payment ($124)",
+  care_plan: "Care Plan ($99/month)",
+};
+
 /** Derive the HMAC key from a `ws_...` secret per Standard Webhooks spec. */
 function deriveKey(secret: string): Buffer {
   const withoutPrefix = secret.startsWith("ws_") ? secret.slice(3) : secret;
@@ -252,6 +298,39 @@ export async function POST(request: NextRequest) {
         clientId,
         amountCents: normalizedCents,
       });
+
+      // --- Email notifications (fire-and-forget) ---
+      const planLabel = PLAN_LABELS[planKey] || planKey;
+      const amountStr = formatMoney(normalizedCents, currency);
+      // 1. Notify admin (Tauseef)
+      sendEmail(
+        ADMIN_EMAIL,
+        `✅ Payment received: ${amountStr} — ${buyerEmail || "unknown"}`,
+        `<h2 style="color:#15803d;">Payment Confirmed ✅</h2>
+        <p><strong>${amountStr}</strong> received for <strong>${planLabel}</strong>.</p>
+        <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;"><strong>Buyer</strong></td><td style="padding:8px;border-bottom:1px solid #eee;">${buyerName || "—"} (${buyerEmail || "—"})</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;"><strong>Amount</strong></td><td style="padding:8px;border-bottom:1px solid #eee;">${amountStr}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;"><strong>Plan</strong></td><td style="padding:8px;border-bottom:1px solid #eee;">${planLabel}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;"><strong>Client linked</strong></td><td style="padding:8px;border-bottom:1px solid #eee;">${clientId ? "✅ Yes (auto-activated)" : "⚠️ No — manual review needed"}</td></tr>
+          <tr><td style="padding:8px;"><strong>Whop ID</strong></td><td style="padding:8px;font-family:monospace;font-size:.85em;">${whopPaymentId}</td></tr>
+        </table>
+        <p><a href="https://replypilot-site.vercel.app/admin/payments" style="background:#f59e0b;color:#111827;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;">View in Admin →</a></p>`
+      );
+      // 2. Confirm to the client
+      if (buyerEmail) {
+        sendEmail(
+          buyerEmail,
+          `Payment confirmed — ${planLabel} | ReplyPilot`,
+          `<h2 style="color:#15803d;">Payment Confirmed ✅</h2>
+          <p>Hi ${buyerName || "there"},</p>
+          <p>We've received your payment of <strong>${amountStr}</strong> for <strong>${planLabel}</strong>.</p>
+          <p>Your account ${clientId ? "has been activated automatically" : "is being set up"} — we'll be in touch shortly with next steps.</p>
+          <p>Questions? Just reply to this email.</p>
+          <p>— The ReplyPilot Team</p>`
+        );
+      }
+
       return NextResponse.json({ ok: true });
     }
 
@@ -279,6 +358,35 @@ export async function POST(request: NextRequest) {
         { onConflict: "whop_payment_id" }
       );
       await markProcessed();
+
+      // --- Notify admin of failed payment ---
+      const failPlanLabel = PLAN_LABELS[planKey] || planKey;
+      const failAmountStr = formatMoney(normalizedCents, currency);
+      sendEmail(
+        ADMIN_EMAIL,
+        `❌ Payment failed: ${failAmountStr} — ${buyerEmail || "unknown"}`,
+        `<h2 style="color:#dc2626;">Payment Failed ❌</h2>
+        <p>A payment of <strong>${failAmountStr}</strong> for <strong>${failPlanLabel}</strong> did not go through.</p>
+        <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;"><strong>Buyer</strong></td><td style="padding:8px;border-bottom:1px solid #eee;">${buyerName || "—"} (${buyerEmail || "—"})</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;"><strong>Amount</strong></td><td style="padding:8px;border-bottom:1px solid #eee;">${failAmountStr}</td></tr>
+          <tr><td style="padding:8px;"><strong>Event</strong></td><td style="padding:8px;font-family:monospace;font-size:.85em;">${normalizedType}</td></tr>
+        </table>
+        <p><a href="https://replypilot-site.vercel.app/admin/payments" style="background:#f59e0b;color:#111827;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;">View in Admin →</a></p>`
+      );
+      // Notify the buyer too
+      if (buyerEmail) {
+        sendEmail(
+          buyerEmail,
+          `Payment issue — ${failPlanLabel} | ReplyPilot`,
+          `<h2 style="color:#dc2626;">Payment Didn't Go Through</h2>
+          <p>Hi ${buyerName || "there"},</p>
+          <p>Your payment of <strong>${failAmountStr}</strong> for <strong>${failPlanLabel}</strong> could not be completed.</p>
+          <p>No charge was made. Please try again, or contact us if you need help.</p>
+          <p>— The ReplyPilot Team</p>`
+        );
+      }
+
       return NextResponse.json({ ok: true });
     }
 
