@@ -45,25 +45,46 @@ export default function BlogPage() {
         <section className="block" style={{ paddingTop: 64 }}>
           <div className="wrap">
             <div className="blog-grid">
-              {posts.map((post, i) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="blog-card"
-                >
-                  <span className="service-num">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3>{post.title}</h3>
-                  <p>{post.excerpt}</p>
-                  <div className="blog-meta">
-                    <span>{post.date}</span>
-                    <span>·</span>
-                    <span>{post.readTime}</span>
-                  </div>
-                  <span className="blog-read">Read article →</span>
-                </Link>
-              ))}
+              {posts.map((post, i) => {
+                const imgBlock = post.content.find((b) => b.type === "img");
+                const thumb =
+                  imgBlock && imgBlock.type === "img" ? imgBlock.src : null;
+                return (
+                  <Link
+                    key={post.slug}
+                    href={`/blog/${post.slug}`}
+                    className="blog-card"
+                  >
+                    {thumb && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumb}
+                        alt={post.title}
+                        style={{
+                          width: "100%",
+                          height: 180,
+                          objectFit: "cover",
+                          borderRadius: 8,
+                          marginBottom: 16,
+                          display: "block",
+                        }}
+                        loading="lazy"
+                      />
+                    )}
+                    <span className="service-num">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3>{post.title}</h3>
+                    <p>{post.excerpt}</p>
+                    <div className="blog-meta">
+                      <span>{post.date}</span>
+                      <span>·</span>
+                      <span>{post.readTime}</span>
+                    </div>
+                    <span className="blog-read">Read article →</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
