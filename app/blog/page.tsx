@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
-import { posts } from "./posts";
+import { getPublishedPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog — AI Automation Tips for Small Businesses | ReplyPilot",
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 /** /blog — listing of all posts. */
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getPublishedPosts();
   return (
     <>
       <PageHeader />

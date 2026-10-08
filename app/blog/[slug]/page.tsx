@@ -3,19 +3,20 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
 import PriceValue from "@/components/PriceValue";
-import { posts, type Block } from "../posts";
+import { getPublishedPosts, getPostBySlug, type Block } from "@/lib/blog";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
   return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "Post not found — ReplyPilot" };
   return {
     title: `${post.title} | ReplyPilot Blog`,
@@ -93,10 +94,11 @@ function renderBlock(block: Block, i: number) {
 /** /blog/[slug] — full article page. */
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const related = posts.filter((p) => p.slug !== slug).slice(0, 3);
+  const all = await getPublishedPosts();
+  const related = all.filter((p) => p.slug !== slug).slice(0, 3);
 
   // Article schema — Neil Patel 2026 rule: schema markup so AI can scrape and cite content
   const articleSchema = {

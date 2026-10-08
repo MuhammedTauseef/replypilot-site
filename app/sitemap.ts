@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { posts } from "./blog/posts";
+import { getPublishedPosts } from "@/lib/blog";
 
 const BASE = "https://replypilot-site.vercel.app";
 
 /** Public routes for search engines. Auth-gated pages stay out. */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getPublishedPosts().catch(() => []);
   const routes = [
     "/",
     "/demo",

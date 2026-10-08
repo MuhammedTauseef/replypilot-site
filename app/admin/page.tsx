@@ -411,6 +411,9 @@ export default function AdminPage() {
           </p>
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <a href="/admin/blog" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            Blog posts →
+          </a>
           <a href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             ← Home
           </a>
