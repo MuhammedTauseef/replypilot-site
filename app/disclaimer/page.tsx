@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { getStaticPage } from "@/lib/pages";
 import type { Block } from "@/lib/blog";
 
+export const dynamic = "force-dynamic";
+
+
+
 export const metadata: Metadata = {
   title: "Disclaimer | ReplyPilot",
   description:

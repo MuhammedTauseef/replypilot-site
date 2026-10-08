@@ -3,6 +3,10 @@ import Link from "next/link";
 import { getStaticPage } from "@/lib/pages";
 import type { Block } from "@/lib/blog";
 
+export const dynamic = "force-dynamic";
+
+
+
 export const metadata: Metadata = {
   title: "About — ReplyPilot",
   description:

@@ -64,3 +64,4 @@ npm run dev
   only the logged-in admin can **read** them.
 - `/admin` is protected by `proxy.ts` (redirects to login when signed out).
 - Never expose the Supabase **service_role** key — this project doesn't need it.
+# Force Vercel rebuild
