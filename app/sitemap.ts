@@ -11,10 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
     "/videos",
     ...posts.map((p) => `/blog/${p.slug}`),
-    "/login",
-    "/signup",
-    "/forgot-password",
-    "/reset-password",
+    "/about",
+    "/contact",
     "/privacy",
     "/terms",
   ];
