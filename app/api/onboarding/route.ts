@@ -57,32 +57,49 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { business_name, industry, website, business_description, services, faqs, whatsapp_number } = body;
+    // Server-side length caps — client-side trim alone is not enough.
+    const str = (v: unknown, max: number) =>
+      typeof v === "string" ? v.trim().slice(0, max) : "";
+    const arr = (v: unknown, maxItems: number) =>
+      Array.isArray(v) ? v.slice(0, maxItems) : [];
+    const business_name = str(body.business_name, 120);
+    const industry = str(body.industry, 120);
+    const website = str(body.website, 200);
+    const business_description = str(body.business_description, 2000);
+    const whatsapp_number = str(body.whatsapp_number, 40);
+    const services = arr(body.services, 50).map((s) => ({
+      name: str(s?.name, 120),
+      price: str(s?.price, 60),
+    }));
+    const faqs = arr(body.faqs, 50).map((f) => ({
+      q: str(f?.q, 300),
+      a: str(f?.a, 1000),
+    }));
 
-    if (!business_name?.trim() || !industry?.trim() || !whatsapp_number?.trim()) {
+    if (!business_name || !industry || !whatsapp_number) {
       return NextResponse.json({ error: "Business name, industry, and WhatsApp number are required." }, { status: 400 });
     }
 
     const agentConfig = buildAgentConfig({
-      business_name: business_name.trim(),
-      industry: industry.trim(),
-      website: (website || "").trim(),
-      business_description: (business_description || "").trim(),
-      services: Array.isArray(services) ? services : [],
-      faqs: Array.isArray(faqs) ? faqs : [],
-      whatsapp_number: whatsapp_number.trim(),
+      business_name,
+      industry,
+      website,
+      business_description,
+      services,
+      faqs,
+      whatsapp_number,
     });
 
     const { error } = await supabase.from("clients").upsert(
       {
         user_id: user.id,
-        business_name: business_name.trim(),
-        industry: industry.trim(),
-        website: (website || "").trim() || null,
-        business_description: (business_description || "").trim() || null,
-        services: Array.isArray(services) ? services : [],
-        faqs: Array.isArray(faqs) ? faqs : [],
-        whatsapp_number: whatsapp_number.trim(),
+        business_name,
+        industry,
+        website: website || null,
+        business_description: business_description || null,
+        services,
+        faqs,
+        whatsapp_number,
         agent_config: agentConfig,
         agent_status: "preview",
       },

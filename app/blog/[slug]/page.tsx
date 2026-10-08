@@ -21,6 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${post.title} | ReplyPilot Blog`,
     description: post.excerpt,
     keywords: post.keywords,
+    alternates: {
+      canonical: `https://replypilot-site.vercel.app/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,

@@ -4,9 +4,13 @@ import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://replypilot-site.vercel.app"),
   title: "ReplyPilot — AI Automation by Muhammad Tauseef",
   description:
-    "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses. Free custom demo.",
+    "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses. WhatsApp, Instagram & website agents. Free custom demo.",
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app",
+  },
   verification: {
     google: "jXx7jWarPskM3UN7e2YihwpzUjZAzKJim_fvKRz-kw8",
   },
@@ -96,6 +100,23 @@ export default function RootLayout({
       <Script id="ga4-init" strategy="afterInteractive">
         {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
+// Consent Mode v2: default denied until the visitor chooses.
+gtag('consent', 'default', {
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
+  analytics_storage: 'denied'
+});
+try {
+  if (localStorage.getItem('replypilot-cookie-consent') === 'accepted') {
+    gtag('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted'
+    });
+  }
+} catch (e) {}
 gtag('js', new Date());
 gtag('config', 'G-1QP894DHB3');`}
       </Script>
