@@ -78,8 +78,9 @@ export async function proxy(request: NextRequest) {
 
   const isAdminArea = pathname.startsWith("/admin") && pathname !== "/admin/login";
   const isDashboardArea = pathname.startsWith("/dashboard");
+  const isOnboardingArea = pathname.startsWith("/onboarding");
 
-  if (!user && (isAdminArea || isDashboardArea)) {
+  if (!user && (isAdminArea || isDashboardArea || isOnboardingArea)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -101,5 +102,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*", "/login", "/signup"],
+  matcher: ["/admin/:path*", "/dashboard/:path*", "/onboarding/:path*", "/login", "/signup"],
 };
