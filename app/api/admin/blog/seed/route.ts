@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         keywords: p.keywords,
         published: true,
       },
-      { onConflict: "slug", ignoreDuplicates: true }
+      { onConflict: "slug" }
     );
     if (error) {
       errors.push(`${p.slug}: ${error.message}`);
