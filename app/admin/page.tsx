@@ -25,6 +25,19 @@ type Booking = {
   created_at: string;
 };
 
+type Client = {
+  id: string;
+  business_name: string;
+  industry: string;
+  website: string | null;
+  business_description: string | null;
+  services: { name: string }[] | null;
+  faqs: { q: string; a: string }[] | null;
+  whatsapp_number: string;
+  agent_status: string;
+  created_at: string;
+};
+
 function formatDate(iso: string): string {
   try {
     return new Date(iso).toLocaleString("en-GB", {
@@ -144,6 +157,60 @@ function BookingsTable({ rows }: { rows: Booking[] }) {
   );
 }
 
+function ClientsTable({ rows }: { rows: Client[] }) {
+  if (rows.length === 0) {
+    return (
+      <div className="empty">
+        No clients yet. When a client completes onboarding, their business
+        details will appear here.
+      </div>
+    );
+  }
+  return (
+    <table className="leads-table">
+      <thead>
+        <tr>
+          <th>Business</th>
+          <th>Industry</th>
+          <th>WhatsApp</th>
+          <th>Services</th>
+          <th>FAQs</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((c) => (
+          <tr key={c.id}>
+            <td>
+              <strong>{c.business_name}</strong>
+              {c.website && (
+                <>
+                  <br />
+                  <a href={c.website} target="_blank" rel="noreferrer" style={{ fontSize: ".85rem" }}>
+                    {c.website}
+                  </a>
+                </>
+              )}
+              {c.business_description && (
+                <div className="msg" style={{ marginTop: 4 }}>{c.business_description}</div>
+              )}
+            </td>
+            <td>{c.industry}</td>
+            <td style={{ whiteSpace: "nowrap" }}>{c.whatsapp_number}</td>
+            <td className="msg">
+              {(c.services ?? []).map((s) => s.name).filter(Boolean).join(", ") || "—"}
+            </td>
+            <td className="msg">
+              {(c.faqs ?? []).map((f) => `Q: ${f.q}`).filter((q) => q !== "Q: ").join(" | ") || "—"}
+            </td>
+            <td>{c.agent_status}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 /**
  * Session-gated content. Reading the session is a request-time operation,
  * so with Cache Components it streams in behind the Suspense boundary
@@ -159,7 +226,7 @@ async function AdminContent() {
     redirect("/admin/login");
   }
 
-  const [{ data: leads, error: leadsError }, { data: bookings, error: bookingsError }] =
+  const [{ data: leads, error: leadsError }, { data: bookings, error: bookingsError }, { data: clients, error: clientsError }] =
     await Promise.all([
       supabase
         .from("leads")
@@ -171,9 +238,14 @@ async function AdminContent() {
         .select("id, name, email, phone, slot_start, slot_end, status, source, created_at")
         .order("slot_start", { ascending: true })
         .limit(200),
+      supabase
+        .from("clients")
+        .select("id, business_name, industry, website, business_description, services, faqs, whatsapp_number, agent_status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(200),
     ]);
 
-  if (leadsError || bookingsError) {
+  if (leadsError || bookingsError || clientsError) {
     return (
       <div className="empty">
         Could not load dashboard data. Check the database setup (see
@@ -198,6 +270,23 @@ async function AdminContent() {
           Messages from the website contact form, newest first.
         </p>
         <LeadsTable rows={(leads ?? []) as Lead[]} />
+      </section>
+
+      <section style={{ marginBottom: 48 }}>
+        <h2
+          style={{
+            fontSize: "1.25rem",
+            letterSpacing: "-.01em",
+            marginBottom: 6,
+          }}
+        >
+          Clients
+        </h2>
+        <p style={{ color: "var(--muted)", fontSize: ".92rem", margin: "0 0 18px" }}>
+          Onboarding details submitted by clients — business info, services,
+          FAQs, and WhatsApp number for building their agent.
+        </p>
+        <ClientsTable rows={(clients ?? []) as Client[]} />
       </section>
 
       <section>
