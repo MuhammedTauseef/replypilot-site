@@ -5,6 +5,7 @@ import ChatWidget from "@/components/ChatWidget";
 import ThemeToggle from "@/components/ThemeToggle";
 import AuthNav from "@/components/AuthNav";
 import PriceValue from "@/components/PriceValue";
+import CheckoutButton from "@/components/CheckoutButton";
 import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS, demosByGroup } from "@/lib/demos";
@@ -433,6 +434,17 @@ export default function Home() {
                   Request a custom demo{" "}
                   <span className="arrow" aria-hidden="true">→</span>
                 </a>
+                <div style={{ marginTop: 12 }}>
+                  <CheckoutButton
+                    linkKey="deposit"
+                    label={
+                      <>
+                        Pay <PriceValue>$125</PriceValue> deposit
+                      </>
+                    }
+                    note="50% upfront to start your build. The remaining $124 is due when you approve the finished agent."
+                  />
+                </div>
               </div>
               <div className="price-card">
                 <div className="price-tag">Custom build</div>
