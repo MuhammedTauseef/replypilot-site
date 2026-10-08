@@ -65,10 +65,12 @@ export default function ClientDashboardPage() {
     <main>
       <section className="block">
         <div className="wrap" style={{ maxWidth: 900 }}>
-          <span className="eyebrow">My Agent Dashboard</span>
+          <Link href="/" style={{ color: "#6b7280", textDecoration: "none", fontSize: ".9rem" }}>
+            ← Home
+          </Link>
+          <span className="eyebrow" style={{ display: "block", marginTop: 12 }}>My Agent Dashboard</span>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8, flexWrap: "wrap" }}>
-            <h1 className="display" style={{ fontSize: "2.2rem", margin: 0 }}>{data.business_name}</h1>
-            <span style={{
+            <h1 className="display" style={{ fontSize: "2.2rem", margin: 0 }}>{data.business_name}</h1><span style={{
               background: statusColor + "1a", color: statusColor,
               padding: "6px 16px", borderRadius: 20, fontWeight: 700, fontSize: ".85rem",
               textTransform: "uppercase",

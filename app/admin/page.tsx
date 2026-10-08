@@ -322,7 +322,12 @@ export default function AdminPage() {
             Enquiries and demo bookings, at a glance.
           </p>
         </div>
-        <LogoutButton />
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <a href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            ← Home
+          </a>
+          <LogoutButton />
+        </div>
       </div>
 
       <Suspense fallback={<div className="empty">Loading dashboard…</div>}>
