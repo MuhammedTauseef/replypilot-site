@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getStaticPage } from "@/lib/pages";
+import type { Block } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Contact — ReplyPilot",
@@ -6,8 +8,37 @@ export const metadata: Metadata = {
     "Contact ReplyPilot — email us about AI sales agents, WhatsApp automation, and workflow automation for your business.",
 };
 
-/** /contact — simple contact page. */
-export default function ContactPage() {
+const fallbackBlocks: Block[] = [
+  { type: "h2", text: "Email" },
+  { type: "p", text: "muhammadtauseef714@gmail.com" },
+  { type: "h2", text: "What to include" },
+  { type: "p", text: "Tell us a little about your business and what you'd like to automate." },
+];
+
+function renderBlock(block: Block, i: number) {
+  switch (block.type) {
+    case "h2":
+      return <h2 key={i}>{block.text}</h2>;
+    case "ul":
+      return (
+        <ul key={i}>
+          {block.items.map((item, j) => (
+            <li key={j}>{item}</li>
+          ))}
+        </ul>
+      );
+    case "img":
+      return null; // images not used on static pages
+    default:
+      return <p key={i}>{(block as { text: string }).text}</p>;
+  }
+}
+
+/** /contact — simple contact page. Content editable via admin. */
+export default async function ContactPage() {
+  const page = await getStaticPage("contact");
+  const blocks = page?.content?.length ? page.content : fallbackBlocks;
+
   return (
     <main>
       <section className="block">
@@ -22,29 +53,7 @@ export default function ContactPage() {
           </p>
 
           <div className="legal-body">
-            <h2>Email</h2>
-            <p>
-              <a href="mailto:muhammadtauseef714@gmail.com">
-                muhammadtauseef714@gmail.com
-              </a>
-            </p>
-
-            <h2>What to include</h2>
-            <p>
-              Tell us a little about your business and what you&apos;d like to
-              automate — for example:
-            </p>
-            <ul>
-              <li>What kind of business you run</li>
-              <li>Where you lose leads today (missed DMs? slow replies?)</li>
-              <li>Which channel matters most (WhatsApp, Instagram, website)</li>
-            </ul>
-
-            <h2>Prefer to explore first?</h2>
-            <p>
-              Try a live demo, read the blog, or watch how the demos work — no
-              signup needed to look around.
-            </p>
+            {blocks.map(renderBlock)}
           </div>
         </div>
       </section>

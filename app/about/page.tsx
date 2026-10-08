@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getStaticPage } from "@/lib/pages";
+import type { Block } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "About — ReplyPilot",
@@ -7,8 +9,40 @@ export const metadata: Metadata = {
     "ReplyPilot is an AI automation studio by Muhammad Tauseef — building practical AI sales agents and workflow automations for growing businesses.",
 };
 
-/** /about — who we are, what we do. */
-export default function AboutPage() {
+/** Fallback content if DB is unavailable. */
+const fallbackBlocks: Block[] = [
+  { type: "h2", text: "What we do" },
+  { type: "p", text: "We build AI sales agents and workflow automations that help small and growing businesses respond faster, capture more leads, and save hours every week." },
+  { type: "h2", text: "How we work" },
+  { type: "p", text: "Every build starts with understanding your business. Then we design, build, and launch a custom AI agent, usually within 48 hours." },
+];
+
+function renderBlock(block: Block, i: number) {
+  switch (block.type) {
+    case "h2":
+      return <h2 key={i}>{block.text}</h2>;
+    case "ul":
+      return (
+        <ul key={i}>
+          {block.items.map((item, j) => (
+            <li key={j}>{item}</li>
+          ))}
+        </ul>
+      );
+    case "img":
+      // eslint-disable-next-line @next/next/no-img-element
+      return <img key={i} src={block.src} alt={block.alt} style={{ maxWidth: "100%", borderRadius: 8 }} />;
+    default:
+      return <p key={i}>{block.text}</p>;
+  }
+}
+
+/** /about — who we are, what we do. Content editable via admin. */
+export default async function AboutPage() {
+  const page = await getStaticPage("about");
+  const blocks = page?.content?.length ? page.content : fallbackBlocks;
+  const title = page?.title || "About — ReplyPilot";
+
   return (
     <main>
       <section className="block">
@@ -22,39 +56,8 @@ export default function AboutPage() {
           </p>
 
           <div className="legal-body">
-            <h2>What we do</h2>
-            <p>
-              We build AI sales agents and workflow automations that help small
-              and growing businesses respond faster, capture more leads, and
-              save hours every week. That includes:
-            </p>
-            <ul>
-              <li>WhatsApp DM automation that answers customers instantly</li>
-              <li>Instagram DM automation for bookings and enquiries</li>
-              <li>Website chatbots that qualify and capture leads 24/7</li>
-              <li>E-commerce store assistants that reduce cart abandonment</li>
-              <li>Custom n8n workflow automations for repetitive tasks</li>
-            </ul>
-
-            <h2>How we work</h2>
-            <p>
-              Every build starts with understanding your business — how you get
-              customers today, where leads slip through, and what eats your
-              time. Then we design, build, and launch a custom AI agent for
-              your business, usually within 48 hours. You see a working demo
-              before you pay anything beyond the upfront split.
-            </p>
-
-            <h2>Why ReplyPilot</h2>
-            <p>
-              Most AI tools are generic. We build for one business at a time —
-              your services, your tone, your customers. No templates pretending
-              to be custom. And we stay after launch: the monthly care plan
-              keeps your agent improving as your business grows.
-            </p>
-
-            <h2>Get in touch</h2>
-            <p>
+            {blocks.map(renderBlock)}
+            <p style={{ marginTop: 24 }}>
               Want to see what an AI agent could do for your business?{" "}
               <Link href="/contact">Contact us</Link> or try a{" "}
               <Link href="/demo">live demo</Link> — it takes two minutes.
