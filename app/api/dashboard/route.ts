@@ -25,14 +25,18 @@ export async function GET() {
       .order("created_at", { ascending: false })
       .limit(10);
 
-    // Stats: count leads/bookings linked to this client (by email match fallback to 0)
+    // Stats scoped to THIS client only:
+    // - leads: submitted while signed in as this user
+    // - bookings: made with this client's business (source = business_name)
     const { count: leadsCount } = await supabase
       .from("leads")
-      .select("id", { count: "exact", head: true });
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id);
 
     const { count: bookingsCount } = await supabase
       .from("bookings")
-      .select("id", { count: "exact", head: true });
+      .select("id", { count: "exact", head: true })
+      .eq("source", client.business_name);
 
     return NextResponse.json({
       business_name: client.business_name,
