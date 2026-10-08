@@ -1,0 +1,10 @@
+# ReplyPilot blog topics log — 30-day no-repeat rule.
+# Format: YYYY-MM-DD | slug | primary keyword | secondary keywords
+# Baseline: 6 articles already live before this log was created (all dated 2026-10-08).
+
+2026-10-08 | whatsapp-automation-restaurants | WhatsApp automation for restaurants | restaurant booking chatbot, AI reservation agent
+2026-10-08 | instagram-dm-automation-salons | Instagram DM automation for salons | salon booking chatbot, beauty salon AI assistant
+2026-10-08 | ai-chatbots-dental-clinics | AI chatbot for dental clinics | dental appointment automation, patient messaging AI
+2026-10-08 | ecommerce-store-assistants | AI store assistant | e-commerce chatbot, reduce cart abandonment AI
+2026-10-08 | lead-capture-automation | lead capture automation | website lead generation AI, after-hours lead capture
+2026-10-08 | n8n-workflow-automation-small-business | n8n workflow automation | small business automation, automate repetitive tasks

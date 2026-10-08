@@ -1,0 +1,11 @@
+# ReplyPilot competitor log — daily competitor analysis for SEO blog.
+# Format: YYYY-MM-DD | competitor (domain) | DA estimate (manual, no paid tools) | top topics | content gaps found
+# DA estimates are rough manual assessments only, not tool-measured values.
+
+2026-10-08 | Hyperleap AI (hyperleap.ai) | DA est 20-30 (new site, 2026) | "Best AI chatbot for small business" comparison pages ranking #1; SMB chatbot buying guides | Self-serving comparisons (ranks own product #1); thin on practical owner setup advice; no niche workflow content
+2026-10-08 | Dante AI (dante-ai.com) | DA est 35-45 (established vendor) | "AI chatbot for home services" guides; "best AI chatbot for small business" articles; pricing-transparent content | Product-led vendor content; generic cross-niche advice; weak on practical owner rollout steps and human-fallback guidance
+2026-10-08 | Replify (replify.ai) | DA est 25-35 (niche fitness vendor) | "Best AI for gyms" buyer guides; fitness studio software comparisons; niche case-study content | Vendor buyer-guide framing throughout; thin on education-first "what to automate first" owner guidance
+2026-10-08 | Nuvaro AI (nuvaro.ai) | DA est 10-20 (small vendor) | WhatsApp automation for car dealerships; AI inventory reels | Flagship content ~645 days old / outdated; purely product-led pages, no educational depth
+2026-10-08 | SiteSpeakAI (sitespeak.ai) | DA est 10-20 (niche micro-vendor) | AI chatbot for Showit/photographer portfolio sites | Thin product pages; no educational owner guides; documentation-style content only
+
+2026-10-08 | Market notes | Giants (Tidio, ManyChat, Intercom, HubSpot, Zendesk, Landbot) dominate "AI chatbot for small business" — too competitive to target directly. Niche "niche + service" keywords (AI chatbot for real estate agents / plumbers / gyms / photographers; WhatsApp automation for car dealerships) rank thin content: press-release spam, syndicated copies, GitHub READMEs, outdated vendor pages — LOW competition. Content gap across all: education-first owner guides (what to automate first, mistakes, human handover, ROI math) vs vendor pitches.

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { posts } from "./blog/posts";
 
 const BASE = "https://replypilot-site.vercel.app";
 
@@ -9,12 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/demo",
     "/blog",
     "/videos",
-    "/blog/whatsapp-automation-restaurants",
-    "/blog/instagram-dm-automation-salons",
-    "/blog/ai-chatbots-dental-clinics",
-    "/blog/ecommerce-store-assistants",
-    "/blog/lead-capture-automation",
-    "/blog/n8n-workflow-automation-small-business",
+    ...posts.map((p) => `/blog/${p.slug}`),
     "/login",
     "/signup",
     "/forgot-password",
