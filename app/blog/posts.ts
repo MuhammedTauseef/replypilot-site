@@ -3,7 +3,8 @@
 export type Block =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
-  | { type: "ul"; items: string[] };
+  | { type: "ul"; items: string[] }
+  | { type: "img"; src: string; alt: string };
 
 export interface Post {
   slug: string;
@@ -29,6 +30,11 @@ export const posts: Post[] = [
       "AI reservation agent",
     ],
     content: [
+      {
+        type: "img",
+        src: "/blog/whatsapp-restaurants.jpg",
+        alt: "Restaurant owner using WhatsApp automation to confirm table bookings instantly",
+      },
       {
         type: "p",
         text: "It's 11:40 PM. A couple is choosing where to eat tomorrow night, and they message your restaurant on WhatsApp: \"Table for two at 8 tomorrow?\" Nobody replies until the morning shift. By then, they've booked somewhere else. This happens every single day in restaurants — and it's the easiest revenue leak to fix.",
@@ -98,6 +104,11 @@ export const posts: Post[] = [
     ],
     content: [
       {
+        type: "img",
+        src: "/blog/instagram-salons.jpg",
+        alt: "Modern beauty salon using Instagram DM automation for appointment bookings",
+      },
+      {
         type: "p",
         text: "Your salon's Instagram is your storefront. A bride-to-be finds your bridal work at 11 PM, loves it, and sends a DM: \"Do you have Saturday open for a trial?\" She's messaging three salons. The one that answers first usually wins the booking. If your DMs sit unread until morning, you're donating clients to faster competitors.",
       },
@@ -163,6 +174,11 @@ posts.push(
     ],
     content: [
       {
+        type: "img",
+        src: "/blog/dental-clinics.jpg",
+        alt: "Modern dental clinic reception with AI chatbot for patient appointments",
+      },
+      {
         type: "p",
         text: "Dental pain doesn't respect office hours. A patient with a throbbing tooth messages your clinic at 1 AM: \"Are you open tomorrow? How much is a root canal?\" If that message waits until morning, the patient has already called the clinic that answered. In healthcare, speed of response isn't just good service — it's the deciding factor.",
       },
@@ -225,6 +241,11 @@ posts.push(
       "reduce cart abandonment AI",
     ],
     content: [
+      {
+        type: "img",
+        src: "/blog/ecommerce.jpg",
+        alt: "E-commerce store on laptop with AI assistant helping shoppers",
+      },
       {
         type: "p",
         text: "Picture a shopper on your store at midnight, torn between two products. They have one question — \"which one is better for me?\" — and nobody to ask. So they close the tab. This quiet abandonment happens thousands of times a day across small e-commerce stores. An AI store assistant exists to be there in that exact moment.",
@@ -292,6 +313,11 @@ posts.push(
     ],
     content: [
       {
+        type: "img",
+        src: "/blog/lead-capture.jpg",
+        alt: "Business leads flowing automatically into a CRM dashboard",
+      },
+      {
         type: "p",
         text: "Your website works 24 hours a day, but your sales process doesn't. A visitor lands at 10 PM, reads your services page, has one question — and finds only a contact form promising a reply \"within 1-2 business days.\" They leave. That visitor was a lead, and your website let them walk away.",
       },
@@ -355,6 +381,11 @@ posts.push(
     ],
     content: [
       {
+        type: "img",
+        src: "/blog/n8n-workflows.jpg",
+        alt: "Small business owner with automated workflow connections on screen",
+      },
+      {
         type: "p",
         text: "Every small business runs on repetitive work: copying lead details into a spreadsheet, sending the same follow-up emails, chasing invoices, updating inventory across three apps. It eats hours every week — hours that should go into customers and growth. n8n is an open-source workflow automation tool that connects your apps and does this busywork for you.",
       },
@@ -416,6 +447,11 @@ posts.push(
     readTime: "6 min read",
     keywords: ["AI chatbot for real estate agents", "real estate lead response", "property viewing booking chatbot"],
     content: [
+      {
+        type: "img",
+        src: "/blog/real-estate.jpg",
+        alt: "Real estate agent showing a house while AI chatbot handles enquiries",
+      },
       { type: "p", text: "A buyer in your area messages three agents on a Sunday evening about the same street. One agent replies within minutes, answers two questions about the flat, and books a viewing for Tuesday. The other two reply on Monday morning — to a buyer who has already picked her agent. This is how house hunting works now: buyers contact several agents at once, and they book viewings with whoever answers first. An AI chatbot for real estate agents changes the mathematics of that race. It never sleeps, never misses a message, and can take a buyer from first hello to a booked viewing in under three minutes. Here is how the workflow actually works, and how to set it up properly." },
       { type: "h2", text: "Why the First Response Wins the Viewing" },
       { type: "p", text: "When a buyer sends an enquiry, they rarely contact just you. Most buyers shortlist two or three agents and compare how quickly each one responds. The agent who replies first sets the tone of the relationship, gets the viewing slot, and often gets the sale. Agents who respond within minutes typically win more viewings than agents who reply the next working day — not because they are better agents, but because they were simply there first. A chatbot closes that gap for you. It does not replace your judgement or your relationships; it makes sure no enquiry ever waits hours for a hello." },
@@ -449,6 +485,11 @@ posts.push(
     readTime: "6 min read",
     keywords: ["AI chatbot for plumbers", "home services lead capture", "AI answering service for contractors"],
     content: [
+      {
+        type: "img",
+        src: "/blog/plumbers.jpg",
+        alt: "Professional plumber at work with AI-powered booking system",
+      },
       { type: "p", text: "Picture this. You are lying on your back under a kitchen sink, both hands wrapped around a wrench, water dripping onto your forehead, and your phone starts ringing in your pocket. It rings out. Twenty minutes later, the voice on the other end says, 'Sorry, we already found someone else.' An AI chatbot for plumbers exists to make that moment a thing of the past. It answers every call and message the second it arrives, even when your hands are full, and it turns the caller into a booked job before they dial your competitor." },
       { type: "h2", text: "Why an AI chatbot for plumbers beats a missed call" },
       { type: "p", text: "Most callers never leave a voicemail. They hear the beep, hang up, and dial the next name in the search results. Every contractor knows the pattern: the job goes to whoever picks up first. A missed call during a two-hour boiler repair is not just a missed call. It is a lost job, a lost referral, and a customer who may never ring again. A traditional answering service only takes messages. A chatbot set up for your trade picks up instantly, speaks in plain language, and steers the conversation toward a booked appointment." },
@@ -482,6 +523,11 @@ posts.push(
     readTime: "6 min read",
     keywords: ["WhatsApp automation for car dealerships", "car dealer lead follow-up", "test drive booking automation"],
     content: [
+      {
+        type: "img",
+        src: "/blog/car-dealerships.jpg",
+        alt: "Car dealership showroom with WhatsApp automation for test drive bookings",
+      },
       { type: "p", text: "A buyer scrolls your listings at 9:40 in the evening, falls in love with a silver SUV, and messages your dealership on WhatsApp: 'Hi, is this still available?' He is ready to talk. If your answer arrives the next morning, he has already messaged two other dealers. WhatsApp automation for car dealerships closes exactly this gap — it replies in seconds, answers the availability question, and starts the test-drive conversation while interest is at its peak, even when your showroom floor is empty." },
       { type: "h2", text: "Why Car Buyers Prefer WhatsApp Over Phone Calls" },
       { type: "p", text: "For most buyers, WhatsApp is where they already live. They send voice notes, photos, and location pins all day. A phone call feels formal and interruptive; an email feels slow. WhatsApp sits in the sweet spot: conversational but not intrusive. Buyers happily send a photo of a small scratch and ask 'can this be fixed before delivery?' — something they would never put in an email. When your dealership meets them on WhatsApp, the enquiry feels easy, so more enquiries actually happen." },
@@ -515,6 +561,11 @@ posts.push(
     readTime: "6 min read",
     keywords: ["AI chatbot for gyms", "fitness studio lead capture", "gym membership chatbot"],
     content: [
+      {
+        type: "img",
+        src: "/blog/gyms.jpg",
+        alt: "Modern gym interior with AI chatbot for membership enquiries",
+      },
       { type: "p", text: "It is 7:40 in the evening and you are mid-spin class, music loud, twenty riders pushing through the last climb. On your website, a visitor has just asked whether there is a trial session this Saturday and what the off-peak membership costs. That enquiry sits unanswered for ninety minutes. By the time you read it, the person has tried the studio down the road. An AI chatbot for gyms exists to fix exactly this moment: the enquiry that arrives while you are coaching." },
       { type: "h2", text: "Why gym leads go cold so fast" },
       { type: "p", text: "Fitness is an impulse-driven purchase. Someone searching for a gym tonight wants to start soon. Their motivation is highest in the minutes after they reach out, and competitors are one click away. Slow replies kill that momentum. The studios that win are the ones that answer first, with something concrete: a tour slot, a trial time, a price. That speed is the real job of an AI chatbot for gyms. It greets the visitor the second they arrive, qualifies them gently, and turns interest into a booked tour before the impulse fades." },
@@ -542,6 +593,11 @@ posts.push(
     readTime: "6 min read",
     keywords: ["AI chatbot for photographers", "photography booking automation", "photographer lead capture"],
     content: [
+      {
+        type: "img",
+        src: "/blog/photographers.jpg",
+        alt: "Professional photographer at a photoshoot with automated booking system",
+      },
       { type: "p", text: "The bride found your website at 11pm on a Saturday night. She has just started planning her wedding, she is excited, and she is sending the same enquiry to five photographers. The trouble is that you are mid-wedding yourself, camera in hand, hours away from touching your phone. An AI chatbot for photographers fixes exactly this gap. It answers her questions the moment she asks, collects the details you need to quote accurately, and offers her a consultation slot - all while you are busy capturing someone else's big day. By the time you check your messages, the booking conversation is already halfway done." },
       { type: "h2", text: "The Enquiry Gap Every Photographer Knows" },
       { type: "p", text: "Most enquiry emails arrive when you cannot reply. Weddings run all day, portrait shoots fill golden hour, and studio sessions block out whole afternoons. Meanwhile your next client is browsing portfolios at lunch, on the train, or late at night, and attention moves fast. If three photographers reply quickly and you reply the next morning, you are already last in the queue. This is not a criticism of your work ethic - it is a structural problem with the job. When your hands are on a camera, your inbox is on its own. Closing the enquiry gap means being responsive even when you physically cannot respond." },

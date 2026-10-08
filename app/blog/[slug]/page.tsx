@@ -41,6 +41,23 @@ function renderBlock(block: Block, i: number) {
           ))}
         </ul>
       );
+    case "img":
+      return (
+        <figure key={i} style={{ margin: "32px 0" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={block.src}
+            alt={block.alt}
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: 12,
+              display: "block",
+            }}
+            loading="lazy"
+          />
+        </figure>
+      );
     default:
       return <p key={i}>{block.text}</p>;
   }
