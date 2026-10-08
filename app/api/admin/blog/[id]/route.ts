@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { posts as FALLBACK_POSTS } from "@/app/blog/posts";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -33,6 +34,26 @@ export async function GET(
     .eq("id", id)
     .single();
   if (error || !data) return NextResponse.json({ error: "Not found." }, { status: 404 });
+
+  // If DB content is empty/placeholder, enrich with fallback from posts.ts
+  // so the admin editor always shows the full article.
+  const contentLen = JSON.stringify(data.content || []).length;
+  if (contentLen < 500) {
+    const fallback = FALLBACK_POSTS.find((p) => p.slug === data.slug);
+    if (fallback) {
+      return NextResponse.json({
+        post: {
+          ...data,
+          content: fallback.content,
+          keywords:
+            Array.isArray(data.keywords) && data.keywords.length > 0
+              ? data.keywords
+              : fallback.keywords,
+        },
+      });
+    }
+  }
+
   return NextResponse.json({ post: data });
 }
 
