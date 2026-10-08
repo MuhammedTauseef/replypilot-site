@@ -5,12 +5,14 @@ import PageHeader from "@/components/PageHeader";
 export const metadata: Metadata = {
   title: "Demo Videos — AI Agents in Action | ReplyPilot",
   description:
-    "Watch ReplyPilot's AI sales agents in action: 30-second demos for boutiques, restaurants, salons, real estate, dental clinics, and gyms — WhatsApp, Instagram, website, and e-commerce automation.",
+    "Watch ReplyPilot's AI sales agents in action: 30-second demos for boutiques, restaurants, salons, real estate, dental clinics, gyms, and blogs — WhatsApp, Instagram, website, and e-commerce automation.",
   keywords: [
     "AI agent demo videos",
     "WhatsApp automation demo",
     "Instagram DM automation demo",
     "AI chatbot demo",
+    "website chatbot for blogs",
+    "guest posting automation",
     "ReplyPilot",
   ],
 };
@@ -76,6 +78,15 @@ const videos: DemoVideo[] = [
     title: "Turn Browsers Into Members",
     description:
       "Meet Bolt — a demo AI store assistant for gyms. It compares membership plans, matches supplements to fitness goals, and guides shoppers to checkout.",
+  },
+  {
+    file: "/videos/demo-blog-website.mp4",
+    poster: "/videos/demo-blog-website.png",
+    niche: "Blog & Content",
+    channel: "Website chatbot",
+    title: "Never Miss Another Contributor",
+    description:
+      "Meet Bridge — a demo AI website chatbot for blog submissions. It answers guest-posting pricing, dofollow-link policy, and word-count questions instantly, filters off-topic pitches, and captures contributor details while you sleep. Watch how a 24/7 AI chatbot turns your submission page into a contributor pipeline.",
   },
 ];
 
