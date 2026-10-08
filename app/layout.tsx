@@ -40,6 +40,31 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem("replypilot-theme");if(!t){t="dark"}document.documentElement.dataset.theme=t}catch(e){}})();`,
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "ReplyPilot",
+                  url: "https://replypilot-site.vercel.app/",
+                  description:
+                    "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses.",
+                  founder: { "@type": "Person", name: "Muhammad Tauseef" },
+                  sameAs: [],
+                },
+                {
+                  "@type": "WebSite",
+                  name: "ReplyPilot",
+                  url: "https://replypilot-site.vercel.app/",
+                  inLanguage: "en",
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>

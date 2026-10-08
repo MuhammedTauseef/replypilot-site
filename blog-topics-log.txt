@@ -8,3 +8,8 @@
 2026-10-08 | ecommerce-store-assistants | AI store assistant | e-commerce chatbot, reduce cart abandonment AI
 2026-10-08 | lead-capture-automation | lead capture automation | website lead generation AI, after-hours lead capture
 2026-10-08 | n8n-workflow-automation-small-business | n8n workflow automation | small business automation, automate repetitive tasks
+2026-10-08 | ai-chatbot-real-estate-agents | AI chatbot for real estate agents | real estate lead response, property viewing booking chatbot
+2026-10-08 | ai-chatbot-plumbers-home-services | AI chatbot for plumbers | home services lead capture, AI answering service for contractors
+2026-10-08 | whatsapp-automation-car-dealerships | WhatsApp automation for car dealerships | car dealer lead follow-up, test drive booking automation
+2026-10-08 | ai-chatbot-gyms-fitness-studios | AI chatbot for gyms | fitness studio lead capture, gym membership chatbot
+2026-10-08 | ai-chatbot-photographers | AI chatbot for photographers | photography booking automation, photographer lead capture
