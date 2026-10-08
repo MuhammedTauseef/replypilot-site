@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ReplyPilot — AI Automation by Muhammad Tauseef",
   description:
-    "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses. Get your AI agent for $249. Free custom demo.",
+    "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses. Free custom demo.",
   verification: {
     google: "jXx7jWarPskM3UN7e2YihwpzUjZAzKJim_fvKRz-kw8",
   },
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ReplyPilot — AI Automation by Muhammad Tauseef",
     description:
-      "Turn your website into an AI sales & support agent. Get your AI agent for $249.",
+      "Turn your website into an AI sales & support agent. Free custom demo.",
     type: "website",
   },
 };
