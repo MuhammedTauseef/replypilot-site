@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/LogoutButton";
+import DeleteButton from "@/components/DeleteButton";
 
 type Lead = {
   id: string;
@@ -73,6 +74,7 @@ function LeadsTable({ rows }: { rows: Lead[] }) {
           <th>Email</th>
           <th>Business</th>
           <th>Message</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -87,6 +89,9 @@ function LeadsTable({ rows }: { rows: Lead[] }) {
             </td>
             <td>{l.business_type || "—"}</td>
             <td className="msg">{l.message}</td>
+            <td>
+              <DeleteButton type="lead" id={l.id} label={l.name} />
+            </td>
           </tr>
         ))}
       </tbody>
@@ -112,6 +117,7 @@ function BookingsTable({ rows }: { rows: Booking[] }) {
           <th>Email</th>
           <th>Phone</th>
           <th>Status</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -128,6 +134,9 @@ function BookingsTable({ rows }: { rows: Booking[] }) {
             </td>
             <td>{b.phone || "—"}</td>
             <td>{b.status}</td>
+            <td>
+              <DeleteButton type="booking" id={b.id} label={b.name} />
+            </td>
           </tr>
         ))}
       </tbody>
