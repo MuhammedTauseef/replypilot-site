@@ -10,7 +10,7 @@ import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS } from "@/lib/demos";
 import { getPublishedDemos } from "@/lib/demos-db";
-import { getPublishedFaqs } from "@/lib/settings";
+import { getPublishedFaqs, getSetting } from "@/lib/settings";
 
 const SERVICES = [
   {
@@ -69,6 +69,9 @@ const ENGAGE = [
 export default async function Home() {
   const allDemos = await getPublishedDemos();
   const faqs = await getPublishedFaqs();
+  const heroSub = await getSetting("hero_sub", "Practical AI systems that turn customer interest into action.");
+  const announcement = await getSetting("announcement_bar", "");
+  const contactEmail = await getSetting("contact_email", "muhammadtauseef714@gmail.com");
   const demosByGroup = (group: "website" | "whatsapp" | "instagram") =>
     allDemos.filter((d) => d.group === group);
   return (
@@ -76,6 +79,12 @@ export default async function Home() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
+
+      {announcement && (
+        <div style={{ background: "#f59e0b", color: "#111827", textAlign: "center", padding: "8px 16px", fontSize: ".9rem", fontWeight: 600 }}>
+          {announcement}
+        </div>
+      )}
 
       <header className="site-header">
         <div className="wrap">
@@ -112,7 +121,7 @@ export default async function Home() {
                 <span className="dot">.</span>
               </h1>
               <p className="hero-sub">
-                Practical AI systems that turn customer interest into action.
+                {heroSub}
               </p>
               <p className="hero-lede">
                 I&rsquo;m Tauseef, an AI automation specialist. I build practical
@@ -574,7 +583,7 @@ export default async function Home() {
                   <span>
                     <strong>Email</strong>
                     <br />
-                    muhammadtauseef714@gmail.com
+                    {contactEmail}
                   </span>
                 </li>
                 <li>
