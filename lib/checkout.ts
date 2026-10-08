@@ -16,7 +16,7 @@ export const WHOP_CHECKOUT = {
    * wiring this link into the site — otherwise buyers get charged monthly.
    */
   deposit:
-    "https://whop.com/replypilot-site/replypilot-build-deposit/",
+    "https://whop.com/replypilot-site/replypilot-site-ff/",
   /** ReplyPilot Build — Go-Live: one-time $124 (50% on approval) */
   goLive:
     "https://whop.com/replypilot-site/replypilot-build-go-live",
