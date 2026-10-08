@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 export interface DemoVideo {
   id: string;
@@ -12,7 +12,8 @@ export interface DemoVideo {
 
 /** Published demo videos, in sort order (public read). */
 export async function getPublishedVideos(): Promise<DemoVideo[]> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("videos")
     .select("id, file, poster, niche, channel, title, description")

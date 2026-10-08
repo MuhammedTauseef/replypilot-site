@@ -9,6 +9,7 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+
 export async function generateStaticParams() {
   const posts = await getPublishedPosts();
   return posts.map((p) => ({ slug: p.slug }));

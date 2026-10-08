@@ -9,6 +9,7 @@ import PriceValue from "@/components/PriceValue";
  * portfolio's individual demo pages. Opens the chat pre-loaded as that
  * business's AI assistant, with a features rundown above it.
  */
+
 export async function generateStaticParams() {
   const demos = await getPublishedDemos();
   return demos.map((d) => ({ slug: d.slug }));

@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
+import { posts as FALLBACK_POSTS } from "@/app/blog/posts";
 
 export type Block =
   | { type: "p"; text: string }
@@ -55,27 +56,55 @@ function enrich(row: Record<string, unknown>): DbPost {
   };
 }
 
-/** All published posts, newest first (public read). */
+/** Convert hardcoded post to DbPost shape (build-time fallback). */
+function fallbackToDbPost(p: (typeof FALLBACK_POSTS)[number], i: number): DbPost {
+  // Fixed date for build-time determinism (no new Date() in prerender)
+  const fixedDate = "2026-10-08T00:00:00.000Z";
+  return {
+    id: `fallback-${i}`,
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    content: p.content as Block[],
+    keywords: p.keywords,
+    cover_image: null,
+    published: true,
+    created_at: fixedDate,
+    updated_at: fixedDate,
+    date: p.date,
+    readTime: p.readTime,
+  };
+}
+
+/** All published posts, newest first (public read). Falls back to hardcoded posts if DB unavailable. */
 export async function getPublishedPosts(): Promise<DbPost[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("published", true)
-    .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data.map(enrich);
+  const supabase = createPublicClient();
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("published", true)
+      .order("created_at", { ascending: false });
+    if (!error && data && data.length > 0) return data.map(enrich);
+  }
+  // Fallback: hardcoded posts (ensures build succeeds and site works pre-seed)
+  return FALLBACK_POSTS.map(fallbackToDbPost);
 }
 
 /** Single published post by slug (public read). */
 export async function getPostBySlug(slug: string): Promise<DbPost | null> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .eq("published", true)
-    .single();
-  if (error || !data) return null;
-  return enrich(data);
+  const supabase = createPublicClient();
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .eq("published", true)
+      .single();
+    if (!error && data) return enrich(data);
+  }
+  // Fallback: hardcoded posts
+  const p = FALLBACK_POSTS.find((x) => x.slug === slug);
+  if (!p) return null;
+  return fallbackToDbPost(p, FALLBACK_POSTS.indexOf(p));
 }

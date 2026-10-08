@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import VideoFormFields, { emptyVideoForm, type VideoForm } from "@/components/VideoForm";
 
 /** /admin/videos/[id] — edit a video. */
-export default function EditVideoPage() {
+function EditVideoForm() {
   const router = useRouter();
   const { id } = useParams() as { id: string };
   const [loading, setLoading] = useState(true);
@@ -74,5 +75,14 @@ export default function EditVideoPage() {
       {error && <p style={{ color: "#b3261e" }}>{error}</p>}
       {initial && <VideoFormFields initial={initial} onSave={onSave} saving={saving} />}
     </main>
+  );
+}
+
+/** Wrapper with Suspense boundary for static prerendering. */
+export default function EditVideoPage() {
+  return (
+    <Suspense fallback={<main className="admin-wrap"><p>Loading…</p></main>}>
+      <EditVideoForm />
+    </Suspense>
   );
 }

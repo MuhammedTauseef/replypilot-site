@@ -1,11 +1,12 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { DemoPersona } from "@/lib/demos";
 import { DEMOS as FALLBACK_DEMOS } from "@/lib/demos";
 
 /** Published demos from DB, in sort order. Falls back to hardcoded list if DB is empty/unavailable. */
 export async function getPublishedDemos(): Promise<DemoPersona[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
+    if (!supabase) return FALLBACK_DEMOS;
     const { data, error } = await supabase
       .from("demos")
       .select("tag, name, slug, text, group_name, business, blurb, welcome")

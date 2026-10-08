@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import BlogEditor, { type Block } from "@/components/BlogEditor";
 
 /** /admin/blog/[id] — edit an existing post. */
-export default function EditPostPage() {
+function EditPostForm() {
   const router = useRouter();
   const { id } = useParams() as { id: string };
   const [loading, setLoading] = useState(true);
@@ -106,5 +107,14 @@ export default function EditPostPage() {
       <h3>Content</h3>
       {blocks !== null && <BlogEditor initial={blocks} onSave={onSave} saving={saving} />}
     </main>
+  );
+}
+
+/** Wrapper with Suspense boundary for static prerendering. */
+export default function EditPostPage() {
+  return (
+    <Suspense fallback={<main className="admin-wrap"><p>Loading…</p></main>}>
+      <EditPostForm />
+    </Suspense>
   );
 }

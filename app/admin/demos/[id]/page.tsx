@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import DemoFormFields, { emptyDemoForm, type DemoForm } from "@/components/DemoForm";
 
 /** /admin/demos/[id] — edit a demo agent. */
-export default function EditDemoPage() {
+function EditDemoForm() {
   const router = useRouter();
   const { id } = useParams() as { id: string };
   const [loading, setLoading] = useState(true);
@@ -76,5 +77,14 @@ export default function EditDemoPage() {
       {error && <p style={{ color: "#b3261e" }}>{error}</p>}
       {initial && <DemoFormFields initial={initial} onSave={onSave} saving={saving} isNew={false} />}
     </main>
+  );
+}
+
+/** Wrapper with Suspense boundary for static prerendering. */
+export default function EditDemoPage() {
+  return (
+    <Suspense fallback={<main className="admin-wrap"><p>Loading…</p></main>}>
+      <EditDemoForm />
+    </Suspense>
   );
 }

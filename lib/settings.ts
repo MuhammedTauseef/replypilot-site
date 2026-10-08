@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 export interface Faq {
   question: string;
@@ -22,7 +22,8 @@ export async function getPublishedFaqs(): Promise<Faq[]> {
     },
   ];
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
+    if (!supabase) return fallback;
     const { data, error } = await supabase
       .from("faqs")
       .select("question, answer")
@@ -38,7 +39,8 @@ export async function getPublishedFaqs(): Promise<Faq[]> {
 /** Get a site setting value by key, with fallback. */
 export async function getSetting(key: string, fallback: string): Promise<string> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
+    if (!supabase) return fallback;
     const { data } = await supabase
       .from("site_settings")
       .select("value")
