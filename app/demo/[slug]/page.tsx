@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DEMOS, getDemoBySlug } from "@/lib/demos";
+import { getPublishedDemos, getDemoBySlugDb } from "@/lib/demos-db";
 import DemoPlayground from "@/components/DemoPlayground";
 import PriceValue from "@/components/PriceValue";
 
@@ -9,13 +9,14 @@ import PriceValue from "@/components/PriceValue";
  * portfolio's individual demo pages. Opens the chat pre-loaded as that
  * business's AI assistant, with a features rundown above it.
  */
-export function generateStaticParams() {
-  return DEMOS.map((d) => ({ slug: d.slug }));
+export async function generateStaticParams() {
+  const demos = await getPublishedDemos();
+  return demos.map((d) => ({ slug: d.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const demo = getDemoBySlug(slug);
+  const demo = await getDemoBySlugDb(slug);
   return {
     title: demo ? `${demo.name} — Live AI Demo | ReplyPilot` : "Demo | ReplyPilot",
     description: demo
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function DemoDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const demo = getDemoBySlug(slug);
+  const demo = await getDemoBySlugDb(slug);
   if (!demo) notFound();
 
   return (

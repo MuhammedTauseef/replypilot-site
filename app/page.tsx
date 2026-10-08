@@ -8,7 +8,8 @@ import PriceValue from "@/components/PriceValue";
 import CheckoutButton from "@/components/CheckoutButton";
 import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
-import { DEMO_GROUPS, demosByGroup } from "@/lib/demos";
+import { DEMO_GROUPS } from "@/lib/demos";
+import { getPublishedDemos } from "@/lib/demos-db";
 
 const SERVICES = [
   {
@@ -79,7 +80,10 @@ const FAQS = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const allDemos = await getPublishedDemos();
+  const demosByGroup = (group: "website" | "whatsapp" | "instagram") =>
+    allDemos.filter((d) => d.group === group);
   return (
     <>
       <a className="skip-link" href="#main">
