@@ -107,6 +107,14 @@ async function DashboardContent() {
           >
             Request your AI agent
           </Link>
+          <div style={{ marginTop: 12 }}>
+            <Link
+              href="/dashboard/client/billing"
+              style={{ color: "#1b2653", fontWeight: 700, fontSize: ".92rem", textDecoration: "underline" }}
+            >
+              💳 Billing — pay $124 / $99 plan
+            </Link>
+          </div>
         </div>
       </div>
 
