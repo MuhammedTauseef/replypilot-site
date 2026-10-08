@@ -423,6 +423,9 @@ export default function AdminPage() {
           <a href="/admin/settings" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             Settings →
           </a>
+          <a href="/admin/pages" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            Pages →
+          </a>
           <a href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             ← Home
           </a>
