@@ -420,6 +420,9 @@ export default function AdminPage() {
           <a href="/admin/demos" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             Demos →
           </a>
+          <a href="/admin/settings" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            Settings →
+          </a>
           <a href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             ← Home
           </a>

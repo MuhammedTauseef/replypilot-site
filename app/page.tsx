@@ -10,6 +10,7 @@ import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS } from "@/lib/demos";
 import { getPublishedDemos } from "@/lib/demos-db";
+import { getPublishedFaqs } from "@/lib/settings";
 
 const SERVICES = [
   {
@@ -65,23 +66,9 @@ const ENGAGE = [
   { t: "50% on go-live", s: "when it's working" },
 ];
 
-const FAQS = [
-  {
-    q: "Do I need technical skills?",
-    a: "No. I handle the build, setup, and testing, then show you the parts you need to know in plain language.",
-  },
-  {
-    q: "What if customers prefer humans?",
-    a: "Human handoff is built in. The agent handles routine questions and passes the conversation to you or your team when a customer wants a person — or the situation needs judgment.",
-  },
-  {
-    q: "What does the monthly care cover?",
-    a: "Hosting of the agent, updates, and support — that's my service fee. Your AI API usage and WhatsApp Business messaging charges (if used) are separate and billed directly by those providers, and I'll estimate them for you during the free demo.",
-  },
-];
-
 export default async function Home() {
   const allDemos = await getPublishedDemos();
+  const faqs = await getPublishedFaqs();
   const demosByGroup = (group: "website" | "whatsapp" | "instagram") =>
     allDemos.filter((d) => d.group === group);
   return (
@@ -554,10 +541,10 @@ export default async function Home() {
               </p>
             </div>
             <div className="faq">
-              {FAQS.map((f) => (
-                <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+              {faqs.map((f) => (
+                <details key={f.question}>
+                  <summary>{f.question}</summary>
+                  <p>{f.answer}</p>
                 </details>
               ))}
             </div>
