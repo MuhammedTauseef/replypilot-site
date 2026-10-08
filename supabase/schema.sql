@@ -91,6 +91,13 @@ create policy "leads_select_own"
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_user_id_idx on public.leads (user_id);
 
+-- Admins may delete leads (dashboard Delete button). Without this, deletes
+-- silently affect 0 rows under RLS and the row "comes back" after reload.
+drop policy if exists "leads_delete_admin" on public.leads;
+create policy "leads_delete_admin"
+  on public.leads for delete to authenticated
+  using (public.is_admin());
+
 -- Where the lead came from ('form' or 'chat'). Added after the fact; safe to re-run.
 alter table public.leads add column if not exists source text;
 
@@ -127,6 +134,12 @@ create policy "bookings_select_admin"
 
 create index if not exists bookings_slot_start_idx on public.bookings (slot_start);
 create index if not exists bookings_created_at_idx on public.bookings (created_at desc);
+
+-- Admins may delete bookings (dashboard Delete button). Same RLS note as leads.
+drop policy if exists "bookings_delete_admin" on public.bookings;
+create policy "bookings_delete_admin"
+  on public.bookings for delete to authenticated
+  using (public.is_admin());
 
 -- ============================================================
 -- 4. MAKE YOURSELF ADMIN (run after you sign up, replace the email)

@@ -38,8 +38,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Need type (lead|booking) and id." }, { status: 400 });
   }
 
-  const { error } = await supabase.from(table).delete().eq("id", id);
-  if (error) {
+  // count:"exact" guards against silent RLS no-ops: without a delete policy,
+  // Supabase returns success with 0 rows deleted and the row "comes back".
+  const { error, count } = await supabase
+    .from(table)
+    .delete({ count: "exact" })
+    .eq("id", id);
+  if (error || count === 0) {
     return NextResponse.json({ error: "Delete failed." }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
