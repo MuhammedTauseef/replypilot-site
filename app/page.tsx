@@ -111,36 +111,34 @@ export default async function Home() {
       </header>
 
       <main id="main">
-        {/* HERO */}
-        <section className="hero" id="top" aria-labelledby="hero-title">
-          <div className="wrap hero-inner hero-grid">
-            <div className="hero-copy">
-              <span className="eyebrow">Muhammad Tauseef · AI automation specialist</span>
-              <h1 className="hero-statement" id="hero-title">
-                <RotatingWord />
-                <span className="dot">.</span>
-              </h1>
-              <p className="hero-sub">
-                {heroSub}
-              </p>
-              <p className="hero-lede">
-                I&rsquo;m Tauseef, an AI automation specialist. I build practical
-                sales agents, customer-response systems, and workflows that help
-                growing businesses reply faster — and convert more enquiries.
-              </p>
-              <div className="hero-actions">
-                <a className="btn btn-gold" href="#contact">
-                  Get Your AI Agent<PriceValue> — $249</PriceValue>{" "}
-                  <span className="arrow" aria-hidden="true">→</span>
-                </a>
-                <a className="btn btn-ghost" href="/demo">
-                  Try Live Demo
-                </a>
-              </div>
-              <p className="hero-price-note">
-                <PriceValue>$249 one-time setup · $99/month care · </PriceValue>free custom demo first
-              </p>
+        {/* HERO — v2 branded (navy/gold, animated, mobile-first) */}
+        <section className="hero-v2" id="top" aria-labelledby="hero-v2-title">
+          <div className="hero-v2-bubble hero-v2-b1" aria-hidden="true" />
+          <div className="hero-v2-bubble hero-v2-b2" aria-hidden="true" />
+          <div className="hero-v2-bubble hero-v2-b3" aria-hidden="true" />
+          <div className="hero-v2-bubble hero-v2-b4" aria-hidden="true" />
+          <div className="wrap hero-v2-inner">
+            <span className="hero-v2-eyebrow">AI Automation Studio</span>
+            <h1 className="hero-v2-title" id="hero-v2-title">
+              Every customer answered in <span className="hero-v2-gold">5 seconds</span> — 24/7, no staff needed.
+            </h1>
+            <p className="hero-v2-sub">
+              ReplyPilot builds AI sales agents for your website, WhatsApp and
+              Instagram. They reply instantly, book appointments and capture
+              leads while you sleep.
+            </p>
+            <div className="hero-v2-actions">
+              <a className="hero-v2-btn hero-v2-btn-gold" href="#contact">
+                Get Free Demo <span aria-hidden="true">→</span>
+              </a>
+              <a className="hero-v2-btn hero-v2-btn-ghost" href="/demo">
+                See Live Demos
+              </a>
             </div>
+            <p className="hero-v2-trust">
+              13 live demos <span className="hero-v2-dot">•</span> 48-hour
+              delivery <span className="hero-v2-dot">•</span> Free custom demo
+            </p>
           </div>
         </section>
 

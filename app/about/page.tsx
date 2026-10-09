@@ -106,4 +106,4 @@ export default async function AboutPage() {
       </section>
     </main>
   );
-              }
+}

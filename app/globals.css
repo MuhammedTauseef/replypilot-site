@@ -497,4 +497,29 @@ footer{background:var(--navy-2);color:#aeb9d4;padding:64px 0 34px}
 @media (max-width:900px){.video-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.video-grid{grid-template-columns:1fr}.video-card video{max-height:520px}}
 
-/* cache-bust 2026-10-09-0820 */
+/* HERO V2 — branded navy/gold, animated, mobile-first (scoped: hero-v2-*) */
+.hero-v2{position:relative;overflow:hidden;text-align:center;
+background:linear-gradient(135deg,#060b18 0%,#0a1428 40%,#0d1b33 70%,#060b18 100%);
+background-size:300% 300%;animation:heroV2Bg 14.7s ease-in-out infinite;color:#f2f5fa}
+@keyframes heroV2Bg{0%,100%{background-position:0% 40%}50%{background-position:100% 60%}}
+.hero-v2-bubble{position:absolute;border-radius:16px;background:rgba(212,175,55,.07);
+border:1px solid rgba(212,175,55,.16);animation:heroV2Float 9.3s ease-in-out infinite;pointer-events:none}
+.hero-v2-b1{width:110px;height:42px;top:14%;left:7%}
+.hero-v2-b2{width:130px;height:46px;top:22%;right:8%;animation-delay:2.1s}
+.hero-v2-b3{width:90px;height:34px;top:68%;left:11%;animation-delay:4.4s}
+.hero-v2-b4{width:100px;height:38px;top:70%;right:12%;animation-delay:1.3s}
+@keyframes heroV2Float{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-18px);opacity:.9}}
+.hero-v2-inner{position:relative;z-index:2;max-width:680px;margin:0 auto;
+padding:clamp(64px,9vw,110px) 20px clamp(52px,7vw,84px)}
+.hero-v2-eyebrow{display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;
+color:#d4af37;border:1px solid rgba(212,175,55,.35);padding:7px 16px;border-radius:100px;margin-bottom:24px}
+.hero-v2-title{font-size:clamp(1.9rem,6vw,3.4rem);line-height:1.14;font-weight:800;
+color:#f2f5fa;margin:0 0 18px;letter-spacing:-.5px}
+.hero-v2-gold{color:#d4af37}
+.hero-v2-sub{font-size:clamp(1rem,2.8vw,1.2rem);color:#a9b6cc;line-height:1.6;max-width:520px;margin:0 auto 32px}
+.hero-v2-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.hero-v2-btn{display:inline-block;padding:16px 34px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none}
+.hero-v2-btn-gold{background:linear-gradient(135deg,#d4af37,#b8912a);color:#0a0f1c}
+.hero-v2-btn-ghost{border:1.5px solid rgba(255,255,255,.25);color:#f2f5fa}
+.hero-v2-trust{font-size:13px;color:#7d8aa3;letter-spacing:.5px;margin:0}
+.hero-v2-dot{color:#d4af37;margin:0 6px}
