@@ -85,7 +85,17 @@ export async function getPublishedPosts(): Promise<DbPost[]> {
       .select("*")
       .eq("published", true)
       .order("created_at", { ascending: false });
-    if (!error && data && data.length > 0) return data.map(enrich);
+    if (!error && data && data.length > 0) {
+      // For posts with placeholder/short DB content, substitute full fallback content
+      return data.map((p) => {
+        const len = JSON.stringify((p as { content?: unknown }).content || "").length;
+        if (len >= 500) return enrich(p);
+        // Find matching fallback post by slug
+        const fb = FALLBACK_POSTS.find((x) => x.slug === (p as { slug?: string }).slug);
+        if (fb) return fallbackToDbPost(fb, FALLBACK_POSTS.indexOf(fb));
+        return enrich(p);
+      });
+    }
   }
   // Fallback: hardcoded posts (ensures build succeeds and site works pre-seed)
   return FALLBACK_POSTS.map(fallbackToDbPost);
