@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/client";
  * Auth-aware: signed-in users see Dashboard/Admin + Sign out instead of Log in.
  */
 const BASE_LINKS: { label: string; href: string; external?: boolean }[] = [
-  { label: "About", href: "#about" },
+  { label: "About", href: "/about", external: true },
   { label: "Services", href: "#services" },
   { label: "Live demos", href: "#demos" },
   { label: "Demo videos", href: "/videos" },
