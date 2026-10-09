@@ -101,9 +101,13 @@ export async function getPostBySlug(slug: string): Promise<DbPost | null> {
       .eq("slug", slug)
       .eq("published", true)
       .single();
-    if (!error && data) return enrich(data);
+    if (!error && data) {
+      // If DB content is short/placeholder, use full fallback content
+      const contentLen = JSON.stringify(data.content || "").length;
+      if (contentLen >= 500) return enrich(data);
+    }
   }
-  // Fallback: hardcoded posts
+  // Fallback: hardcoded posts (full content)
   const p = FALLBACK_POSTS.find((x) => x.slug === slug);
   if (!p) return null;
   return fallbackToDbPost(p, FALLBACK_POSTS.indexOf(p));
