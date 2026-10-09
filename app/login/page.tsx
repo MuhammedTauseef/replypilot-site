@@ -103,7 +103,20 @@ export default function LoginPage() {
     setResent(true);
   }
 
+  /**
+   * Google OAuth is NOT yet configured in Supabase (Auth → Providers).
+   * Until it is, the button is disabled with an honest "coming soon" state —
+   * never a fake login that errors on click.
+   * To enable: set GOOGLE_OAUTH_ENABLED = true AND enable the Google
+   * provider in the Supabase dashboard.
+   */
+  const GOOGLE_OAUTH_ENABLED = false;
+
   async function signInWithGoogle() {
+    if (!GOOGLE_OAUTH_ENABLED) {
+      setError("Google sign-in isn't available yet — please use email and password.");
+      return;
+    }
     setError(null);
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
@@ -125,21 +138,24 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={signInWithGoogle}
+          disabled={!GOOGLE_OAUTH_ENABLED}
+          title={GOOGLE_OAUTH_ENABLED ? "Sign in with Google" : "Google sign-in coming soon"}
           style={{
             width: "100%",
             padding: "12px",
             borderRadius: 10,
             border: "1px solid #dadce0",
-            background: "#fff",
-            color: "#3c4043",
+            background: GOOGLE_OAUTH_ENABLED ? "#fff" : "#f3f4f6",
+            color: GOOGLE_OAUTH_ENABLED ? "#3c4043" : "#9ca3af",
             fontSize: ".95rem",
             fontWeight: 600,
-            cursor: "pointer",
+            cursor: GOOGLE_OAUTH_ENABLED ? "pointer" : "not-allowed",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: 10,
             marginBottom: 16,
+            opacity: GOOGLE_OAUTH_ENABLED ? 1 : 0.75,
           }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
@@ -149,6 +165,9 @@ export default function LoginPage() {
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
           </svg>
           Continue with Google
+          {!GOOGLE_OAUTH_ENABLED && (
+            <span style={{ fontSize: ".75rem", fontWeight: 400 }}>(coming soon)</span>
+          )}
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
           <div style={{ flex: 1, height: 1, background: "#e5e7eb" }} />
