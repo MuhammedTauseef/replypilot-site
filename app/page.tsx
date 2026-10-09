@@ -92,7 +92,7 @@ export default async function Home() {
             <span className="brand-mark">R</span>REPLYPILOT
           </a>
           <nav className="site-nav" aria-label="Primary navigation">
-            <a className="nav-link" href="#about">About</a>
+            <a className="nav-link" href="/about" target="_blank" rel="noopener">About</a>
             <a className="nav-link" href="#services">Services</a>
             <a className="nav-link" href="#demos">Demos</a>
             <a className="nav-link" href="/videos">Videos</a>
@@ -623,7 +623,7 @@ export default async function Home() {
             </div>
             <div className="foot-col">
               <h4>Explore</h4>
-              <a href="#about">About</a>
+              <a href="/about" target="_blank" rel="noopener">About</a>
               <a href="#services">Services</a>
               <a href="#demos">Live demos</a>
               <a href="/videos">Demo videos</a>
