@@ -250,18 +250,22 @@ export async function POST(request: NextRequest) {
     };
 
     // --- Match buyer email to a client (best effort) ---
+    // OPTIMIZED: direct indexed lookup instead of listUsers() (was causing 5s+ webhook latency)
     let clientId: string | null = null;
     if (buyerEmail) {
       // clients.user_id -> auth.users; we resolve via service role
-      const { data: users } = await supabase.auth.admin.listUsers();
-      const match = (users?.users || []).find(
-        (u: any) => (u.email || "").toLowerCase() === buyerEmail.toLowerCase()
-      );
-      if (match) {
+      // Direct query on auth.users is O(1) vs listUsers() which is O(n)
+      const { data: authUser } = await supabase
+        .schema("auth")
+        .from("users")
+        .select("id")
+        .ilike("email", buyerEmail)
+        .maybeSingle();
+      if (authUser) {
         const { data: client } = await supabase
           .from("clients")
           .select("id")
-          .eq("user_id", match.id)
+          .eq("user_id", authUser.id)
           .maybeSingle();
         if (client) clientId = client.id;
       }
