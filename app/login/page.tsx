@@ -104,13 +104,12 @@ export default function LoginPage() {
   }
 
   /**
-   * Google OAuth is NOT yet configured in Supabase (Auth → Providers).
-   * Until it is, the button is disabled with an honest "coming soon" state —
-   * never a fake login that errors on click.
-   * To enable: set GOOGLE_OAUTH_ENABLED = true AND enable the Google
-   * provider in the Supabase dashboard.
+   * Google OAuth is configured: Supabase Auth → Google provider is ENABLED
+   * with a valid Client ID/Secret, callback URL registered, and the user
+   * added as a test user (app is in Testing publishing status).
+   * To disable: set GOOGLE_OAUTH_ENABLED = false.
    */
-  const GOOGLE_OAUTH_ENABLED = false;
+  const GOOGLE_OAUTH_ENABLED = true;
 
   async function signInWithGoogle() {
     if (!GOOGLE_OAUTH_ENABLED) {
