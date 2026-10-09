@@ -80,10 +80,16 @@ const PLAN_LABELS: Record<string, string> = {
   care_plan: "Care Plan ($99/month)",
 };
 
-/** Derive the HMAC key from a `ws_...` secret per Standard Webhooks spec. */
+/**
+ * Derive the HMAC key from the `ws_...` webhook signing secret.
+ *
+ * Whop signs webhooks with the LITERAL BYTES of the full secret string
+ * (e.g. `ws_` + 64 hex chars), NOT a base64-decoded derivation.
+ * Verified against Whop's official docs ("The key is your `ws_...` secret")
+ * and the whopsdk-ruby/python signature-verification fixes (2026-08-22).
+ */
 function deriveKey(secret: string): Buffer {
-  const withoutPrefix = secret.startsWith("ws_") ? secret.slice(3) : secret;
-  return Buffer.from(withoutPrefix, "base64");
+  return Buffer.from(secret, "utf8");
 }
 
 function verifySignature(
