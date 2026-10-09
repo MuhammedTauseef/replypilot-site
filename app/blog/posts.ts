@@ -991,7 +991,7 @@ posts.push(
       { type: "p", text: "Every chat is market research you never had to pay for. Read a month of transcripts and patterns jump out: the same question about travel fees asked eleven times means your pricing page needs a travel section. Ten people asking whether you offer videography is a service worth adding. A question you had never thought to answer on your FAQ belongs on your homepage. Most photographers guess what clients care about; your chat logs tell you directly. Review them monthly, update your website and packages based on what you find, and the chatbot gets smarter too, because every new answer you add becomes something it can handle next time. Gyms mine their chat logs the same way \u2014 our guide to [AI chatbots for gyms](/blog/ai-chatbot-gyms-fitness-studios) shows the fitness-studio version." },
       { type: "p", text: "You became a photographer to shoot, not to answer the same five questions in your inbox every night. An AI chatbot for photographers handles the repetitive work - instant answers, qualification, and consultation booking - so your energy goes into the craft and the clients who are ready to hire you. If you want to see what this looks like on your own website, with your packages, your tone, and your calendar, request a free custom demo at https://replypilot-site.vercel.app/ and we will build you a working preview tailored to your photography business." },
     ],
-  }
+  },
   {
   slug: "ai-chatbot-barbershops",
   title: "AI Chatbot for Barbershops: Fill Every Empty Chair Without Touching Your Phone",
