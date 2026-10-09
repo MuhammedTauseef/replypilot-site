@@ -1,0 +1,25 @@
+# ReplyPilot blog topics log — 30-day no-repeat rule.
+# Format: YYYY-MM-DD | slug | primary keyword | secondary keywords
+# Baseline: 6 articles already live before this log was created (all dated 2026-10-08).
+
+2026-10-08 | whatsapp-automation-restaurants | WhatsApp automation for restaurants | restaurant booking chatbot, AI reservation agent
+2026-10-08 | instagram-dm-automation-salons | Instagram DM automation for salons | salon booking chatbot, beauty salon AI assistant
+2026-10-08 | ai-chatbots-dental-clinics | AI chatbot for dental clinics | dental appointment automation, patient messaging AI
+2026-10-08 | ecommerce-store-assistants | AI store assistant | e-commerce chatbot, reduce cart abandonment AI
+2026-10-08 | lead-capture-automation | lead capture automation | website lead generation AI, after-hours lead capture
+2026-10-08 | n8n-workflow-automation-small-business | n8n workflow automation | small business automation, automate repetitive tasks
+2026-10-08 | ai-chatbot-real-estate-agents | AI chatbot for real estate agents | real estate lead response, property viewing booking chatbot
+2026-10-08 | ai-chatbot-plumbers-home-services | AI chatbot for plumbers | home services lead capture, AI answering service for contractors
+2026-10-08 | whatsapp-automation-car-dealerships | WhatsApp automation for car dealerships | car dealer lead follow-up, test drive booking automation
+2026-10-08 | ai-chatbot-gyms-fitness-studios | AI chatbot for gyms | fitness studio lead capture, gym membership chatbot
+2026-10-08 | ai-chatbot-photographers | AI chatbot for photographers | photography booking automation, photographer lead capture
+2026-10-09 | whatsapp-automation-clothing-boutiques | WhatsApp automation for clothing boutiques | boutique WhatsApp chatbot, clothing store WhatsApp marketing
+2026-10-09 | ai-chatbot-bakeries | AI chatbot for bakeries | bakery order automation, cake order chatbot
+2026-10-09 | ai-chatbot-wedding-planners | AI chatbot for wedding planners | wedding planner lead automation, event enquiry chatbot
+2026-10-09 | whatsapp-automation-flower-shops | WhatsApp automation for flower shops | florist WhatsApp orders, flower delivery automation
+2026-10-09 | ai-chatbot-pet-groomers | AI chatbot for pet grooming | pet grooming booking automation, dog groomer appointment chatbot
+2026-10-09 | ai-chatbot-tutoring-businesses | AI chatbot for tutoring businesses | tutoring centre enquiry automation, tutor booking chatbot
+2026-10-09 | whatsapp-automation-guesthouses | WhatsApp automation for guesthouses | guesthouse booking automation, B&B WhatsApp chatbot
+2026-10-09 | ai-chatbot-car-detailing | AI chatbot for car detailing | detailing booking chatbot, auto detailing lead automation
+2026-10-09 | ai-chatbot-interior-designers | AI chatbot for interior designers | interior design client enquiries, designer consultation booking
+2026-10-09 | ai-chatbot-law-firms | AI chatbot for law firms | law firm client intake automation, attorney lead chatbot
