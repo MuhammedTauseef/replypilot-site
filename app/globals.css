@@ -496,3 +496,5 @@ footer{background:var(--navy-2);color:#aeb9d4;padding:64px 0 34px}
 [data-theme="dark"] .video-body h3{color:#f2f6fc}
 @media (max-width:900px){.video-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.video-grid{grid-template-columns:1fr}.video-card video{max-height:520px}}
+
+/* cache-bust 2026-10-09-0820 */
