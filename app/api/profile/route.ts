@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { getServiceClient } from "@/lib/supabase/service";
 
 /** GET /api/profile — own profile (authenticated only). */
 export async function GET() {
@@ -61,10 +61,13 @@ export async function PATCH(req: NextRequest) {
   // Service client: RLS has no UPDATE policy on profiles, so we update
   // server-side scoped to the authenticated user's own id. Only full_name
   // is ever written — role escalation is impossible through this route.
-  const service = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
 
   const { error } = await service
     .from("profiles")

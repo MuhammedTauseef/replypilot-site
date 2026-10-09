@@ -158,7 +158,11 @@ export async function POST(request: NextRequest) {
   const webhookTimestamp = request.headers.get("webhook-timestamp") || "";
   const webhookSignature = request.headers.get("webhook-signature") || "";
 
-  const supabase = getServiceClient();
+  // Fail fast: no secret configured → reject honestly (never 500).
+  if (!WEBHOOK_SECRET) {
+    console.error("[whop-webhook] WHOP_WEBHOOK_SECRET not configured");
+    return NextResponse.json({ error: "Webhook not configured." }, { status: 503 });
+  }
 
   let event: any = null;
   let eventType = "unknown";
@@ -176,6 +180,12 @@ export async function POST(request: NextRequest) {
     event !== null &&
     verifySignature(rawBody, webhookId, webhookTimestamp, webhookSignature);
 
+  if (!signatureValid) {
+    return NextResponse.json({ error: "Invalid signature." }, { status: 401 });
+  }
+
+  const supabase = getServiceClient();
+
   // Always audit-log the delivery attempt
   try {
     await supabase.from("webhook_events").insert({
@@ -187,12 +197,7 @@ export async function POST(request: NextRequest) {
       processed: false,
     });
   } catch {
-    // table may not exist yet — continue; signature check below still protects us
-  }
-
-  if (!signatureValid) {
-    console.warn("[whop-webhook] Invalid signature", { webhookId, eventType });
-    return NextResponse.json({ error: "invalid signature" }, { status: 401 });
+    // table may not exist yet — continue; signature was already verified above
   }
 
   // Idempotency: skip already-processed webhook IDs

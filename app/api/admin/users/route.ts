@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { getServiceClient } from "@/lib/supabase/service";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -25,10 +25,13 @@ export async function GET(req: NextRequest) {
   if ("error" in auth)
     return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-  const service = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
 
   // Get all auth users
   const { data: usersData, error: usersError } =
@@ -122,10 +125,13 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "You cannot change your own role." }, { status: 400 });
   }
 
-  const service = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
 
   // Cannot demote the last remaining admin.
   if (role === "client") {
@@ -170,10 +176,13 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "You cannot delete yourself." }, { status: 400 });
   }
 
-  const service = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
 
   // Cannot delete the last admin.
   const { data: target } = await service
