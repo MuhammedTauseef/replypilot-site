@@ -7,6 +7,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 /** /login — sign in, then route to /admin (admins) or /dashboard (clients). */
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_KEY = "rp_login_lockout";
+
+function getLockoutUntil(): number {
+  try {
+    return parseInt(localStorage.getItem(LOCKOUT_KEY) || "0", 10) || 0;
+  } catch { return 0; }
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -15,10 +24,21 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [needsVerify, setNeedsVerify] = useState(false);
   const [resent, setResent] = useState(false);
+  const [attempts, setAttempts] = useState(0);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (busy) return;
+
+    // Client-side brute-force throttle: 5 failures → 60s lockout.
+    // (Supabase also rate-limits auth endpoints server-side.)
+    const lockoutUntil = getLockoutUntil();
+    if (Date.now() < lockoutUntil) {
+      const secs = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      setError(`Too many attempts. Try again in ${secs} seconds.`);
+      return;
+    }
+
     setBusy(true);
     setError(null);
     setNeedsVerify(false);
@@ -31,15 +51,30 @@ export default function LoginPage() {
 
     if (signInError) {
       setBusy(false);
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      if (newAttempts >= MAX_ATTEMPTS) {
+        try {
+          localStorage.setItem(LOCKOUT_KEY, String(Date.now() + 60_000));
+        } catch { /* storage unavailable */ }
+        setAttempts(0);
+        setError("Too many failed attempts. Locked for 60 seconds.");
+        return;
+      }
       const msg = signInError.message.toLowerCase();
       if (msg.includes("email not confirmed") || msg.includes("not confirmed")) {
         setNeedsVerify(true);
         setError("Please verify your email first — check your inbox for the link.");
       } else {
-        setError("Invalid email or password.");
+        const remaining = MAX_ATTEMPTS - newAttempts;
+        setError(`Invalid email or password. (${remaining} ${remaining === 1 ? "try" : "tries"} left)`);
       }
       return;
     }
+
+    // Success: clear lockout state.
+    setAttempts(0);
+    try { localStorage.removeItem(LOCKOUT_KEY); } catch { /* ignore */ }
 
     // Role-aware landing: admins → /admin, clients → /dashboard.
     const {
@@ -68,7 +103,19 @@ export default function LoginPage() {
     setResent(true);
   }
 
+  /**
+   * Google OAuth is configured: Supabase Auth → Google provider is ENABLED
+   * with a valid Client ID/Secret, callback URL registered, and the user
+   * added as a test user (app is in Testing publishing status).
+   * To disable: set GOOGLE_OAUTH_ENABLED = false.
+   */
+  const GOOGLE_OAUTH_ENABLED = true;
+
   async function signInWithGoogle() {
+    if (!GOOGLE_OAUTH_ENABLED) {
+      setError("Google sign-in isn't available yet — please use email and password.");
+      return;
+    }
     setError(null);
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
@@ -90,21 +137,24 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={signInWithGoogle}
+          disabled={!GOOGLE_OAUTH_ENABLED}
+          title={GOOGLE_OAUTH_ENABLED ? "Sign in with Google" : "Google sign-in coming soon"}
           style={{
             width: "100%",
             padding: "12px",
             borderRadius: 10,
             border: "1px solid #dadce0",
-            background: "#fff",
-            color: "#3c4043",
+            background: GOOGLE_OAUTH_ENABLED ? "#fff" : "#f3f4f6",
+            color: GOOGLE_OAUTH_ENABLED ? "#3c4043" : "#9ca3af",
             fontSize: ".95rem",
             fontWeight: 600,
-            cursor: "pointer",
+            cursor: GOOGLE_OAUTH_ENABLED ? "pointer" : "not-allowed",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: 10,
             marginBottom: 16,
+            opacity: GOOGLE_OAUTH_ENABLED ? 1 : 0.75,
           }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
@@ -114,6 +164,9 @@ export default function LoginPage() {
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
           </svg>
           Continue with Google
+          {!GOOGLE_OAUTH_ENABLED && (
+            <span style={{ fontSize: ".75rem", fontWeight: 400 }}>(coming soon)</span>
+          )}
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
           <div style={{ flex: 1, height: 1, background: "#e5e7eb" }} />

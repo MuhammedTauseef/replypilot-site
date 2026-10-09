@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
 import PriceValue from "@/components/PriceValue";
+import { safeJsonLd } from "@/lib/json-ld";
 import { getPublishedPosts, getPostBySlug, type Block } from "@/lib/blog";
 
 interface Props {
@@ -159,7 +160,7 @@ export default async function BlogPostPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
       />
       <PageHeader />
       <main>

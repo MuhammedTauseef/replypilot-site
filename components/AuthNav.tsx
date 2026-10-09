@@ -13,10 +13,13 @@ export default function AuthNav() {
 
   useEffect(() => {
     const supabase = createClient();
+    let cancelled = false;
+
     async function check() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      if (cancelled) return;
       if (!user) {
         setRole(null);
         return;
@@ -26,11 +29,38 @@ export default function AuthNav() {
         .select("role")
         .eq("id", user.id)
         .single();
+      if (cancelled) return;
       setRole((profile as { role?: string } | null)?.role ?? "client");
     }
+
+    // Subscribe first so we never miss the session event that fires
+    // right after an OAuth redirect (the initial getUser() can race
+    // the cookie write and return null even though a session exists).
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+        check();
+      } else if (event === "SIGNED_OUT") {
+        setRole(null);
+      }
+    });
+
+    // Initial check, with one retry for the OAuth-redirect race:
+    // if the first check finds no user, re-check once after a beat
+    // in case the session was still being established.
     check();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => check());
+    const retryTimer = setTimeout(() => {
+      if (cancelled) return;
+      // Only re-check if we still think the user is logged out —
+      // avoids a stale "Log in" after a fresh OAuth sign-in.
+      setRole((prev) => {
+        if (prev === null) check();
+        return prev;
+      });
+    }, 1500);
+
     return () => {
+      cancelled = true;
+      clearTimeout(retryTimer);
       sub.subscription.unsubscribe();
     };
   }, []);
@@ -49,7 +79,13 @@ export default function AuthNav() {
     window.location.href = "/";
   }
 
-  if (!role) {
+  // Still checking: render nothing (not "Log in") to avoid a
+  // logged-out flash for users who are actually signed in.
+  if (role === undefined) {
+    return null;
+  }
+
+  if (role === null) {
     return (
       <a className="nav-link" href="/login">
         Log in

@@ -18,11 +18,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const demo = await getDemoBySlugDb(slug);
+  const url = `https://replypilot-site.vercel.app/demo/${slug}`;
   return {
     title: demo ? `${demo.name} — Live AI Demo | ReplyPilot` : "Demo | ReplyPilot",
     description: demo
       ? `Try the live AI assistant for ${demo.name} (${demo.business}). ${demo.text}`
       : "Try a live ReplyPilot AI demo.",
+    alternates: { canonical: url },
+    openGraph: demo
+      ? {
+          title: `${demo.name} — Live AI Demo | ReplyPilot`,
+          description: `Chat with the AI assistant for ${demo.name}.`,
+          url,
+          type: "website",
+        }
+      : undefined,
   };
 }
 

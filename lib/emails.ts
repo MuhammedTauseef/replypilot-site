@@ -1,4 +1,23 @@
-/** Email templates for Phase 2 automation. Works with Resend (or logs if no key). */
+/** Email templates for ReplyPilot. Works with Resend, degrades safely without it.
+ *
+ * DEV/TEST MODE: When RESEND_API_KEY is not set, emails are logged to console
+ * and NOT sent. The return value honestly reports this — never claims delivery.
+ *
+ * EmailResult.status:
+ * - 'sent'     → Resend accepted the email (real delivery attempted)
+ * - 'dev-mode' → No API key; logged only, NOT sent (safe for dev/test)
+ * - 'failed'   → Tried to send but Resend rejected or network failed
+ */
+
+export type EmailStatus = "sent" | "dev-mode" | "failed";
+
+export interface EmailResult {
+  status: EmailStatus;
+  /** Resend message ID when actually sent */
+  id?: string;
+  /** Human-readable reason when dev-mode or failed */
+  detail?: string;
+}
 
 interface EmailParams {
   to: string;
@@ -6,14 +25,14 @@ interface EmailParams {
   html: string;
 }
 
-async function sendEmail({ to, subject, html }: EmailParams): Promise<boolean> {
+async function sendEmail({ to, subject, html }: EmailParams): Promise<EmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM || "ReplyPilot <hello@replypilot-site.vercel.app>";
 
-  // Log to console + DB when no API key (dev mode)
+  // Dev/test mode: no API key → log honestly, never claim delivery
   if (!apiKey) {
-    console.log(`[EMAIL:DEV] To: ${to} | Subject: ${subject}`);
-    return true;
+    console.log(`[EMAIL:DEV-MODE] NOT SENT (no RESEND_API_KEY) | To: ${to} | Subject: ${subject}`);
+    return { status: "dev-mode", detail: "No RESEND_API_KEY configured — email logged, not sent." };
   }
 
   try {
@@ -25,10 +44,15 @@ async function sendEmail({ to, subject, html }: EmailParams): Promise<boolean> {
       },
       body: JSON.stringify({ from, to, subject, html }),
     });
-    return res.ok;
+    const body = await res.json().catch(() => ({}));
+    if (res.ok) {
+      return { status: "sent", id: (body as { id?: string }).id };
+    }
+    console.error("[EMAIL] Resend rejected:", res.status, JSON.stringify(body).slice(0, 300));
+    return { status: "failed", detail: `Resend rejected with HTTP ${res.status}` };
   } catch (e) {
-    console.error("email send error:", e);
-    return false;
+    console.error("[EMAIL] send error:", e instanceof Error ? e.message : e);
+    return { status: "failed", detail: "Network error contacting Resend API" };
   }
 }
 
@@ -81,7 +105,7 @@ export const emails = {
       html: wrap(`
         <h2>Thank you!</h2>
         <p>We've received your payment of <strong>${amount}</strong> for <strong>${type}</strong>.</p>
-        <p>A detailed invoice is attached to your Stripe receipt.</p>
+        <p>A detailed invoice is available in your Whop receipt.</p>
         <p>Your agent keeps working for you 24/7. 🚀</p>
       `),
     }),

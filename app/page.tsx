@@ -625,13 +625,6 @@ export default async function Home() {
               >
                 LinkedIn
               </a>
-              <a
-                href="https://tauseef-phi.vercel.app/"
-                target="_blank"
-                rel="noopener"
-              >
-                Previous portfolio
-              </a>
             </div>
           </div>
           <div className="foot-base">

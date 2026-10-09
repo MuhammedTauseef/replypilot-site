@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { getServiceClient } from "@/lib/supabase/service";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -25,10 +25,13 @@ export async function GET(req: NextRequest) {
   if ("error" in auth)
     return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-  const service = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
 
   // Get all auth users
   const { data: usersData, error: usersError } =
@@ -89,4 +92,119 @@ export async function GET(req: NextRequest) {
   );
 
   return NextResponse.json({ users, total: users.length });
+}
+
+/** PATCH /api/admin/users — change a user's role (admin only).
+ * Body: { user_id: string, role: "admin" | "client" }
+ * Safeguards: cannot demote yourself, cannot demote the last admin.
+ */
+export async function PATCH(req: NextRequest) {
+  const auth = await requireAdmin();
+  if ("error" in auth)
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+
+  let body: { user_id?: string; role?: string };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  const { user_id, role } = body;
+  if (!user_id || typeof user_id !== "string") {
+    return NextResponse.json({ error: "user_id required." }, { status: 400 });
+  }
+  if (role !== "admin" && role !== "client") {
+    return NextResponse.json({ error: "role must be 'admin' or 'client'." }, { status: 400 });
+  }
+
+  // Cannot change your own role (prevents accidental lockout).
+  const supabase = await createClient();
+  const { data: { user: me } } = await supabase.auth.getUser();
+  if (me && me.id === user_id) {
+    return NextResponse.json({ error: "You cannot change your own role." }, { status: 400 });
+  }
+
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
+
+  // Cannot demote the last remaining admin.
+  if (role === "client") {
+    const { count } = await service
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "admin");
+    if ((count || 0) <= 1) {
+      return NextResponse.json({ error: "Cannot demote the last admin." }, { status: 400 });
+    }
+  }
+
+  const { error } = await service
+    .from("profiles")
+    .update({ role })
+    .eq("id", user_id);
+  if (error) {
+    console.error("[admin/users] role update failed:", error.message.slice(0, 200));
+    return NextResponse.json({ error: "Role update failed." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, user_id, role });
+}
+
+/** DELETE /api/admin/users?user_id=xxx — delete a user (admin only).
+ * Safeguards: cannot delete yourself, cannot delete the last admin.
+ * Note: deletes the auth user; related rows cascade per FK constraints.
+ */
+export async function DELETE(req: NextRequest) {
+  const auth = await requireAdmin();
+  if ("error" in auth)
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+
+  const user_id = req.nextUrl.searchParams.get("user_id");
+  if (!user_id) {
+    return NextResponse.json({ error: "user_id required." }, { status: 400 });
+  }
+
+  const supabase = await createClient();
+  const { data: { user: me } } = await supabase.auth.getUser();
+  if (me && me.id === user_id) {
+    return NextResponse.json({ error: "You cannot delete yourself." }, { status: 400 });
+  }
+
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
+
+  // Cannot delete the last admin.
+  const { data: target } = await service
+    .from("profiles")
+    .select("role")
+    .eq("id", user_id)
+    .single();
+  if ((target as { role?: string } | null)?.role === "admin") {
+    const { count } = await service
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "admin");
+    if ((count || 0) <= 1) {
+      return NextResponse.json({ error: "Cannot delete the last admin." }, { status: 400 });
+    }
+  }
+
+  const { error } = await service.auth.admin.deleteUser(user_id);
+  if (error) {
+    console.error("[admin/users] delete failed:", error.message.slice(0, 200));
+    return NextResponse.json({ error: "Delete failed." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, user_id });
 }

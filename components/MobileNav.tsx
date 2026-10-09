@@ -20,7 +20,6 @@ const BASE_LINKS: { label: string; href: string; external?: boolean }[] = [
   { label: "FAQ", href: "#faq" },
   { label: "Contact form", href: "#contact" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammadtauseef9", external: true },
-  { label: "Previous portfolio", href: "https://tauseef-phi.vercel.app/", external: true },
 ];
 
 export default function MobileNav() {
@@ -30,10 +29,13 @@ export default function MobileNav() {
 
   useEffect(() => {
     const supabase = createClient();
+    let cancelled = false;
+
     async function check() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      if (cancelled) return;
       if (!user) {
         setRole(null);
         return;
@@ -43,11 +45,32 @@ export default function MobileNav() {
         .select("role")
         .eq("id", user.id)
         .single();
+      if (cancelled) return;
       setRole((profile as { role?: string } | null)?.role ?? "client");
     }
+
+    // Subscribe first so we never miss the session event that fires
+    // right after an OAuth redirect.
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+        check();
+      } else if (event === "SIGNED_OUT") {
+        setRole(null);
+      }
+    });
+
     check();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => check());
+    const retryTimer = setTimeout(() => {
+      if (cancelled) return;
+      setRole((prev) => {
+        if (prev === null) check();
+        return prev;
+      });
+    }, 1500);
+
     return () => {
+      cancelled = true;
+      clearTimeout(retryTimer);
       sub.subscription.unsubscribe();
     };
   }, []);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import CookieConsent from "@/components/CookieConsent";
+import { safeJsonLd } from "@/lib/json-ld";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -66,7 +67,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: safeJsonLd({
               "@context": "https://schema.org",
               "@graph": [
                 {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "FAQ — AI Automation Questions Answered | ReplyPilot",
@@ -72,7 +73,7 @@ export default function FaqPage() {
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
       />
       <section className="block">
         <div className="wrap" style={{ maxWidth: 760 }}>

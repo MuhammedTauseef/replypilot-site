@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { generateText, tool, stepCountIs } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
-import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { rateLimit, userKey } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -326,14 +326,6 @@ const bookDemo = tool({
 });
 
 export async function POST(req: Request) {
-  // 30 chat messages per minute per IP — keeps API costs abuse-proof.
-  if (!rateLimit(`chat:${clientIp(req)}`, 30, 60_000)) {
-    return NextResponse.json({
-      reply:
-        "You're sending messages very fast — please wait a few seconds and try again.",
-    });
-  }
-
   // Live demos are gated behind login (lead capture) — the client UI shows
   // a login prompt, and this server check stops direct API bypasses.
   const supabase = await createClient();
@@ -345,6 +337,15 @@ export async function POST(req: Request) {
       { error: "Please log in to use the live demo." },
       { status: 401 }
     );
+  }
+
+  // 30 chat messages per minute per USER — keyed by user ID so IP rotation
+  // cannot bypass it. (IP-based limiting is spoofable; see lib/rate-limit.ts)
+  if (!rateLimit(userKey("chat", user.id), 30, 60_000)) {
+    return NextResponse.json({
+      reply:
+        "You're sending messages very fast — please wait a few seconds and try again.",
+    });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
@@ -388,19 +389,29 @@ export async function POST(req: Request) {
   try {
     // NOTE: the @ai-sdk/google provider reads GOOGLE_GENERATIVE_AI_API_KEY
     // by default — we pass our GEMINI_API_KEY explicitly so the key is found.
+    // 30s timeout: Gemini hanging must never hang the request forever.
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
     const google = createGoogleGenerativeAI({ apiKey });
-    const { text } = await generateText({
-      model: google(GEMINI_MODEL),
-      system: systemText,
-      messages: history.map((m) => ({
-        role: m.role as "user" | "assistant",
-        content: m.text,
-      })),
-      tools: { saveLead, handoffToHuman, checkAvailability, bookDemo },
-      stopWhen: stepCountIs(4),
-      temperature: 0.7,
-      maxOutputTokens: 400,
-    });
+    let text: string | undefined;
+    try {
+      const result = await generateText({
+        model: google(GEMINI_MODEL),
+        system: systemText,
+        messages: history.map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.text,
+        })),
+        tools: { saveLead, handoffToHuman, checkAvailability, bookDemo },
+        stopWhen: stepCountIs(4),
+        temperature: 0.7,
+        maxOutputTokens: 400,
+        abortSignal: controller.signal,
+      });
+      text = result.text;
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const reply = (text ?? "").trim();
     if (!reply) throw new Error("Empty reply from model");
@@ -420,13 +431,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply: reply.slice(0, 1200) });
   } catch (err) {
     // Log the real cause server-side (never exposed to the visitor).
+    const msg = err instanceof Error ? err.message : String(err);
+    const isTimeout = err instanceof Error && (err.name === "AbortError" || msg.includes("abort"));
     console.error(
-      "chat route failed:",
-      err instanceof Error ? err.message.slice(0, 300) : String(err).slice(0, 300)
+      isTimeout ? "chat route timed out (30s):" : "chat route failed:",
+      msg.slice(0, 300)
     );
     return NextResponse.json({
-      reply:
-        "Sorry, I had trouble thinking just now — please try again, or leave your details in the contact form and Tauseef will reply personally.",
+      reply: isTimeout
+        ? "That took longer than expected — please try again, or leave your details in the contact form and Tauseef will reply personally."
+        : "Sorry, I had trouble thinking just now — please try again, or leave your details in the contact form and Tauseef will reply personally.",
     });
   }
 }

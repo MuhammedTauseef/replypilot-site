@@ -1,6 +1,21 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import DemoPlayground from "@/components/DemoPlayground";
 import PriceValue from "@/components/PriceValue";
+
+export const metadata: Metadata = {
+  title: "Live AI Demo — Try ReplyPilot in Action",
+  description:
+    "Try a live ReplyPilot AI agent right now. Pick from 13 demo businesses — salon, restaurant, real estate, dental clinic and more — and chat with their AI assistant.",
+  alternates: { canonical: "https://replypilot-site.vercel.app/demo" },
+  openGraph: {
+    title: "Live AI Demo — Try ReplyPilot in Action",
+    description:
+      "Chat live with AI assistants for 13 demo businesses. See what ReplyPilot can do for yours.",
+    url: "https://replypilot-site.vercel.app/demo",
+    type: "website",
+  },
+};
 
 /**
  * /demo — full-page live AI demo with all 13 demo businesses.

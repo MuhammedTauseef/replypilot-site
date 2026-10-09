@@ -63,8 +63,11 @@ function enrich(row: Record<string, unknown>): DbPost {
 
 /** Convert hardcoded post to DbPost shape (build-time fallback). */
 function fallbackToDbPost(p: (typeof FALLBACK_POSTS)[number], i: number): DbPost {
-  // Fixed date for build-time determinism (no new Date() in prerender)
-  const fixedDate = "2026-10-08T00:00:00.000Z";
+  // Derive created_at from the post's display date so merged listings sort newest-first.
+  const parsed = Date.parse(p.date);
+  const created = Number.isFinite(parsed)
+    ? new Date(parsed).toISOString()
+    : "2026-10-08T00:00:00.000Z";
   return {
     id: `fallback-${i}`,
     slug: p.slug,
@@ -74,15 +77,20 @@ function fallbackToDbPost(p: (typeof FALLBACK_POSTS)[number], i: number): DbPost
     keywords: p.keywords,
     cover_image: null,
     published: true,
-    created_at: fixedDate,
-    updated_at: fixedDate,
+    created_at: created,
+    updated_at: created,
     date: p.date,
     readTime: p.readTime,
   };
 }
 
-/** All published posts, newest first (public read). Falls back to hardcoded posts if DB unavailable. */
+/** All published posts, newest first (public read).
+ *  Merges CMS rows with hardcoded posts: DB rows first, then any hardcoded
+ *  post whose slug isn't already listed — so code-pushed articles always show
+ *  even when the CMS table is non-empty. Falls back to hardcoded posts
+ *  entirely when the DB is unavailable or empty. */
 export async function getPublishedPosts(): Promise<DbPost[]> {
+  let dbPosts: DbPost[] = [];
   const supabase = createPublicClient();
   if (supabase) {
     const { data, error } = await supabase
@@ -92,7 +100,7 @@ export async function getPublishedPosts(): Promise<DbPost[]> {
       .order("created_at", { ascending: false });
     if (!error && data && data.length > 0) {
       // For posts with placeholder/short DB content, substitute full fallback content
-      return data.map((p) => {
+      dbPosts = data.map((p) => {
         const len = JSON.stringify((p as { content?: unknown }).content || "").length;
         if (len >= 500) return enrich(p);
         // Find matching fallback post by slug
@@ -102,8 +110,16 @@ export async function getPublishedPosts(): Promise<DbPost[]> {
       });
     }
   }
-  // Fallback: hardcoded posts (ensures build succeeds and site works pre-seed)
-  return FALLBACK_POSTS.map(fallbackToDbPost);
+  // Merge in hardcoded posts missing from the DB (dedupe by slug), newest first.
+  const seen = new Set(dbPosts.map((p) => p.slug));
+  const extra = FALLBACK_POSTS.filter((p) => !seen.has(p.slug)).map((p, i) =>
+    fallbackToDbPost(p, i)
+  );
+  const merged = [...dbPosts, ...extra];
+  merged.sort((a, b) =>
+    a.created_at < b.created_at ? 1 : a.created_at > b.created_at ? -1 : 0
+  );
+  return merged;
 }
 
 /** Single published post by slug (public read). */

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { getServiceClient } from "@/lib/supabase/service";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -91,15 +91,14 @@ export async function POST(req: NextRequest) {
     const result = await res.json();
 
     // Log to email_log
-    const service = createServiceClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-    await service.from("email_log").insert({
-      recipient: to,
-      template: "admin-followup",
-      subject,
-    });
+    const service = getServiceClient();
+    if (service) {
+      await service.from("email_log").insert({
+        recipient: to,
+        template: "admin-followup",
+        subject,
+      });
+    }
 
     if (!res.ok) {
       console.error("[send-email] Resend error:", result);

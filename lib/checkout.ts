@@ -16,13 +16,13 @@ export const WHOP_CHECKOUT = {
    * wiring this link into the site — otherwise buyers get charged monthly.
    */
   deposit:
-    "https://whop.com/replypilot-site/replypilot-site-ff/",
+    "https://whop.com/replypilot-site-ea3d/replypilot-build-deposit-cf",
   /** ReplyPilot Build — Go-Live: one-time $124 (50% on approval) */
   goLive:
-    "https://whop.com/replypilot-site/replypilot-build-go-live",
+    "https://whop.com/replypilot-site-ea3d/replypilot-build-go-live-01",
   /** ReplyPilot Care Plan: recurring $99/month */
   carePlan:
-    "https://whop.com/replypilot-site/replypilot-care-plan",
+    "https://whop.com/replypilot-site-ea3d/replypilot-care-plan-a8",
 } as const;
 
 export type CheckoutKey = keyof typeof WHOP_CHECKOUT;

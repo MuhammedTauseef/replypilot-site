@@ -44,15 +44,15 @@ const emailWrap = (body: string) => `
 </div>`;
 
 /** Send an email via Resend. Fire-and-forget: never blocks the webhook. */
-async function sendEmail(to: string, subject: string, htmlBody: string) {
+async function sendEmail(to: string, subject: string, htmlBody: string): Promise<{ status: "sent" | "dev-mode" | "failed"; detail?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.log(`[EMAIL:DEV] To: ${to} | Subject: ${subject}`);
-    return;
+    console.log(`[EMAIL:DEV-MODE] NOT SENT (no RESEND_API_KEY) | To: ${to} | Subject: ${subject}`);
+    return { status: "dev-mode", detail: "No RESEND_API_KEY — logged, not sent." };
   }
   const from = process.env.RESEND_FROM || "ReplyPilot <hello@replypilot-site.vercel.app>";
   try {
-    await fetch("https://api.resend.com/emails", {
+    const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -60,8 +60,13 @@ async function sendEmail(to: string, subject: string, htmlBody: string) {
       },
       body: JSON.stringify({ from, to, subject, html: emailWrap(htmlBody) }),
     });
+    if (res.ok) return { status: "sent" };
+    const errBody = await res.text().catch(() => "");
+    console.error("[webhook-email] Resend rejected:", res.status, errBody.slice(0, 200));
+    return { status: "failed", detail: `Resend HTTP ${res.status}` };
   } catch (e) {
-    console.error("[webhook-email] send failed:", e);
+    console.error("[webhook-email] send failed:", e instanceof Error ? e.message : e);
+    return { status: "failed", detail: "Network error" };
   }
 }
 
@@ -75,10 +80,16 @@ const PLAN_LABELS: Record<string, string> = {
   care_plan: "Care Plan ($99/month)",
 };
 
-/** Derive the HMAC key from a `ws_...` secret per Standard Webhooks spec. */
+/**
+ * Derive the HMAC key from the `ws_...` webhook signing secret.
+ *
+ * Whop signs webhooks with the LITERAL BYTES of the full secret string
+ * (e.g. `ws_` + 64 hex chars), NOT a base64-decoded derivation.
+ * Verified against Whop's official docs ("The key is your `ws_...` secret")
+ * and the whopsdk-ruby/python signature-verification fixes (2026-08-22).
+ */
 function deriveKey(secret: string): Buffer {
-  const withoutPrefix = secret.startsWith("ws_") ? secret.slice(3) : secret;
-  return Buffer.from(withoutPrefix, "base64");
+  return Buffer.from(secret, "utf8");
 }
 
 function verifySignature(
@@ -153,7 +164,11 @@ export async function POST(request: NextRequest) {
   const webhookTimestamp = request.headers.get("webhook-timestamp") || "";
   const webhookSignature = request.headers.get("webhook-signature") || "";
 
-  const supabase = getServiceClient();
+  // Fail fast: no secret configured → reject honestly (never 500).
+  if (!WEBHOOK_SECRET) {
+    console.error("[whop-webhook] WHOP_WEBHOOK_SECRET not configured");
+    return NextResponse.json({ error: "Webhook not configured." }, { status: 503 });
+  }
 
   let event: any = null;
   let eventType = "unknown";
@@ -171,6 +186,12 @@ export async function POST(request: NextRequest) {
     event !== null &&
     verifySignature(rawBody, webhookId, webhookTimestamp, webhookSignature);
 
+  if (!signatureValid) {
+    return NextResponse.json({ error: "Invalid signature." }, { status: 401 });
+  }
+
+  const supabase = getServiceClient();
+
   // Always audit-log the delivery attempt
   try {
     await supabase.from("webhook_events").insert({
@@ -182,12 +203,7 @@ export async function POST(request: NextRequest) {
       processed: false,
     });
   } catch {
-    // table may not exist yet — continue; signature check below still protects us
-  }
-
-  if (!signatureValid) {
-    console.warn("[whop-webhook] Invalid signature", { webhookId, eventType });
-    return NextResponse.json({ error: "invalid signature" }, { status: 401 });
+    // table may not exist yet — continue; signature was already verified above
   }
 
   // Idempotency: skip already-processed webhook IDs
@@ -234,18 +250,22 @@ export async function POST(request: NextRequest) {
     };
 
     // --- Match buyer email to a client (best effort) ---
+    // OPTIMIZED: direct indexed lookup instead of listUsers() (was causing 5s+ webhook latency)
     let clientId: string | null = null;
     if (buyerEmail) {
       // clients.user_id -> auth.users; we resolve via service role
-      const { data: users } = await supabase.auth.admin.listUsers();
-      const match = (users?.users || []).find(
-        (u: any) => (u.email || "").toLowerCase() === buyerEmail.toLowerCase()
-      );
-      if (match) {
+      // Direct query on auth.users is O(1) vs listUsers() which is O(n)
+      const { data: authUser } = await supabase
+        .schema("auth")
+        .from("users")
+        .select("id")
+        .ilike("email", buyerEmail)
+        .maybeSingle();
+      if (authUser) {
         const { data: client } = await supabase
           .from("clients")
           .select("id")
-          .eq("user_id", match.id)
+          .eq("user_id", authUser.id)
           .maybeSingle();
         if (client) clientId = client.id;
       }
