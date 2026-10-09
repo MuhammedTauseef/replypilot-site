@@ -250,22 +250,47 @@ export async function POST(request: NextRequest) {
     };
 
     // --- Match buyer email to a client (best effort) ---
-    // OPTIMIZED: direct indexed lookup instead of listUsers() (was causing 5s+ webhook latency)
+    // Uses auth.admin.listUsers() with pagination — safe, no direct auth schema access.
+    // Paginates through all users to avoid missing matches beyond the first 50.
+    // Case-insensitive match; skips on ambiguous (multiple) matches to avoid unsafe activation.
     let clientId: string | null = null;
     if (buyerEmail) {
-      // clients.user_id -> auth.users; we resolve via service role
-      // Direct query on auth.users is O(1) vs listUsers() which is O(n)
-      const { data: authUser } = await supabase
-        .schema("auth")
-        .from("users")
-        .select("id")
-        .ilike("email", buyerEmail)
-        .maybeSingle();
-      if (authUser) {
+      const normalizedEmail = buyerEmail.toLowerCase();
+      let matchedUserId: string | null = null;
+      let matchCount = 0;
+      let page = 1;
+      const perPage = 100;
+      // Paginate until we've seen all users or found ambiguity
+      for (;;) {
+        const { data: usersData, error: listErr } = await supabase.auth.admin.listUsers({
+          page,
+          perPage,
+        });
+        if (listErr) break;
+        const users = usersData?.users || [];
+        if (users.length === 0) break;
+        for (const u of users) {
+          if ((u.email || "").toLowerCase() === normalizedEmail) {
+            matchCount++;
+            if (matchCount === 1) matchedUserId = u.id;
+            // Ambiguous: more than one user with same email — do not guess
+            if (matchCount > 1) {
+              matchedUserId = null;
+              break;
+            }
+          }
+        }
+        if (matchCount > 1) break;
+        if (users.length < perPage) break;
+        page++;
+        // Safety cap: 100 pages = 10,000 users max per webhook
+        if (page > 100) break;
+      }
+      if (matchedUserId) {
         const { data: client } = await supabase
           .from("clients")
           .select("id")
-          .eq("user_id", authUser.id)
+          .eq("user_id", matchedUserId)
           .maybeSingle();
         if (client) clientId = client.id;
       }
