@@ -55,12 +55,47 @@ export default async function AboutPage() {
           <h1 className="display" style={{ marginBottom: 12 }}>
             Practical AI for real businesses.
           </h1>
-          <p style={{ color: "#4b5563" }}>
-            ReplyPilot is an AI automation studio run by Muhammad Tauseef.
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/founder.jpg"
+              alt="Muhammad Tauseef, founder of ReplyPilot"
+              style={{ width: 90, height: 90, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(216,189,143,.5)" }}
+            />
+            <p style={{ color: "#4b5563", margin: 0 }}>
+              ReplyPilot is an AI automation studio run by <strong>Muhammad Tauseef</strong>.
+            </p>
+          </div>
 
           <div className="legal-body">
             {blocks.map(renderBlock)}
+
+            {/* Founder & CEO section */}
+            <div style={{ marginTop: 40, padding: 24, background: "var(--card)", borderRadius: 16, border: "1px solid rgba(216,189,143,.25)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 16 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/founder.jpg"
+                  alt="Muhammad Tauseef, Founder & CEO of ReplyPilot"
+                  style={{ width: 100, height: 100, borderRadius: "50%", objectFit: "cover", objectPosition: "top center", border: "2px solid rgba(216,189,143,.5)", flexShrink: 0 }}
+                />
+                <div>
+                  <h3 style={{ margin: "0 0 4px", fontSize: "1.25rem" }}>Muhammad Tauseef</h3>
+                  <p style={{ margin: 0, color: "var(--gold)", fontSize: ".95rem", fontWeight: 600 }}>Founder & CEO, ReplyPilot</p>
+                </div>
+              </div>
+              <p style={{ margin: "0 0 12px", lineHeight: 1.7 }}>
+                I&apos;m Tauseef, an AI automation specialist. I build practical sales agents,
+                customer-response systems, and workflows that help growing businesses reply
+                faster and convert more enquiries.
+              </p>
+              <p style={{ margin: 0, lineHeight: 1.7 }}>
+                Every ReplyPilot system is built around a real bottleneck — unanswered questions,
+                missed leads, or repetitive follow-up. One person builds it, tests it, and
+                supports it: no agency layers, no templates pretending to be custom.
+              </p>
+            </div>
+
             <p style={{ marginTop: 24 }}>
               Want to see what an AI agent could do for your business?{" "}
               <Link href="/contact">Contact us</Link> or try a{" "}
@@ -71,4 +106,4 @@ export default async function AboutPage() {
       </section>
     </main>
   );
-}
+              }
