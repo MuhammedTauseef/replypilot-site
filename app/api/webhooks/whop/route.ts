@@ -442,10 +442,56 @@ export async function POST(request: NextRequest) {
     if (normalizedType === "membership_deactivated") {
       const membershipId = data.id || data.membership_id;
       if (membershipId) {
+        // Find the subscription to identify the owning client.
+        // If lookup fails or is ambiguous, we skip the client downgrade (safe default).
+        const { data: sub, error: subError } = await supabase
+          .from("subscriptions")
+          .select("client_id")
+          .eq("whop_subscription_id", String(membershipId))
+          .maybeSingle();
+        if (subError) {
+          console.error(
+            "[whop-webhook] membership.deactivated: subscription lookup failed",
+            subError.message
+          );
+        }
+
+        // Mark this subscription cancelled (existing behavior, unchanged).
         await supabase
           .from("subscriptions")
           .update({ status: "cancelled" })
           .eq("whop_subscription_id", String(membershipId));
+
+        // Downgrade the client only when:
+        //  1. the lookup succeeded and identified a linked client, and
+        //  2. no other active subscription remains for that client.
+        // Note: the cancelled subscription above already has status='cancelled',
+        // so any remaining 'active' rows are genuinely other subscriptions.
+        // No .neq() exclusion needed — ordering makes it unnecessary.
+        if (!subError && sub?.client_id) {
+          const { data: otherActive, error: activeError } = await supabase
+            .from("subscriptions")
+            .select("id")
+            .eq("client_id", sub.client_id)
+            .eq("status", "active")
+            .limit(1);
+          if (activeError) {
+            console.error(
+              "[whop-webhook] membership.deactivated: active-subscription check failed",
+              activeError.message
+            );
+          } else if (!otherActive || otherActive.length === 0) {
+            await supabase
+              .from("clients")
+              .update({
+                subscription_status: "cancelled",
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", sub.client_id);
+          }
+          // else: client retains another active subscription — leave status as-is.
+        }
+        // else: lookup failed / no linked client — do not downgrade.
       }
       await markProcessed();
       return NextResponse.json({ ok: true });
