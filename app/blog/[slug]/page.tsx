@@ -87,6 +87,36 @@ function renderBlock(block: Block, i: number) {
           />
         </figure>
       );
+    case "video":
+      return (
+        <figure key={i} style={{ margin: "32px 0" }}>
+          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+          <video
+            src={block.src}
+            poster={block.poster}
+            controls
+            preload="metadata"
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: 12,
+              display: "block",
+            }}
+          />
+          {block.caption && (
+            <figcaption
+              style={{
+                marginTop: 10,
+                fontSize: ".9rem",
+                color: "#8b98b8",
+                textAlign: "center",
+              }}
+            >
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
     default:
       return <p key={i}>{renderInline(block.text, `p${i}`)}</p>;
   }

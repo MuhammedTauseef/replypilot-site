@@ -5,7 +5,8 @@ export type Block =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
   | { type: "ul"; items: string[] }
-  | { type: "img"; src: string; alt: string };
+  | { type: "img"; src: string; alt: string }
+  | { type: "video"; src: string; poster?: string; caption: string };
 
 export interface DbPost {
   id: string;
@@ -28,7 +29,11 @@ function enrich(row: Record<string, unknown>): DbPost {
   const content = Array.isArray(row.content) ? (row.content as Block[]) : [];
   const words = content
     .map((b) =>
-      b.type === "ul" ? b.items.join(" ") : b.type === "img" ? "" : b.text
+      b.type === "ul"
+        ? b.items.join(" ")
+        : b.type === "img" || b.type === "video"
+          ? ""
+          : b.text
     )
     .join(" ")
     .split(/\s+/).length;

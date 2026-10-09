@@ -36,8 +36,28 @@ function renderBlock(block: Block, i: number) {
     case "img":
       // eslint-disable-next-line @next/next/no-img-element
       return <img key={i} src={block.src} alt={block.alt} style={{ maxWidth: "100%", borderRadius: 8 }} />;
+    case "video":
+      return (
+        <figure key={i} style={{ margin: "24px 0" }}>
+          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+          <video
+            src={block.src}
+            poster={block.poster}
+            controls
+            preload="metadata"
+            style={{ maxWidth: "100%", borderRadius: 8, display: "block" }}
+          />
+          {block.caption && (
+            <figcaption
+              style={{ marginTop: 8, fontSize: ".9rem", color: "#8b98b8" }}
+            >
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
     default:
-      return <p key={i}>{block.text}</p>;
+      return <p key={i}>{"text" in block ? block.text : ""}</p>;
   }
 }
 
