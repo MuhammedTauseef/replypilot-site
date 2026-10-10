@@ -95,6 +95,18 @@ function renderBlock(block: Block, i: number) {
             }}
             loading="lazy"
           />
+          {block.caption && (
+            <figcaption
+              style={{
+                marginTop: 10,
+                fontSize: ".9rem",
+                color: "#8b98b8",
+                textAlign: "center",
+              }}
+            >
+              {block.caption}
+            </figcaption>
+          )}
         </figure>
       );
     case "video":
