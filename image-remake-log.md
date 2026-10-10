@@ -54,3 +54,66 @@ STATUS: awaiting user approval of this batch before doing remaining 18.
 ## Batch 3 — 2026-10-10 (REALISTIC direction, single image first)
 - `car-rental-services.jpg` — REDONE realistic style: car keys on hooks, phone with incoming call screen on wooden counter, natural daylight, snapshot feel. No text, no overlays. Awaiting user approval before continuing.
 - vet + bakeries: NOT started (waiting for single-image approval per user).
+
+## Batch 4 — 2026-10-10 (approved realistic style, batch 1 of remaining)
+
+User APPROVED the realistic style (car rental, vet clinics, bakeries). Continuing remaining in same style.
+
+| # | Article slug | File | Description | Status |
+|---|---|---|---|---|
+| 4 | whatsapp-automation-clothing-boutiques | public/blog/boutiques.jpg | Boutique owner stressed looking at phone full of WhatsApp messages, dress racks, natural daylight | ✅ Done — realistic, clean, no text/lines |
+| 5 | ai-chatbot-wedding-planners | public/blog/wedding-planners.jpg | Wedding planner at candlelit venue at night checking phone with unread notifications | ✅ Done — realistic, clean, no text/lines |
+| 6 | whatsapp-automation-flower-shops | public/blog/flower-shops.jpg | Florist surrounded by bouquets staring at phone with messages, natural shop light | ✅ Done — realistic, clean, no text/lines |
+| 7 | ai-chatbot-pet-groomers | public/blog/pet-groomers.jpg | Groomer mid-groom with clippers, ringing phone + messy appointment book on counter | ✅ Done — realistic, clean, no text/lines |
+
+STATUS: awaiting user approval of Batch 4 before continuing. Remaining: tutoring, guesthouses, car-detailing, interior-designers, law-firms, photographers (mismatched fix), coffee-shops, yoga-studios, home-cleaning-services, physiotherapy-clinics.
+
+## Batch 5 — 2026-10-10 (final 10, LOCKED final style)
+
+User LOCKED final style: realistic photo + text bar at BOTTOM INSIDE the picture (dark strip rgb 30,30,30, ~16% height, white centered wrapped text). Photo stays clean above. No HTML captions (removed from posts.ts).
+
+All 10 existing images were already realistic/clean/content-relevant — no regeneration needed. Added bottom text bars via PIL per locked spec. Visually verified sample (tutoring, physiotherapy): realistic, no text on photo, bar readable, text not cut off.
+
+| # | Article slug | File | Bar caption | Status |
+|---|---|---|---|---|
+| 8 | ai-chatbot-tutoring-businesses | public/blog/tutoring.jpg | "Parent messaging a tutoring centre at night — the owner misses the enquiry." | ✅ Done |
+| 9 | whatsapp-automation-guesthouses | public/blog/guesthouses.jpg | "Small guesthouse owner overwhelmed by unread booking messages." | ✅ Done |
+| 10 | ai-chatbot-car-detailing | public/blog/car-detailing.jpg | "Hands busy polishing the car — booking enquiries pile up unanswered." | ✅ Done |
+| 11 | ai-chatbot-interior-designers | public/blog/interior-designers.jpg | "Holding fabric samples at a client site while new enquiries wait." | ✅ Done |
+| 12 | ai-chatbot-law-firms | public/blog/law-firms.jpg | "Empty office at night — missed client enquiry calls on the phone." | ✅ Done |
+| 13 | ai-chatbot-photographers | public/blog/photographers.jpg | "Mid-shoot with camera in hand — booking enquiries go unanswered." | ✅ Done |
+| 14 | ai-chatbot-coffee-shops | public/blog/ai-chatbot-coffee-shops.jpg | "Steaming milk in the morning rush while customer messages pile up." | ✅ Done |
+| 15 | ai-chatbot-yoga-studios | public/blog/ai-chatbot-yoga-studios.jpg | "Teaching an evening class while the front desk phone fills with unread messages." | ✅ Done |
+| 16 | ai-chatbot-home-cleaning-services | public/blog/ai-chatbot-home-cleaning-services.jpg | "Scrubbing a kitchen while missed calls stack up on the phone." | ✅ Done |
+| 17 | ai-chatbot-physiotherapy-clinics | public/blog/ai-chatbot-physiotherapy-clinics.jpg | "Juggling a ringing phone and a full waiting room at once." | ✅ Done |
+
+NOTE on photographers "mismatch": investigated — the 5 images (barbershops/pharmacies/travel-agencies/furniture-stores/language-schools) are correctly placed in their OWN articles, not in the photographers article. The photographers article has 1 correct img block (photographers.jpg). No content bug; no posts.ts changes needed.
+
+**ALL 17 article images now in locked final style.** (7 done by parent earlier: car-rental, vet-clinics, bakeries, boutiques, wedding-planners, flower-shops, pet-groomers + 10 here = 17 total.)
+
+## Batch 6 — 2026-10-10 (final sweep: all remaining images)
+
+Found 32 unique img srcs in posts.ts (count had grown past the earlier 22). 17 already had bars; 15 remained.
+
+**5 missing files — generated fresh in realistic style (media pipeline):**
+| File | Scene |
+|---|---|
+| ai-chatbot-barbershops.jpg | Barber doing skin fade, phone buzzing with booking messages on counter |
+| whatsapp-automation-pharmacies.jpg | Pharmacist counting tablets, phone with WhatsApp refill questions |
+| ai-chatbot-travel-agencies.jpg | Travel agent on call, second phone with holiday package enquiries |
+| ai-chatbot-language-schools.jpg | Empty classroom at night, phone with enrolment messages on desk |
+| whatsapp-automation-furniture-stores.jpg | Couple photographing sofa price tag, salesperson busy with another family |
+
+**1 regenerated (was 3D render, violated realistic rule):**
+| File | New scene |
+|---|---|
+| lead-capture.jpg | Business owner at night desk, laptop inbox full of unread customer enquiries |
+
+**9 existing Oct-8 images — already realistic/clean, kept as-is:**
+car-dealerships.jpg, dental-clinics.jpg, ecommerce.jpg, gyms.jpg, instagram-salons.jpg, n8n-workflows.jpg, plumbers.jpg, real-estate.jpg, whatsapp-restaurants.jpg
+
+All 15 got bottom text bars via PIL per locked spec (dark strip rgb 30,30,30, 16% height, white centered wrapped text).
+
+**FINAL VERIFICATION:** all 32 unique img srcs in posts.ts have bottom bars, zero missing files.
+
+**PROJECT COMPLETE — all 32 article images in locked final style** (realistic photo + bottom text bar inside picture, photo clean above).

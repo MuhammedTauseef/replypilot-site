@@ -19,6 +19,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/terms",
     "/disclaimer",
   ];
+  // Collect article images for image sitemap
+  const postImages: Record<string, string[]> = {};
+  for (const p of posts) {
+    const imgs = (p.content || [])
+      .filter((b: any) => b.type === "img" && b.src)
+      .map((b: any) => `${BASE}${b.src}`);
+    if (imgs.length) postImages[`/blog/${p.slug}`] = imgs;
+  }
+
   return routes.map((path) => ({
     url: `${BASE}${path}`,
     lastModified: new Date(),
@@ -29,5 +38,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         : path === "/demo" || path === "/blog" || path === "/videos"
           ? 0.9
           : 0.5,
+    ...(postImages[path] ? { images: postImages[path] } : {}),
   }));
 }

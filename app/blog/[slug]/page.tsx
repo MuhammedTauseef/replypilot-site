@@ -31,6 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt,
       type: "article",
+      images: (() => {
+        const firstImg = (post.content || []).find((b) => b.type === "img");
+        if (firstImg && firstImg.type === "img") {
+          return [{ url: `https://replypilot-site.vercel.app${firstImg.src}`, alt: firstImg.alt || post.title }];
+        }
+        return [];
+      })(),
     },
   };
 }
@@ -158,12 +165,47 @@ export default async function BlogPostPage({ params }: Props) {
     },
   };
 
+  // FAQ schema — extract Q&A pairs from FAQ section for Google rich snippets
+  const faqSchema = (() => {
+    const blocks = post.content || [];
+    const faqIdx = blocks.findIndex(
+      (b) => (b.type === "h2" || b.type === "h3") && /frequently asked questions/i.test(b.text)
+    );
+    if (faqIdx === -1) return null;
+    const questions: { "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }[] = [];
+    for (let i = faqIdx + 1; i < blocks.length; i++) {
+      const b = blocks[i];
+      if (b.type === "h3" && b.text.trim().endsWith("?")) {
+        const answerBlock = blocks[i + 1];
+        if (answerBlock && answerBlock.type === "p") {
+          questions.push({
+            "@type": "Question",
+            name: b.text.trim(),
+            acceptedAnswer: { "@type": "Answer", text: answerBlock.text.trim() },
+          });
+        }
+      }
+    }
+    if (!questions.length) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: questions,
+    };
+  })();
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }}
+        />
+      )}
       <PageHeader />
       <main>
         <section className="article-hero">
