@@ -7,7 +7,8 @@ export type Block =
   | { type: "h3"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "img"; src: string; alt: string; caption?: string }
-  | { type: "video"; src: string; poster?: string; caption: string };
+  | { type: "video"; src: string; poster?: string; caption: string }
+  | { type: "quick-answer"; text: string };
 
 export interface DbPost {
   id: string;

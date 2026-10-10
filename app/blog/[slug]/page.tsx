@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-import PriceValue from "@/components/PriceValue";
+import {
+  MidArticleCTA,
+  EndOfArticleCTA,
+  LeadMagnetForm,
+  WhatsAppFloat,
+  type CtaContext,
+} from "@/components/BlogCTA";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getPublishedPosts, getPostBySlug, type Block } from "@/lib/blog";
 
@@ -80,6 +87,28 @@ function renderBlock(block: Block, i: number) {
           ))}
         </ul>
       );
+    case "quick-answer":
+      return (
+        <div
+          key={i}
+          className="quick-answer-box"
+          style={{
+            background: "rgba(216, 189, 143, 0.08)",
+            border: "1px solid rgba(216, 189, 143, 0.35)",
+            borderLeft: "4px solid var(--gold-soft)",
+            borderRadius: 10,
+            padding: "18px 22px",
+            margin: "28px 0",
+          }}
+        >
+          <p style={{ margin: 0, fontWeight: 600 }}>
+            <span style={{ color: "var(--gold-soft)" }}>
+              Quick answer:{" "}
+            </span>
+            {renderInline(block.text, `qa${i}`)}
+          </p>
+        </div>
+      );
     case "img":
       return (
         <figure key={i} style={{ margin: "32px 0" }}>
@@ -144,16 +173,64 @@ function renderBlock(block: Block, i: number) {
   }
 }
 
+/** Derive the article's niche (e.g. "clothing boutiques") from its slug. */
+function nicheFromSlug(slug: string): string {
+  const prefixes = [
+    "instagram-dm-automation-",
+    "whatsapp-automation-",
+    "ai-chatbots-",
+    "ai-chatbot-",
+  ];
+  for (const p of prefixes) {
+    if (slug.startsWith(p)) {
+      const rest = slug.slice(p.length).replace(/-/g, " ").trim();
+      if (rest) return rest;
+    }
+  }
+  return "your business";
+}
+
+/** Derive the automation channel (e.g. "WhatsApp automation") from the slug. */
+function channelFromSlug(slug: string): string {
+  if (slug.startsWith("whatsapp-automation-")) return "WhatsApp automation";
+  if (slug.startsWith("instagram")) return "Instagram DM automation";
+  if (slug.startsWith("ai-chatbot")) return "AI chatbot";
+  return "AI automation";
+}
+
 /** /blog/[slug] — full article page. */
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  const ctx: CtaContext = {
+    niche: nicheFromSlug(post.slug),
+    channel: channelFromSlug(post.slug),
+  };
+
   const all = await getPublishedPosts();
   const related = all.filter((p) => p.slug !== slug).slice(0, 3);
 
+  // Mid-article CTA position: ~40% into the body, never inside the FAQ section.
+  const blocks = post.content || [];
+  const faqHeadingIdx = blocks.findIndex(
+    (b) => (b.type === "h2" || b.type === "h3") && /frequently asked questions/i.test(b.text)
+  );
+  const midCtaIdx = (() => {
+    let idx = Math.max(4, Math.floor(blocks.length * 0.4));
+    if (faqHeadingIdx > 0 && idx >= faqHeadingIdx) {
+      idx = Math.max(4, faqHeadingIdx - 1);
+    }
+    return idx;
+  })();
+
   // Article schema — Neil Patel 2026 rule: schema markup so AI can scrape and cite content
+  const postImage = (() => {
+    const imgBlock = (post.content || []).find((b) => b.type === "img");
+    const src = imgBlock && imgBlock.type === "img" ? imgBlock.src : undefined;
+    return src ? `https://replypilot-site.vercel.app${src}` : undefined;
+  })();
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -161,6 +238,7 @@ export default async function BlogPostPage({ params }: Props) {
     description: post.excerpt,
     url: `https://replypilot-site.vercel.app/blog/${post.slug}`,
     datePublished: post.date,
+    ...(postImage ? { image: postImage } : {}),
     author: {
       "@type": "Organization",
       name: "ReplyPilot",
@@ -175,6 +253,32 @@ export default async function BlogPostPage({ params }: Props) {
       "@type": "WebPage",
       "@id": `https://replypilot-site.vercel.app/blog/${post.slug}`,
     },
+  };
+
+  // BreadcrumbList schema — site-wide breadcrumb structured data
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://replypilot-site.vercel.app/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: "https://replypilot-site.vercel.app/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `https://replypilot-site.vercel.app/blog/${post.slug}`,
+      },
+    ],
   };
 
   // FAQ schema — extract Q&A pairs from FAQ section for Google rich snippets
@@ -206,6 +310,18 @@ export default async function BlogPostPage({ params }: Props) {
     };
   })();
 
+  // SpeakableSpecification schema — flags quotable sections for voice assistants and AI answer engines
+  const speakableSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: post.title,
+    url: `https://replypilot-site.vercel.app/blog/${post.slug}`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".quick-answer-box", ".article-body > p:first-of-type"],
+    },
+  };
+
   return (
     <>
       <script
@@ -218,6 +334,14 @@ export default async function BlogPostPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(speakableSchema) }}
+      />
       <PageHeader />
       <main>
         <section className="article-hero">
@@ -259,36 +383,17 @@ export default async function BlogPostPage({ params }: Props) {
         <section className="block" style={{ paddingTop: 56 }}>
           <div className="wrap" style={{ maxWidth: 760 }}>
             <article className="article-body">
-              {post.content.map(renderBlock)}
+              {blocks.map((b, i) => (
+                <Fragment key={i}>
+                  {renderBlock(b, i)}
+                  {i === midCtaIdx && <MidArticleCTA ctx={ctx} />}
+                </Fragment>
+              ))}
             </article>
 
-            <div className="article-cta">
-              <div>
-                <h3>Want this working in your business?</h3>
-                <p>
-                  ReplyPilot builds custom AI agents and automations around
-                  your services, your FAQs, and your booking flow — with a free
-                  custom demo before you decide.
-                </p>
-              </div>
-              <div
-                style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
-              >
-                <Link href="/#contact" className="btn btn-gold">
-                  Get a free demo
-                </Link>
-                <span
-                  style={{
-                    alignSelf: "center",
-                    color: "#b9c6e2",
-                    fontSize: ".95rem",
-                    fontWeight: 600,
-                  }}
-                >
-                  Pricing: <PriceValue>visible after login</PriceValue>
-                </span>
-              </div>
-            </div>
+            <EndOfArticleCTA ctx={ctx} />
+            <LeadMagnetForm ctx={ctx} />
+            <WhatsAppFloat ctx={ctx} />
 
             {related.length > 0 && (
               <div style={{ marginTop: 64 }}>
