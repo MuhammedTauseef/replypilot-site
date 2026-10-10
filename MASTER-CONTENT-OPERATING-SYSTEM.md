@@ -17,7 +17,7 @@ These rules are mandatory unless a rule is explicitly marked conditional. Never 
 
 ## 1. LOCKED ARTICLE RULES
 
-1. Every standard article must contain approximately 3,000 words of substantive content. Aim for 3,000 words and never pad content with repetition, filler, unnecessary introductions, or keyword stuffing. If the topic cannot honestly support 3,000 useful words, flag it for editorial approval rather than inventing content.
+1. Every standard article must contain 2,500–3,000 words of substantive content (user-locked 2026-10-10). Aim for this range and never pad content with repetition, filler, unnecessary introductions, or keyword stuffing. If the topic cannot honestly support 2,500 useful words, flag it for editorial approval rather than inventing content.
 
 2. The daily publishing quantity must vary according to the actual research queue, editorial capacity, and quality of available topics. The historical target may vary between 9, 12, and 15 articles, but these are NOT mandatory minimums or quotas. Publish fewer when fewer articles pass quality control.
 
