@@ -73,11 +73,25 @@ export default function RootLayout({
                 {
                   "@type": "Organization",
                   name: "ReplyPilot",
+                  alternateName:
+                    "ReplyPilot AI Agents for Small Business Messaging",
                   url: "https://replypilot-site.vercel.app/",
+                  logo: "https://replypilot-site.vercel.app/logo.png",
                   description:
-                    "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses.",
+                    "ReplyPilot builds AI sales agents and workflow automations for small businesses: automated WhatsApp replies, Instagram DM handling, and website chat agents that qualify leads, follow up, book appointments, and hand off to humans. A product of independent founder Muhammad Tauseef. Distinct from the unrelated ReplyPilot Chrome extension for drafting social media replies.",
                   founder: { "@type": "Person", name: "Muhammad Tauseef" },
-                  sameAs: [],
+                  foundingDate: "2024",
+                  knowsAbout: [
+                    "AI sales agents",
+                    "WhatsApp business automation",
+                    "Instagram DM automation",
+                    "AI chatbots for small business",
+                    "lead qualification automation",
+                    "appointment booking automation",
+                  ],
+                  sameAs: [
+                    "https://www.linkedin.com/in/muhammadtauseef9",
+                  ],
                 },
                 {
                   "@type": "WebSite",

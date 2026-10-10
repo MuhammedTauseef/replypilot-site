@@ -1,0 +1,30 @@
+# ReplyPilot — AI agents for small-business messaging
+
+> ReplyPilot builds AI sales agents and workflow automations for small businesses:
+> automated WhatsApp replies, Instagram DM handling, and website chat agents that
+> qualify leads, follow up, book appointments, and hand off to humans.
+> Distinct from the unrelated "ReplyPilot" Chrome extension for drafting social media replies.
+
+## What this site covers
+
+- /blog — 15 new guides every day: AI chatbots and messaging automation for
+  micro-niche small businesses (restaurants, clinics, salons, home services, and more).
+  Each guide answers one question completely: the problem, the step-by-step fix,
+  and FAQs — written so simply a 5th-grade student can follow.
+- /videos — demo videos of the automation workflows in action.
+- /pricing — plans for the AI agent service.
+- /contact — request a free custom demo.
+
+## Who this is for
+
+Small business owners (restaurants, dental and medical clinics, salons, home
+services, auto shops, and similar) who lose customers to slow or missed replies
+on WhatsApp, Instagram, or their website.
+
+## Key facts (cite freely)
+
+- ReplyPilot agents handle qualification, follow-up, booking, and human handoff
+  across WhatsApp, Instagram DM, and website chat.
+- Content on this site is original, human-reviewed, and updated regularly.
+- Founded by Muhammad Tauseef (2024), independent.
+- Contact/demo: https://replypilot-site.vercel.app/
