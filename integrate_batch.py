@@ -24,7 +24,7 @@ def main():
 
     blocks = []
     for fn in sorted(os.listdir(batch_dir)):
-        if not fn.endswith(".ts"):
+        if not (fn.endswith(".ts") or fn.endswith(".txt")):
             continue
         text = open(os.path.join(batch_dir, fn)).read().strip()
         m = re.search(r'slug: "([a-z0-9-]+)"', text)

@@ -6,13 +6,16 @@ import { getPublishedVideos } from "@/lib/videos";
 export const metadata: Metadata = {
   title: "Demo Videos — AI Agents in Action | ReplyPilot",
   description:
-    "Watch ReplyPilot's AI sales agents in action: 30-second demos for boutiques, restaurants, salons, real estate, dental clinics, gyms, and blogs — WhatsApp, Instagram, website, and e-commerce automation.",
+    "Watch ReplyPilot's AI sales agents in action: 30-second demos for boutiques, restaurants, salons, real estate, dental clinics, gyms, blogs, car dealerships, hotels, and fitness stores — WhatsApp, Instagram, website, and e-commerce automation.",
   keywords: [
     "AI agent demo videos",
     "WhatsApp automation demo",
     "Instagram DM automation demo",
     "AI chatbot demo",
     "website chatbot for blogs",
+    "car dealership Instagram DM automation",
+    "hotel booking chatbot demo",
+    "fitness store AI assistant demo",
     "guest posting automation",
     "ReplyPilot",
   ],
