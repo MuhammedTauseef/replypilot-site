@@ -136,7 +136,25 @@ For every article:
 12. Avoid misleading titles, exaggerated promises, and clickbait.
 13. Do not create separate pages for every minor keyword variation.
 14. Review competitor content for gaps, not for copying.
-15. DAILY COMPETITOR-BEAT ANALYSIS (user-locked 2026-10-10): For EVERY article's keywords, before writing, identify the top 5 REAL ACTIVE competitor websites and record: (a) DA 1–10 range preferred — these are the beatable targets; (b) monthly traffic 30K–500K preferred; (c) spam score must be 0% (clean link profiles only); (d) must be RECENTLY ACTIVE (fresh content/updates — old or new site, but not dead/abandoned); (e) practical gap analysis — how are they ranking page 1, what content gaps exist, what they missed (cost math, setup steps, trust builders); (f) exactly how our article beats each one. (g) IMAGE ANALYSIS — what types of pictures/images competitors use (stock vs custom, screenshots vs illustrations), and what image strategy will beat them. IMAGE RULE (user-locked 2026-10-10): all article images must be CUSTOM-MADE, human-feeling visuals (like a human designer made them) — never generic stock photos or robotic AI-looking images. Every image must be CONTENT-RELEVANT (directly matching what the surrounding text discusses) and show the problem or the solution. CLEAN IMAGE RULE (user-locked 2026-10-10): NO text overlaid on the picture, NO lines/bands/strips over the picture — the image must be completely clean. PROFESSIONAL LEVEL: every image must look like a professional photographer's/designer's work — premium lighting, composition, and finish. The picture should visually show the problem/solution on its own; any explanatory text goes as a caption BELOW the image, never on top of it. If no competitor matches the full profile, target the weakest page-1 content (thin vendor pages, GitHub repos, press releases) — a 2,500-word problem-solving guide with cost math + setup steps + FAQ schema beats them on relevance.
+15. DAILY COMPETITOR-BEAT ANALYSIS (merged user + agent rules, user-locked 2026-10-10): For EVERY article's keywords, before writing:
+
+USER'S RULES (targets, not blockers):
+(a) Identify top 5 REAL ACTIVE competitors on page 1
+(b) DA 1–10 preferred — beatable targets
+(c) Traffic 30K–500K preferred
+(d) Spam score 0% preferred (clean link profiles)
+(e) Must be RECENTLY ACTIVE (not dead/abandoned)
+(f) Practical gap analysis — how they rank, what they cover, what they miss
+(g) Exactly how our article beats each one
+(h) IMAGE ANALYSIS — what pictures they use, what image strategy beats them
+
+AGENT'S GUIDANCE (practical reality):
+- Perfect numbers (DA 1-10 + 30K-500K together) are RARE — don't chase them, don't block on them
+- Real opportunity = THIN page-1 content (300-500 words), VENDOR self-promotion (biased), UNOCCUPIED micro-niches
+- If no competitor matches the full numeric profile, target the WEAKEST page-1 content honestly
+- Content quality beats metric perfection: 2,500-word problem-solving guide + cost math + setup steps + FAQ schema + real images beats thin pages on relevance
+
+MERGED PRINCIPLE: Use the user's criteria as the IDEAL target, use the agent's guidance as the PRACTICAL fallback. Never fabricate metrics. Never skip the analysis. Always publish better content than what's on page 1.
 
 16. IMAGE REMAKE RULE (user-locked 2026-10-10): ALL published articles' images must be remade to the IMAGE RULE standard (custom-made, human-feeling, content-relevant, designed text on image, problem/solution showing). No article keeps old generic/stock images.
 
