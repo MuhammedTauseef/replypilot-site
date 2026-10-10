@@ -3,13 +3,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-import {
-  MidArticleCTA,
-  EndOfArticleCTA,
-  LeadMagnetForm,
-  WhatsAppFloat,
-  type CtaContext,
-} from "@/components/BlogCTA";
+// BlogCTA temporarily disabled for deploy (placeholder WhatsApp number)
 import { safeJsonLd } from "@/lib/json-ld";
 import { getPublishedPosts, getPostBySlug, type Block } from "@/lib/blog";
 
@@ -187,6 +181,11 @@ function nicheFromSlug(slug: string): string {
       if (rest) return rest;
     }
   }
+  // Guide-style slugs: "ecommerce-store-assistants" -> "ecommerce stores"
+  if (slug.endsWith("-assistants")) {
+    return slug.slice(0, -"-assistants".length).replace(/-/g, " ").trim();
+  }
+  // Generic guides aren't niche-specific — "your business" reads naturally.
   return "your business";
 }
 
@@ -195,6 +194,9 @@ function channelFromSlug(slug: string): string {
   if (slug.startsWith("whatsapp-automation-")) return "WhatsApp automation";
   if (slug.startsWith("instagram")) return "Instagram DM automation";
   if (slug.startsWith("ai-chatbot")) return "AI chatbot";
+  if (slug.includes("whatsapp")) return "WhatsApp automation";
+  if (slug.includes("chatbot")) return "AI chatbot";
+  if (slug.includes("phone")) return "AI phone agent";
   return "AI automation";
 }
 
@@ -204,10 +206,7 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const ctx: CtaContext = {
-    niche: nicheFromSlug(post.slug),
-    channel: channelFromSlug(post.slug),
-  };
+  // CTA ctx disabled for deploy
 
   const all = await getPublishedPosts();
   const related = all.filter((p) => p.slug !== slug).slice(0, 3);
@@ -386,14 +385,14 @@ export default async function BlogPostPage({ params }: Props) {
               {blocks.map((b, i) => (
                 <Fragment key={i}>
                   {renderBlock(b, i)}
-                  {i === midCtaIdx && <MidArticleCTA ctx={ctx} />}
+                  {/* CTA disabled */}
                 </Fragment>
               ))}
             </article>
 
-            <EndOfArticleCTA ctx={ctx} />
-            <LeadMagnetForm ctx={ctx} />
-            <WhatsAppFloat ctx={ctx} />
+            {/* CTA disabled */}
+            {/* Lead magnet disabled */}
+            {/* WhatsApp float disabled */}
 
             {related.length > 0 && (
               <div style={{ marginTop: 64 }}>
