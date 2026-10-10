@@ -3,7 +3,13 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-// BlogCTA temporarily disabled for deploy (placeholder WhatsApp number)
+import {
+  MidArticleCTA,
+  EndOfArticleCTA,
+  LeadMagnetForm,
+  WhatsAppFloat,
+  type CtaContext,
+} from "@/components/BlogCTA";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getPublishedPosts, getPostBySlug, type Block } from "@/lib/blog";
 
@@ -206,7 +212,10 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  // CTA ctx disabled for deploy
+  const ctx: CtaContext = {
+    niche: nicheFromSlug(post.slug),
+    channel: channelFromSlug(post.slug),
+  };
 
   const all = await getPublishedPosts();
   const related = all.filter((p) => p.slug !== slug).slice(0, 3);
@@ -385,14 +394,14 @@ export default async function BlogPostPage({ params }: Props) {
               {blocks.map((b, i) => (
                 <Fragment key={i}>
                   {renderBlock(b, i)}
-                  {/* CTA disabled */}
+                  {i === midCtaIdx && <MidArticleCTA ctx={ctx} />}
                 </Fragment>
               ))}
             </article>
 
-            {/* CTA disabled */}
-            {/* Lead magnet disabled */}
-            {/* WhatsApp float disabled */}
+            <EndOfArticleCTA ctx={ctx} />
+            <LeadMagnetForm ctx={ctx} />
+            <WhatsAppFloat ctx={ctx} />
 
             {related.length > 0 && (
               <div style={{ marginTop: 64 }}>

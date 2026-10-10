@@ -100,6 +100,9 @@ export function WhatsAppFloat({ ctx }: { ctx: CtaContext }) {
  * BEFORE the reader's attention drops. Mentions the article's niche.
  */
 export function MidArticleCTA({ ctx }: { ctx: CtaContext }) {
+  // Avoid "your your business" when the niche is generic.
+  const nichePossessive =
+    ctx.niche === "your business" ? "your business" : `your ${ctx.niche}`;
   return (
     <div
       style={{
@@ -112,7 +115,7 @@ export function MidArticleCTA({ ctx }: { ctx: CtaContext }) {
       }}
     >
       <p style={{ margin: "0 0 8px", fontWeight: 800, fontSize: "1.15rem" }}>
-        Want this for your {ctx.niche}?
+        Want this for {nichePossessive}?
       </p>
       <p style={{ margin: "0 0 18px", color: "#b9c6e2", maxWidth: "60ch" }}>
         ReplyPilot builds a custom {ctx.channel.toLowerCase()} setup for your{" "}
@@ -129,10 +132,12 @@ export function MidArticleCTA({ ctx }: { ctx: CtaContext }) {
  * WhatsApp chat (instant) + free demo request (formal).
  */
 export function EndOfArticleCTA({ ctx }: { ctx: CtaContext }) {
+  const nichePossessive =
+    ctx.niche === "your business" ? "your business" : `your ${ctx.niche}`;
   return (
     <div className="article-cta">
       <div>
-        <h3>Want this working in your {ctx.niche}?</h3>
+        <h3>Want this working in {nichePossessive}?</h3>
         <p>
           ReplyPilot builds custom {ctx.channel.toLowerCase()} around your
           services, your FAQs, and your booking flow — with a free custom
