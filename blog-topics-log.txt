@@ -23,3 +23,8 @@
 2026-10-09 | ai-chatbot-car-detailing | AI chatbot for car detailing | detailing booking chatbot, auto detailing lead automation
 2026-10-09 | ai-chatbot-interior-designers | AI chatbot for interior designers | interior design client enquiries, designer consultation booking
 2026-10-09 | ai-chatbot-law-firms | AI chatbot for law firms | law firm client intake automation, attorney lead chatbot
+2026-10-10 | ai-chatbot-coffee-shops | AI chatbot for coffee shops | coffee shop preorder automation, cafe catering chatbot
+2026-10-10 | ai-chatbot-veterinary-clinics | AI chatbot for veterinary clinics | vet clinic after-hours triage, pet emergency chatbot
+2026-10-10 | ai-chatbot-yoga-studios | AI chatbot for yoga studios | yoga trial class booking, studio class chatbot
+2026-10-10 | ai-chatbot-home-cleaning-services | AI chatbot for home cleaning services | cleaning quote automation, house cleaner booking chatbot
+2026-10-10 | ai-chatbot-physiotherapy-clinics | AI chatbot for physiotherapy clinics | physio appointment booking, clinic intake chatbot
