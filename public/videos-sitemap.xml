@@ -66,5 +66,23 @@
       <video:publication_date>2026-10-09</video:publication_date>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://replypilot-site.vercel.app/videos/demo-pharmacy-whatsapp-poster.png</video:thumbnail_loc>
+      <video:title>Pharmacy WhatsApp Automation: AI Chatbot for Prescription Refills | ReplyPilot</video:title>
+      <video:description>Watch Rhea, a WhatsApp AI chatbot for pharmacies, confirm prescription refills in seconds, answer opening-hours and medicine-stock questions instantly, and arrange home delivery around the clock. ReplyPilot builds custom AI sales agents for growing businesses. Free custom demo available.</video:description>
+      <video:content_loc>https://replypilot-site.vercel.app/videos/demo-pharmacy-whatsapp.mp4</video:content_loc>
+      <video:duration>30</video:duration>
+      <video:publication_date>2026-10-11</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://replypilot-site.vercel.app/videos/demo-lawfirm-website-poster.png</video:thumbnail_loc>
+      <video:title>Law Firm Chatbot Automation: AI Website Assistant That Captures Case Leads | ReplyPilot</video:title>
+      <video:description>Meet Sage, a website AI chatbot for law firms, greeting visitors after hours, answering practice-area questions, and capturing case details as qualified leads into the intake flow. ReplyPilot builds custom AI sales agents for growing businesses. Free custom demo available.</video:description>
+      <video:content_loc>https://replypilot-site.vercel.app/videos/demo-lawfirm-website.mp4</video:content_loc>
+      <video:duration>30</video:duration>
+      <video:publication_date>2026-10-11</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
 </urlset>
