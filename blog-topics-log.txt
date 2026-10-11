@@ -28,3 +28,18 @@
 2026-10-10 | ai-chatbot-yoga-studios | AI chatbot for yoga studios | yoga trial class booking, studio class chatbot
 2026-10-10 | ai-chatbot-home-cleaning-services | AI chatbot for home cleaning services | cleaning quote automation, house cleaner booking chatbot
 2026-10-10 | ai-chatbot-physiotherapy-clinics | AI chatbot for physiotherapy clinics | physio appointment booking, clinic intake chatbot
+2026-10-12 | whatsapp-automation-bridal-shops | WhatsApp automation for bridal shops | KD 0 SERP-estimate (STRONG)
+2026-10-12 | whatsapp-automation-dry-cleaners | WhatsApp automation for dry cleaners | KD 0 SERP-estimate (STRONG)
+2026-10-12 | whatsapp-automation-food-trucks | WhatsApp automation for food trucks | KD 0 SERP-estimate (STRONG)
+2026-10-12 | whatsapp-automation-moving-companies | WhatsApp automation for moving companies | KD 0 SERP-estimate (WEAK — named competitor to outclass)
+2026-10-12 | whatsapp-automation-music-schools | WhatsApp automation for music schools | KD 0 SERP-estimate (STRONG)
+2026-10-12 | ai-chatbot-gift-shops | AI chatbot for gift shops | KD 0 SERP-estimate (WEAK — named competitor to outclass)
+2026-10-12 | ai-chatbot-car-wash-business | AI chatbot for car wash business | KD 0 SERP-estimate (WEAK — named competitor to outclass)
+2026-10-12 | ai-chatbot-furniture-stores | AI chatbot for furniture stores | KD 0 SERP-estimate (STRONG)
+2026-10-12 | whatsapp-automation-print-shops | WhatsApp automation for print shops | KD 0 SERP-estimate (STRONG)
+2026-10-12 | whatsapp-automation-daycare | WhatsApp automation for daycare | KD 0 SERP-estimate (STRONG)
+2026-10-12 | ai-chatbot-bookstores | AI chatbot for bookstores | KD 0 SERP-estimate (STRONG)
+2026-10-12 | whatsapp-automation-tax-preparers | WhatsApp automation for tax preparers | KD 0 SERP-estimate (STRONG)
+2026-10-12 | ai-chatbot-driving-schools | AI chatbot for driving schools | KD 0 SERP-estimate (WEAK — named competitor to outclass)
+2026-10-12 | ai-chatbot-pharmacies | AI chatbot for pharmacies | KD 0 SERP-estimate (WEAK — named competitor to outclass)
+2026-10-12 | ai-chatbot-opticians | AI chatbot for opticians | KD 0 SERP-estimate (WEAK — named competitor to outclass)
