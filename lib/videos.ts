@@ -28,11 +28,36 @@ export async function getPublishedVideos(): Promise<DemoVideo[]> {
       // videos that lack a row yet (deduped by file path) so daily
       // uploads appear in the gallery immediately with full SEO.
       const dbFiles = new Set((data as DemoVideo[]).map((v) => v.file));
-      return [...(data as DemoVideo[]), ...getLocalVideos(dbFiles)];
+      // Backfill missing DB posters from local files so no card ever
+      // renders a black/blank video thumbnail.
+      const withPosters = (data as DemoVideo[]).map((v) => ({
+        ...v,
+        poster: v.poster || resolveLocalPoster(v.file),
+      }));
+      return [...withPosters, ...getLocalVideos(dbFiles)];
     }
   }
   // Fallback: local public/videos files (DB empty or unreachable).
   return getLocalVideos();
+}
+
+/**
+ * Resolve a local poster image for a /videos/<file>.mp4 path.
+ * Prefers <base>-poster.png, falls back to <base>.png, else null.
+ */
+function resolveLocalPoster(file: string): string | null {
+  try {
+    const dir = join(process.cwd(), "public", "videos");
+    const base = file.replace(/^\/videos\//, "").replace(/\.mp4$/, "");
+    const posterPosterPng = base + "-poster.png";
+    const posterPng = base + ".png";
+    const posterFile = existsSync(join(dir, posterPosterPng))
+      ? posterPosterPng
+      : posterPng;
+    return existsSync(join(dir, posterFile)) ? `/videos/${posterFile}` : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -52,14 +77,7 @@ function getLocalVideos(exclude: Set<string> = new Set()): DemoVideo[] {
       const parts = base.replace(/^demo-/, "").split("-");
       const channel = parts[parts.length - 1] || "website";
       const niche = parts.slice(0, -1).join(" ") || base;
-      const posterPng = base + ".png";
-      const posterPosterPng = base + "-poster.png";
-      const posterFile = existsSync(join(dir, posterPosterPng))
-        ? posterPosterPng
-        : posterPng;
-      const poster = existsSync(join(dir, posterFile))
-        ? `/videos/${posterFile}`
-        : null;
+      const poster = resolveLocalPoster(`/videos/${file}`);
       // Full SEO metadata for videos published without a DB row yet.
       const seo = videoSeoMeta[`/videos/${file}`];
       if (seo) {
