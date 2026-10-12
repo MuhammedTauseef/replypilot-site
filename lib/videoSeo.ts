@@ -16,6 +16,22 @@ export interface LocalVideoSeo {
 
 /** Keyed by the exact public file path, e.g. "/videos/demo-pharmacy-whatsapp.mp4". */
 export const videoSeoMeta: Record<string, LocalVideoSeo> = {
+  "/videos/demo-plumbing-instagram.mp4": {
+    niche: "Plumbing Services",
+    channel: "Instagram",
+    title: "Plumbing Services AI Instagram Demo — Never Miss Another Plumbing Job",
+    description:
+      "Meet Wren, a demo AI Instagram DM agent built for plumbers, confirming service areas in seconds, triaging emergency call-outs against routine jobs around the clock, and booking repair slots while the business sleeps. This 30-second demo shows Instagram DM automation running a plumbing company's customer service 24/7 — instant answers to emergency DMs, zero missed jobs, and the team free to focus on the wrench instead of the inbox. Want one for your plumbing business? Get a free custom demo built around your services, your FAQs, and your booking flow.",
+    posterAlt: "Plumbing services AI Instagram DM agent demo — never miss another plumbing job",
+  },
+  "/videos/demo-furniture-ecommerce.mp4": {
+    niche: "Furniture Store",
+    channel: "E-commerce",
+    title: "Furniture Store AI E-commerce Demo — Sell Furniture While You Sleep",
+    description:
+      "Meet Rowan, a demo AI e-commerce store assistant built for furniture stores, guiding shoppers to the right sofa, answering fabric, size, and delivery questions instantly, and recovering abandoned carts automatically. This 30-second demo shows an AI sales agent working an online furniture store around the clock — 24/7 customer support, smart product discovery, and zero lost sales while the team rests. Want one for your store? Get a free custom demo built around your catalog, your FAQs, and your checkout flow.",
+    posterAlt: "Furniture store AI e-commerce assistant demo — sell furniture while you sleep",
+  },
   "/videos/demo-pharmacy-whatsapp.mp4": {
     niche: "Pharmacy",
     channel: "WhatsApp",
