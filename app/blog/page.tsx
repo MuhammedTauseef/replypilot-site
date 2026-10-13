@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { getPublishedPosts } from "@/lib/blog";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Blog — AI Automation Tips for Small Businesses | ReplyPilot",
@@ -15,13 +16,40 @@ export const metadata: Metadata = {
     "n8n workflow automation",
     "ReplyPilot",
   ],
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/blog",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/blog",
+    images: [
+      {
+        url: "https://replypilot-site.vercel.app/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ReplyPilot — AI Sales Agents for Small Business",
+      },
+    ],
+  },
 };
 
 /** /blog — listing of all posts. */
 export default async function BlogPage() {
   const posts = await getPublishedPosts();
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "ReplyPilot Blog",
+    url: "https://replypilot-site.vercel.app/blog",
+    description:
+      "Practical guides for small business owners on AI automation — no jargon, no hype, just what works.",
+    inLanguage: "en",
+  };
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(blogSchema) }}
+      />
       <PageHeader />
       <main>
         <section className="hero" style={{ padding: 0 }}>

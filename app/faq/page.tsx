@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     "AI chatbot for business FAQ",
     "ReplyPilot FAQ",
   ],
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/faq",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/faq",
+  }
 };
 
 const faqs = [

@@ -202,7 +202,10 @@ function channelFromSlug(slug: string): string {
   if (slug.startsWith("ai-chatbot")) return "AI chatbot";
   if (slug.includes("whatsapp")) return "WhatsApp automation";
   if (slug.includes("chatbot")) return "AI chatbot";
-  if (slug.includes("phone")) return "AI phone agent";
+  // Phone receptionist is a category guide, NOT a ReplyPilot offer —
+  // never let the article CTA imply ReplyPilot builds phone agents.
+  // (See the qualifier paragraph in the phone-receptionist article.)
+  if (slug.includes("phone")) return "AI automation";
   return "AI automation";
 }
 
@@ -218,7 +221,39 @@ export default async function BlogPostPage({ params }: Props) {
   };
 
   const all = await getPublishedPosts();
-  const related = all.filter((p) => p.slug !== slug).slice(0, 3);
+  // "Keep reading": topically related first (shared keywords + shared slug
+  // words), newest first as tiebreak — so pending articles get inbound
+  // links from their topical neighbours instead of only from /blog.
+  const STOP = new Set([
+    "ai", "chatbot", "chatbots", "automation", "whatsapp", "instagram",
+    "dm", "for", "and", "the", "small", "business",
+  ]);
+  const slugWords = (s: string) =>
+    new Set(s.split("-").filter((w) => w && !STOP.has(w)));
+  const myWords = slugWords(post.slug);
+  const myKeywords = new Set(post.keywords.map((k) => k.toLowerCase()));
+  const related = all
+    .filter((p) => p.slug !== slug)
+    .map((p) => {
+      const words = slugWords(p.slug);
+      let sharedWords = 0;
+      for (const w of words) if (myWords.has(w)) sharedWords++;
+      const sharedKeywords = p.keywords.filter((k) =>
+        myKeywords.has(k.toLowerCase())
+      ).length;
+      return { p, score: sharedKeywords * 3 + sharedWords };
+    })
+    .sort((a, b) =>
+      b.score - a.score !== 0
+        ? b.score - a.score
+        : b.p.created_at < a.p.created_at
+          ? -1
+          : b.p.created_at > a.p.created_at
+            ? 1
+            : 0
+    )
+    .slice(0, 3)
+    .map(({ p }) => p);
 
   // Mid-article CTA position: ~40% into the body, never inside the FAQ section.
   const blocks = post.content || [];
@@ -245,7 +280,8 @@ export default async function BlogPostPage({ params }: Props) {
     headline: post.title,
     description: post.excerpt,
     url: `https://replypilot-site.vercel.app/blog/${post.slug}`,
-    datePublished: post.date,
+    // ISO 8601 datetime (was: display date like "13 October 2026").
+    datePublished: post.created_at || post.date,
     ...(postImage ? { image: postImage } : {}),
     author: {
       "@type": "Organization",
@@ -289,7 +325,12 @@ export default async function BlogPostPage({ params }: Props) {
     ],
   };
 
-  // FAQ schema — extract Q&A pairs from FAQ section for Google rich snippets
+  // FAQ schema — extract Q&A pairs from FAQ section for Google rich snippets.
+  // Robust: every h3 inside the FAQ section is a question, with or without
+  // a trailing "?" (5 articles have FAQ headings without "?"), and the
+  // answer is ALL consecutive <p> blocks until the next heading/block.
+  // The old extractor silently dropped questions that lacked "?" or whose
+  // answer spanned more than one paragraph.
   const faqSchema = (() => {
     const blocks = post.content || [];
     const faqIdx = blocks.findIndex(
@@ -299,13 +340,19 @@ export default async function BlogPostPage({ params }: Props) {
     const questions: { "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }[] = [];
     for (let i = faqIdx + 1; i < blocks.length; i++) {
       const b = blocks[i];
-      if (b.type === "h3" && b.text.trim().endsWith("?")) {
-        const answerBlock = blocks[i + 1];
-        if (answerBlock && answerBlock.type === "p") {
+      if (b.type === "h2") break; // FAQ section ended
+      if (b.type === "h3") {
+        const answerParts: string[] = [];
+        for (let j = i + 1; j < blocks.length; j++) {
+          const ab = blocks[j];
+          if (ab.type === "p") answerParts.push(ab.text.trim());
+          else break; // next heading / list / media ends this answer
+        }
+        if (answerParts.length) {
           questions.push({
             "@type": "Question",
             name: b.text.trim(),
-            acceptedAnswer: { "@type": "Answer", text: answerBlock.text.trim() },
+            acceptedAnswer: { "@type": "Answer", text: answerParts.join("\n\n") },
           });
         }
       }

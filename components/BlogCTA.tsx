@@ -119,8 +119,8 @@ export function MidArticleCTA({ ctx }: { ctx: CtaContext }) {
         Want this for {nichePossessive}?
       </p>
       <p style={{ margin: "0 0 18px", color: "#b9c6e2", maxWidth: "60ch" }}>
-        ReplyPilot builds a custom {ctx.channel.toLowerCase()} setup for your{" "}
-        {ctx.niche} — answering customer questions instantly, taking
+        ReplyPilot builds a custom {ctx.channel.toLowerCase()} setup for{" "}
+        {nichePossessive} — answering customer questions instantly, taking
         orders and bookings, and handing off to you when a human is needed.
       </p>
       <WhatsAppButton ctx={ctx} label="Ask on WhatsApp — it's free" />

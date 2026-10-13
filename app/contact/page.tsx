@@ -10,6 +10,12 @@ export const metadata: Metadata = {
   title: "Contact — ReplyPilot",
   description:
     "Contact ReplyPilot — email us about AI sales agents, WhatsApp automation, and workflow automation for your business.",
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/contact",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/contact",
+  }
 };
 
 const fallbackBlocks: Block[] = [

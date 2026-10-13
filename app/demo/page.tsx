@@ -14,6 +14,14 @@ export const metadata: Metadata = {
       "Chat live with AI assistants for 13 demo businesses. See what ReplyPilot can do for yours.",
     url: "https://replypilot-site.vercel.app/demo",
     type: "website",
+    images: [
+      {
+        url: "https://replypilot-site.vercel.app/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ReplyPilot — AI Sales Agents for Small Business",
+      },
+    ],
   },
 };
 

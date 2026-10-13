@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   title: "Terms of Service — ReplyPilot",
   description:
     "The terms for using the ReplyPilot website and engaging ReplyPilot's AI automation services.",
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/terms",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/terms",
+  }
 };
 
 const fallbackBlocks: Block[] = [

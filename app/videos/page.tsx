@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { getPublishedVideos } from "@/lib/videos";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Demo Videos — AI Agents in Action | ReplyPilot",
@@ -19,6 +20,20 @@ export const metadata: Metadata = {
     "guest posting automation",
     "ReplyPilot",
   ],
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/videos",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/videos",
+    images: [
+      {
+        url: "https://replypilot-site.vercel.app/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ReplyPilot — AI Sales Agents for Small Business",
+      },
+    ],
+  },
 };
 
 interface DemoVideo {
@@ -34,8 +49,32 @@ interface DemoVideo {
 /** /videos — gallery of 30-second AI agent demo videos. */
 export default async function VideosPage() {
   const videos = await getPublishedVideos();
+  // VideoObject schema — ONLY fields supported by real video data.
+  // No uploadDate / duration: that metadata is not stored with the
+  // videos, and inventing it would be misleading structured data.
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "ReplyPilot demo videos",
+    itemListElement: videos.map((v, i) => ({
+      "@type": "VideoObject",
+      position: i + 1,
+      name: v.title,
+      description: v.description,
+      ...(v.poster
+        ? {
+            thumbnailUrl: `https://replypilot-site.vercel.app${v.poster}`,
+          }
+        : {}),
+      contentUrl: `https://replypilot-site.vercel.app${v.file}`,
+    })),
+  };
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(videoSchema) }}
+      />
       <PageHeader />
       <main>
         <section className="hero" style={{ padding: 0 }}>

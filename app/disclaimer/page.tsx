@@ -10,6 +10,12 @@ export const metadata: Metadata = {
   title: "Disclaimer | ReplyPilot",
   description:
     "ReplyPilot disclaimer — educational content, no guarantees, affiliate and advertising disclosure.",
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/disclaimer",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/disclaimer",
+  }
 };
 
 const fallbackBlocks: Block[] = [

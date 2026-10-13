@@ -37,10 +37,51 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+/**
+ * Demo → article links (P2 internal linking). Only demos with a VERIFIED
+ * matching niche article are mapped — no guessed URLs. Each demo detail
+ * page links to its article so crawl/authority flows demo → article.
+ */
+const DEMO_ARTICLE_LINKS: Record<string, { slug: string; anchor: string }> = {
+  "brightsmile-dental": {
+    slug: "ai-chatbots-dental-clinics",
+    anchor: "how the dental chatbot works",
+  },
+  "casa-verde-kitchen": {
+    slug: "whatsapp-automation-restaurants",
+    anchor: "WhatsApp automation for restaurants",
+  },
+  novakart: {
+    slug: "ecommerce-store-assistants",
+    anchor: "AI store assistants for e-commerce",
+  },
+  "ironpulse-fitness": {
+    slug: "ai-chatbot-gyms-fitness-studios",
+    anchor: "AI chatbots for gyms and fitness studios",
+  },
+  "fixright-plumbing": {
+    slug: "ai-chatbot-plumbers-home-services",
+    anchor: "AI chatbots for plumbers",
+  },
+  "harborline-realty": {
+    slug: "ai-chatbot-real-estate-agents",
+    anchor: "AI chatbots for real estate agents",
+  },
+  "luxe-locks-studio": {
+    slug: "instagram-dm-automation-salons",
+    anchor: "Instagram DM automation for salons",
+  },
+  "daily-grind-coffee": {
+    slug: "ai-chatbot-coffee-shops",
+    anchor: "AI chatbots for coffee shops",
+  },
+};
+
 export default async function DemoDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const demo = await getDemoBySlugDb(slug);
   if (!demo) notFound();
+  const articleLink = DEMO_ARTICLE_LINKS[slug];
 
   return (
     <main>
@@ -85,6 +126,15 @@ export default async function DemoDetailPage({ params }: { params: Promise<{ slu
             <p>{demo.text}</p>
             <div className="demo-detail-kicker">How the agent behaves</div>
             <p>{demo.blurb}</p>
+            {articleLink && (
+              <p>
+                See the full playbook:{" "}
+                <Link href={`/blog/${articleLink.slug}`}>
+                  {articleLink.anchor}
+                </Link>
+                .
+              </p>
+            )}
             <p className="demo-detail-note">
               Fictional sample for illustration — your free custom demo will
               use your own products, prices, and FAQs.

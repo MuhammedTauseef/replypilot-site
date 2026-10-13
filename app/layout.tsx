@@ -9,9 +9,6 @@ export const metadata: Metadata = {
   title: "ReplyPilot — AI Automation by Muhammad Tauseef",
   description:
     "ReplyPilot builds practical AI sales agents and workflow automations for growing businesses. WhatsApp, Instagram & website agents. Free custom demo.",
-  alternates: {
-    canonical: "https://replypilot-site.vercel.app",
-  },
   verification: {
     google: "jXx7jWarPskM3UN7e2YihwpzUjZAzKJim_fvKRz-kw8",
   },
@@ -76,7 +73,8 @@ export default function RootLayout({
                   alternateName:
                     "ReplyPilot AI Agents for Small Business Messaging",
                   url: "https://replypilot-site.vercel.app/",
-                  logo: "https://replypilot-site.vercel.app/logo.png",
+                  // No logo field: no square logo asset exists (logo.png is a 404).
+                  // Do not re-add without a real, publicly reachable logo file.
                   description:
                     "ReplyPilot builds AI sales agents and workflow automations for small businesses: automated WhatsApp replies, Instagram DM handling, and website chat agents that qualify leads, follow up, book appointments, and hand off to humans. A product of independent founder Muhammad Tauseef. Distinct from the unrelated ReplyPilot Chrome extension for drafting social media replies.",
                   founder: { "@type": "Person", name: "Muhammad Tauseef" },

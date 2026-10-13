@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   title: "Privacy Policy — ReplyPilot",
   description:
     "How ReplyPilot collects, uses, and protects your data. Contact-form data is stored in Supabase; we never sell your data.",
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/privacy",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/privacy",
+  }
 };
 
 const fallbackBlocks: Block[] = [

@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   title: "About — ReplyPilot",
   description:
     "ReplyPilot is an AI automation studio by Muhammad Tauseef — building practical AI sales agents and workflow automations for growing businesses.",
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app/about",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app/about",
+  }
 };
 
 /** Fallback content if DB is unavailable. */

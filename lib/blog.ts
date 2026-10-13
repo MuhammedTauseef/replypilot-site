@@ -70,6 +70,20 @@ function fallbackToDbPost(p: (typeof FALLBACK_POSTS)[number], i: number): DbPost
   const created = Number.isFinite(parsed)
     ? new Date(parsed).toISOString()
     : "2026-10-08T00:00:00.000Z";
+  // Recompute read time from actual content (same formula as enrich).
+  // The stored p.readTime values were systematically understated, so
+  // never trust them — derive from word count instead.
+  const words = (p.content as Block[])
+    .map((b) =>
+      b.type === "ul"
+        ? b.items.join(" ")
+        : b.type === "img" || b.type === "video"
+          ? ""
+          : b.text
+    )
+    .join(" ")
+    .split(/\s+/).length;
+  const mins = Math.max(2, Math.round(words / 200));
   return {
     id: `fallback-${i}`,
     slug: p.slug,
@@ -82,7 +96,7 @@ function fallbackToDbPost(p: (typeof FALLBACK_POSTS)[number], i: number): DbPost
     created_at: created,
     updated_at: created,
     date: p.date,
-    readTime: p.readTime,
+    readTime: `${mins} min read`,
   };
 }
 

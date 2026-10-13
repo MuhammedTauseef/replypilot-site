@@ -13,6 +13,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/dashboard/", "/onboarding/", "/api/"],
       },
     ],
-    sitemap: "https://replypilot-site.vercel.app/sitemap.xml",
+    sitemap: [
+      "https://replypilot-site.vercel.app/sitemap.xml",
+      // Video entries for /videos (a static file in public/).
+      // Submit in Search Console too: Sitemaps → Add /videos-sitemap.xml.
+      "https://replypilot-site.vercel.app/videos-sitemap.xml",
+    ],
   };
 }

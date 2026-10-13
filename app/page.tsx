@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import RotatingWord from "@/components/RotatingWord";
 import ContactForm from "@/components/ContactForm";
 import DemoRequestButton from "@/components/DemoRequestButton";
@@ -12,6 +13,16 @@ import Image from "next/image";
 import { DEMO_GROUPS } from "@/lib/demos";
 import { getPublishedDemos } from "@/lib/demos-db";
 import { getPublishedFaqs, getSetting } from "@/lib/settings";
+
+/** Homepage — self-referencing canonical (the root layout sets none). */
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://replypilot-site.vercel.app",
+  },
+  openGraph: {
+    url: "https://replypilot-site.vercel.app",
+  },
+};
 
 const SERVICES = [
   {
