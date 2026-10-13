@@ -1,7 +1,7 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import DemoPlayground from "@/components/DemoPlayground";
 import PriceValue from "@/components/PriceValue";
+import TrackedLink from "@/components/TrackedLink";
 
 export const metadata: Metadata = {
   title: "Live AI Demo — Try ReplyPilot in Action",
@@ -70,12 +70,21 @@ export default function DemoPage() {
               hours, with a free custom demo first.
             </p>
             <div>
-              <Link href="/#contact" className="btn btn-gold">
+              <TrackedLink
+                href="/#contact"
+                variant="link"
+                className="btn btn-gold"
+                eventName="demo_request"
+                eventParams={{
+                  cta_location: "demo-page",
+                  cta_text: "Get Your AI Agent",
+                }}
+              >
                 Get Your AI Agent<PriceValue> — $249</PriceValue>{" "}
                 <span className="arrow" aria-hidden="true">
                   →
                 </span>
-              </Link>
+              </TrackedLink>
             </div>
           </div>
         </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
+import TrackedLink from "@/components/TrackedLink";
+import { trackEvent } from "@/lib/analytics";
 import { whatsappLink } from "@/lib/site-config";
 
 /** Contextual info derived per article: niche + automation channel. */
@@ -146,9 +147,15 @@ export function EndOfArticleCTA({ ctx }: { ctx: CtaContext }) {
       </div>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
         <WhatsAppButton ctx={ctx} label="Chat on WhatsApp" />
-        <Link href="/#contact" className="btn btn-gold">
+        <TrackedLink
+          href="/#contact"
+          variant="link"
+          className="btn btn-gold"
+          eventName="demo_request"
+          eventParams={{ cta_location: "blog", cta_text: "Get a free demo" }}
+        >
           Get a free demo
-        </Link>
+        </TrackedLink>
       </div>
     </div>
   );
@@ -191,6 +198,7 @@ export function LeadMagnetForm({ ctx }: { ctx: CtaContext }) {
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
       if (res.ok && data.ok) {
+        trackEvent("generate_lead", { form_location: "blog" });
         setStatus({
           ok: true,
           text: "You're on the list! Tauseef will send your free checklist within 24 hours.",

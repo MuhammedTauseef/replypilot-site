@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { trackEvent } from "@/lib/analytics";
 import { WHOP_CHECKOUT, hasCheckout, type CheckoutKey } from "@/lib/checkout";
 
 /**
@@ -10,6 +11,10 @@ import { WHOP_CHECKOUT, hasCheckout, type CheckoutKey } from "@/lib/checkout";
  * so the payment button only appears for signed-in users; everyone else
  * sees the same 🔒 login nudge. Renders nothing until the checkout link
  * is filled in (see lib/checkout.ts).
+ *
+ * `analytics` (optional): GA4 event fired when the signed-in checkout
+ * link is clicked. Omitted on dashboard usages so internal billing
+ * clicks don't pollute marketing CTA stats.
  */
 export default function CheckoutButton({
   linkKey,
@@ -17,12 +22,14 @@ export default function CheckoutButton({
   className = "btn btn-gold",
   style,
   note,
+  analytics,
 }: {
   linkKey: CheckoutKey;
   label: ReactNode;
   className?: string;
   style?: React.CSSProperties;
   note?: ReactNode;
+  analytics?: { eventName: string; eventParams: Record<string, string> };
 }) {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
 
@@ -61,6 +68,9 @@ export default function CheckoutButton({
         href={WHOP_CHECKOUT[linkKey]}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => {
+          if (analytics) trackEvent(analytics.eventName, analytics.eventParams);
+        }}
       >
         {label}{" "}
         <span className="arrow" aria-hidden="true">

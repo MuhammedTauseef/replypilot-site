@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import PasswordField from "@/components/PasswordField";
+import { trackEvent } from "@/lib/analytics";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -58,6 +59,9 @@ export default function SignupPage() {
       }
       return;
     }
+    // Email signup succeeded (verification email sent) — GA4 sign_up.
+    // Note: Google OAuth sign-ups redirect away and are not tracked here.
+    trackEvent("sign_up", { method: "email" });
     setDone(true);
   }
 

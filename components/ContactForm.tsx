@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const BUSINESS_TYPES = [
   "Boutique / Retail",
@@ -20,10 +21,17 @@ type Status = { kind: "ok" | "err"; text: string } | null;
  * Contact / lead-capture form. Submits to /api/leads (one tap, no email
  * app needed) and stores the enquiry in the database.
  *
+ * On a successful submit it fires the GA4 `generate_lead` conversion
+ * event (form_location identifies where the form lives).
+ *
  * Listens for the "demo-select" window event (fired by demo cards) to
  * pre-fill the message and scroll the form into view.
  */
-export default function ContactForm() {
+export default function ContactForm({
+  formLocation = "homepage",
+}: {
+  formLocation?: string;
+}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [businessType, setBusinessType] = useState("");
@@ -64,6 +72,7 @@ export default function ContactForm() {
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
       if (res.ok && data.ok) {
+        trackEvent("generate_lead", { form_location: formLocation });
         setStatus({
           kind: "ok",
           text: "Message received! Tauseef will reply within 24 hours.",

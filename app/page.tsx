@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import AuthNav from "@/components/AuthNav";
 import PriceValue from "@/components/PriceValue";
 import CheckoutButton from "@/components/CheckoutButton";
+import TrackedLink from "@/components/TrackedLink";
 import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { DEMO_GROUPS } from "@/lib/demos";
@@ -101,9 +102,14 @@ export default async function Home() {
             <a className="nav-link" href="#pricing">Pricing</a>
             <a className="nav-link" href="#faq">FAQ</a>
             <AuthNav />
-            <a className="nav-cta" href="#contact">
+            <TrackedLink
+              className="nav-cta"
+              href="#contact"
+              eventName="demo_request"
+              eventParams={{ cta_location: "nav", cta_text: "Get Your AI Agent" }}
+            >
               Get Your AI Agent<PriceValue> — $249</PriceValue>
-            </a>
+            </TrackedLink>
             <ThemeToggle />
             <MobileNav />
           </nav>
@@ -128,12 +134,22 @@ export default async function Home() {
               leads while you sleep.
             </p>
             <div className="hero-v2-actions">
-              <a className="hero-v2-btn hero-v2-btn-gold" href="#contact">
+              <TrackedLink
+                className="hero-v2-btn hero-v2-btn-gold"
+                href="#contact"
+                eventName="demo_request"
+                eventParams={{ cta_location: "hero", cta_text: "Get Free Demo" }}
+              >
                 Get Free Demo <span aria-hidden="true">→</span>
-              </a>
-              <a className="hero-v2-btn hero-v2-btn-ghost" href="/demo">
+              </TrackedLink>
+              <TrackedLink
+                className="hero-v2-btn hero-v2-btn-ghost"
+                href="/demo"
+                eventName="cta_click"
+                eventParams={{ cta_location: "hero", cta_text: "See Live Demos" }}
+              >
                 See Live Demos
-              </a>
+              </TrackedLink>
             </div>
             <p className="hero-v2-trust">
               13 live demos <span className="hero-v2-dot">•</span> 48-hour
@@ -297,12 +313,21 @@ export default async function Home() {
                       <small>{c.tag}</small>
                       <h4>{c.name}</h4>
                       <p>{c.text}</p>
-                      <a className="demo-open" href={`/demo/${c.slug}`}>
+                      <TrackedLink
+                        className="demo-open"
+                        href={`/demo/${c.slug}`}
+                        eventName="cta_click"
+                        eventParams={{
+                          cta_location: "demo-card",
+                          cta_text: "Open live demo",
+                          demo_name: c.name,
+                        }}
+                      >
                         Open live demo{" "}
                         <span className="arrow" aria-hidden="true">
                           →
                         </span>
-                      </a>
+                      </TrackedLink>
                       <DemoRequestButton demoName={c.name} />
                     </div>
                   ))}
@@ -410,17 +435,29 @@ export default async function Home() {
                     practical improvements
                   </li>
                 </ul>
-                <a
+                <TrackedLink
                   className="btn btn-gold"
                   style={{ width: "100%" }}
                   href="#contact"
+                  eventName="demo_request"
+                  eventParams={{
+                    cta_location: "pricing",
+                    cta_text: "Request a custom demo",
+                  }}
                 >
                   Request a custom demo{" "}
                   <span className="arrow" aria-hidden="true">→</span>
-                </a>
+                </TrackedLink>
                 <div style={{ marginTop: 12 }}>
                   <CheckoutButton
                     linkKey="deposit"
+                    analytics={{
+                      eventName: "cta_click",
+                      eventParams: {
+                        cta_location: "pricing",
+                        cta_text: "Pay deposit",
+                      },
+                    }}
                     label={
                       <>
                         Pay <PriceValue>$125</PriceValue> deposit
@@ -458,14 +495,19 @@ export default async function Home() {
                     priority support
                   </li>
                 </ul>
-                <a
+                <TrackedLink
                   className="btn btn-ghost"
                   style={{ width: "100%" }}
                   href="#contact"
+                  eventName="cta_click"
+                  eventParams={{
+                    cta_location: "pricing",
+                    cta_text: "Discuss your project",
+                  }}
                 >
                   Discuss your project{" "}
                   <span className="arrow" aria-hidden="true">→</span>
-                </a>
+                </TrackedLink>
               </div>
             </div>
             <p className="fine" style={{ maxWidth: 760 }}>

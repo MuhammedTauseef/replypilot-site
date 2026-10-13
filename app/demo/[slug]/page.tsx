@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPublishedDemos, getDemoBySlugDb } from "@/lib/demos-db";
 import DemoPlayground from "@/components/DemoPlayground";
 import PriceValue from "@/components/PriceValue";
+import TrackedLink from "@/components/TrackedLink";
 
 /**
  * /demo/[slug] — dedicated live demo page per business, like the old
@@ -101,12 +102,22 @@ export default async function DemoDetailPage({ params }: { params: Promise<{ slu
               hours, with a free custom demo first.
             </p>
             <div>
-              <Link href="/#contact" className="btn btn-gold">
+              <TrackedLink
+                href="/#contact"
+                variant="link"
+                className="btn btn-gold"
+                eventName="demo_request"
+                eventParams={{
+                  cta_location: "demo-detail",
+                  cta_text: "Get Your AI Agent",
+                  demo_name: demo.name,
+                }}
+              >
                 Get Your AI Agent<PriceValue> — $249</PriceValue>{" "}
                 <span className="arrow" aria-hidden="true">
                   →
                 </span>
-              </Link>
+              </TrackedLink>
             </div>
           </div>
         </div>
