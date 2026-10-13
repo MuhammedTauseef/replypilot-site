@@ -86,8 +86,61 @@ export async function PUT(
     return NextResponse.json({ error: "No fields to update." }, { status: 400 });
   }
 
-  const { error } = await auth.supabase.from("blog_posts").update(updates).eq("id", id);
-  if (error) return NextResponse.json({ error: "Update failed." }, { status: 400 });
+  // Resolve full values: the throttle RPC takes complete fields, so merge
+  // the partial body over the current row. The RPC claims the slot ONLY
+  // when the update flips published false -> true.
+  const { data: current } = await auth.supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (!current) {
+    // Preserve the previous lenient behavior (ok:true) for unknown ids.
+    return NextResponse.json({ ok: true });
+  }
+  const merged = {
+    slug: typeof updates.slug === "string" ? updates.slug : current.slug,
+    title: typeof updates.title === "string" ? updates.title : current.title,
+    excerpt: typeof updates.excerpt === "string" ? updates.excerpt : current.excerpt,
+    content: Array.isArray(updates.content) ? updates.content : current.content,
+    keywords: Array.isArray(updates.keywords) ? updates.keywords : current.keywords,
+    cover_image:
+      typeof updates.cover_image === "string" ? updates.cover_image : current.cover_image,
+    published: typeof updates.published === "boolean" ? updates.published : current.published,
+  };
+
+  const { error } = await auth.supabase.rpc("update_blog_post_with_claim", {
+    p_id: id,
+    p_slug: merged.slug,
+    p_title: merged.title,
+    p_excerpt: merged.excerpt,
+    p_content: merged.content,
+    p_keywords: merged.keywords,
+    p_cover_image: merged.cover_image,
+    p_published: merged.published,
+  });
+  if (error) {
+    const msg = String(error.message ?? "");
+    if (msg.includes("RATE_LIMITED")) {
+      return NextResponse.json(
+        {
+          error:
+            "Publish rate limit: max 2 articles per 24 hours. Try again after the window passes.",
+        },
+        { status: 429 }
+      );
+    }
+    if (msg.includes("FORBIDDEN")) {
+      return NextResponse.json({ error: "Admins only." }, { status: 403 });
+    }
+    if (error.code === "23505" || msg.includes("duplicate key")) {
+      return NextResponse.json(
+        { error: "A post with this slug already exists." },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json({ error: "Update failed." }, { status: 400 });
+  }
   return NextResponse.json({ ok: true });
 }
 

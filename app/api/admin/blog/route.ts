@@ -28,6 +28,38 @@ function slugify(s: string): string {
     .slice(0, 80);
 }
 
+/**
+ * Map a Supabase / RPC error to an HTTP response.
+ * The publish-throttle functions raise RATE_LIMITED / FORBIDDEN with those
+ * prefixes; a duplicate slug surfaces as Postgres 23505.
+ */
+function mapDbError(
+  error: { message?: string; code?: string },
+  fallback: string,
+  fallbackStatus = 400
+) {
+  const msg = String(error?.message ?? "");
+  if (msg.includes("RATE_LIMITED")) {
+    return NextResponse.json(
+      {
+        error:
+          "Publish rate limit: max 2 articles per 24 hours. Try again after the window passes.",
+      },
+      { status: 429 }
+    );
+  }
+  if (msg.includes("FORBIDDEN")) {
+    return NextResponse.json({ error: "Admins only." }, { status: 403 });
+  }
+  if (error?.code === "23505" || msg.includes("duplicate key")) {
+    return NextResponse.json(
+      { error: "A post with this slug already exists." },
+      { status: 400 }
+    );
+  }
+  return NextResponse.json({ error: fallback }, { status: fallbackStatus });
+}
+
 /** GET /api/admin/blog — list all posts (including drafts). */
 /** GET /api/admin/blog/[id] — single post for editing. */
 export async function GET(req: NextRequest) {
@@ -75,25 +107,48 @@ export async function POST(req: NextRequest) {
   const keywords = Array.isArray(body.keywords)
     ? body.keywords.map((k) => String(k).slice(0, 60)).slice(0, 10)
     : [];
+  const excerpt = String(body.excerpt ?? "").trim().slice(0, 500);
+  const coverImage = String(body.cover_image ?? "").trim().slice(0, 500) || null;
+  const wantsPublish = body.published !== false;
 
+  // Publishing goes through the shared atomic throttle: claim the slot AND
+  // insert the row in ONE DB transaction (publish_blog_post). If the insert
+  // fails (e.g. duplicate slug) the transaction rolls back — no phantom claim.
+  if (wantsPublish) {
+    const { data, error } = await auth.supabase.rpc("publish_blog_post", {
+      p_slug: slug,
+      p_title: title,
+      p_excerpt: excerpt,
+      p_content: content,
+      p_keywords: keywords,
+      p_cover_image: coverImage,
+      p_published: true,
+    });
+    if (error) return mapDbError(error, "Create failed.");
+    // RPC returns a single blog_posts row (or a 1-row array).
+    const row = Array.isArray(data) ? data[0] : data;
+    return NextResponse.json({
+      ok: true,
+      post: row ? { id: row.id, slug: row.slug } : null,
+    });
+  }
+
+  // Draft (published=false): plain insert, never claims the slot.
   const { data, error } = await auth.supabase
     .from("blog_posts")
     .insert({
       slug,
       title,
-      excerpt: String(body.excerpt ?? "").trim().slice(0, 500),
+      excerpt,
       content,
       keywords,
-      cover_image: String(body.cover_image ?? "").trim().slice(0, 500) || null,
-      published: body.published !== false,
+      cover_image: coverImage,
+      published: false,
     })
     .select("id, slug")
     .single();
 
-  if (error) {
-    const msg = error.code === "23505" ? "A post with this slug already exists." : "Create failed.";
-    return NextResponse.json({ error: msg }, { status: 400 });
-  }
+  if (error) return mapDbError(error, "Create failed.");
   return NextResponse.json({ ok: true, post: data });
 }
 
@@ -120,23 +175,21 @@ export async function PUT(req: NextRequest) {
     ? body.keywords.map((k) => String(k).slice(0, 60)).slice(0, 10)
     : [];
 
-  const { error } = await auth.supabase
-    .from("blog_posts")
-    .update({
-      slug,
-      title,
-      excerpt: String(body.excerpt ?? "").trim().slice(0, 500),
-      content,
-      keywords,
-      cover_image: String(body.cover_image ?? "").trim().slice(0, 500) || null,
-      published: body.published !== false,
-    })
-    .eq("id", id);
+  // All updates go through the shared atomic throttle. The RPC claims the
+  // slot ONLY when the update flips published false -> true (a publish
+  // event); edits to an already-published row never claim.
+  const { error } = await auth.supabase.rpc("update_blog_post_with_claim", {
+    p_id: id,
+    p_slug: slug,
+    p_title: title,
+    p_excerpt: String(body.excerpt ?? "").trim().slice(0, 500),
+    p_content: content,
+    p_keywords: keywords,
+    p_cover_image: String(body.cover_image ?? "").trim().slice(0, 500) || null,
+    p_published: body.published !== false,
+  });
 
-  if (error) {
-    const msg = error.code === "23505" ? "A post with this slug already exists." : "Update failed.";
-    return NextResponse.json({ error: msg }, { status: 400 });
-  }
+  if (error) return mapDbError(error, "Update failed.");
   return NextResponse.json({ ok: true });
 }
 
