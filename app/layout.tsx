@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import CookieConsent from "@/components/CookieConsent";
 import { safeJsonLd } from "@/lib/json-ld";
 import "./globals.css";
@@ -105,6 +106,7 @@ export default function RootLayout({
       <body>
         {children}
         <CookieConsent />
+        <Analytics />
       </body>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-1QP894DHB3"
