@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: "https://replypilot-site.vercel.app/about",
+    images: [
+      {
+        url: "https://replypilot-site.vercel.app/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ReplyPilot — AI Sales Agents for Small Business",
+      },
+    ],
   }
 };
 
