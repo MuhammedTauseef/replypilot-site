@@ -104,4 +104,20 @@ export const videoSeoMeta: Record<string, LocalVideoSeo> = {
       "Meet Aria, a demo AI website chatbot for hotels, answering room, rate, and amenity questions instantly, taking direct bookings around the clock, and recommending spa and dining automatically. This 30-second demo shows website chatbot automation filling hotel rooms 24/7 — instant answers for midnight planners, zero lost direct bookings, and staff free to host instead of answering the inbox. Want one for your hotel? Get a free custom demo built around your rooms, your rates, and your booking flow.",
     posterAlt: "Hotel AI website chatbot demo — fill rooms while you sleep",
   },
+  "/videos/demo-veterinary-instagram.mp4": {
+    niche: "Veterinary Clinic",
+    channel: "Instagram",
+    title: "Veterinary Clinic AI Instagram Demo — Never Miss Another Pet Appointment",
+    description:
+      "Meet Jade, a demo AI Instagram DM agent for veterinary clinics, checking pet symptoms in seconds, finding an open slot instantly, and booking the check-up while the clinic sleeps. This 30-second demo shows Instagram DM automation running a vet clinic's bookings 24/7 — instant answers to worried pet owners, zero missed appointments, and staff free to care for animals instead of answering the inbox. Want one for your clinic? Get a free custom demo built around your services, your hours, and your booking flow.",
+    posterAlt: "Veterinary clinic AI Instagram DM agent demo — never miss another pet appointment",
+  },
+  "/videos/demo-cleaning-ecommerce.mp4": {
+    niche: "Cleaning Services",
+    channel: "E-commerce",
+    title: "Cleaning Services AI E-commerce Demo — Book Cleanings While You Sleep",
+    description:
+      "Meet Owen, a demo AI store assistant for cleaning services, explaining cleaning packages in plain words, answering timing and what's-included questions instantly, and booking the cleaning automatically around the clock. This 30-second demo shows AI automation running a cleaning company's bookings 24/7 — instant answers to evening enquiries, zero missed jobs, and the team free to clean instead of answering messages. Want one for your business? Get a free custom demo built around your packages, your pricing, and your booking flow.",
+    posterAlt: "Cleaning services AI store assistant demo — book cleanings while you sleep",
+  },
 };
