@@ -2,10 +2,11 @@
   "publish_history": [
     "2026-10-14T07:41:14Z",
     "2026-10-14T07:41:14Z",
-    "2026-10-14T07:55:31Z"
+    "2026-10-14T07:55:31Z",
+    "2026-10-14T07:56:53Z"
   ],
-  "last_published_at": "2026-10-14T07:55:31Z",
-  "last_slug": "whatsapp-automation-pest-control-companies",
+  "last_published_at": "2026-10-14T07:56:53Z",
+  "last_slug": "whatsapp-automation-locksmiths",
   "limit": "max 5 new articles per rolling 24 hours",
   "updated_by": "scripts/incremental-push.py publish guard"
 }
