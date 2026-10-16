@@ -80,10 +80,11 @@ export async function POST(req: NextRequest) {
     }
 
     // File type validation: only text-based documents allowed.
+    // SEC-007 fix (2026-10-16): require a valid extension — no-extension filenames no longer bypass validation.
     const cleanName = filename.trim().slice(0, 200);
     const allowedExt = [".txt", ".md", ".pdf", ".doc", ".docx", ".csv"];
     const ext = cleanName.toLowerCase().slice(cleanName.lastIndexOf("."));
-    if (!allowedExt.includes(ext) && cleanName.includes(".")) {
+    if (!allowedExt.includes(ext)) {
       return NextResponse.json(
         { error: `File type not allowed. Use: ${allowedExt.join(", ")}` },
         { status: 400 }

@@ -49,13 +49,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** Render paragraph/list text with [label](url) converted to real links. */
+/** Render paragraph/list text with [label](url) converted to real links.
+ * SEC-006 fix (2026-10-16): allowlist href protocols to block javascript: URLs. */
 function renderInline(text: string, keyPrefix: string) {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
   return parts.map((part, j) => {
     const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (m) {
       const href = m[2];
+      // Only allow safe protocols — drop anything else (e.g. javascript:)
+      if (!/^(https?:\/\/|\/|#|mailto:)/.test(href)) {
+        return <span key={`${keyPrefix}-${j}`}>{m[1]}</span>;
+      }
       const external = /^https?:\/\//.test(href);
       return (
         <a
