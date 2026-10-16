@@ -1501,6 +1501,7 @@ export const posts: Post[] = [
     readTime: "13 min read",
     keywords: ["Chatbot for Service Businesses: Book Jobs, Send Quotes & Follow Up — Even While You Sleep", "chatbot for service businesses book jobs, send quotes & follow up — even while you sleep", "replypilot chatbot for service businesses"],
     content: [
+      { type: "img", src: "/images/chatbot-for-service-business-hero.jpg", alt: "Service business owner using AI chatbot on smartphone to book jobs and send quotes" },
       { type: "p", text: "It's 9:40 PM on a Tuesday. You're finally home after a twelve-hour day — three jobs done, two quotes sent, one customer who still hasn't paid. Your phone buzzes. Another potential customer, asking for a quote." },
       { type: "p", text: "You look at the message. You're too tired to reply properly. \"I'll answer in the morning,\" you think." },
       { type: "p", text: "By morning, they've messaged two of your competitors. One of them answered at 10 PM. You never hear from that customer again." },
