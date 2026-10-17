@@ -7,7 +7,7 @@ import { morePosts } from "@/app/blog/posts-more";
  * published after posts.ts grew past the 1MB GitHub contents-API read limit
  * (2026-10-17); it is listed first so new articles sort newest-first.
  */
-const ALL_FALLBACK_POSTS: (typeof ALL_FALLBACK_POSTS)[number][] = [...morePosts, ...FALLBACK_POSTS];
+const ALL_FALLBACK_POSTS = [...morePosts, ...FALLBACK_POSTS];
 
 export type Block =
   | { type: "p"; text: string }
