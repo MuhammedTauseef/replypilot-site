@@ -1,5 +1,13 @@
 import { createPublicClient } from "@/lib/supabase/public";
 import { posts as FALLBACK_POSTS } from "@/app/blog/posts";
+import { morePosts } from "@/app/blog/posts-more";
+
+/**
+ * All hardcoded posts. morePosts (app/blog/posts-more.ts) holds articles
+ * published after posts.ts grew past the 1MB GitHub contents-API read limit
+ * (2026-10-17); it is listed first so new articles sort newest-first.
+ */
+const ALL_FALLBACK_POSTS: (typeof ALL_FALLBACK_POSTS)[number][] = [...morePosts, ...FALLBACK_POSTS];
 
 export type Block =
   | { type: "p"; text: string }
@@ -64,7 +72,7 @@ function enrich(row: Record<string, unknown>): DbPost {
 }
 
 /** Convert hardcoded post to DbPost shape (build-time fallback). */
-function fallbackToDbPost(p: (typeof FALLBACK_POSTS)[number], i: number): DbPost {
+function fallbackToDbPost(p: (typeof ALL_FALLBACK_POSTS)[number], i: number): DbPost {
   // Derive created_at from the post's display date so merged listings sort newest-first.
   const parsed = Date.parse(p.date);
   const created = Number.isFinite(parsed)
@@ -120,15 +128,15 @@ export async function getPublishedPosts(): Promise<DbPost[]> {
         const len = JSON.stringify((p as { content?: unknown }).content || "").length;
         if (len >= 500) return enrich(p);
         // Find matching fallback post by slug
-        const fb = FALLBACK_POSTS.find((x) => x.slug === (p as { slug?: string }).slug);
-        if (fb) return fallbackToDbPost(fb, FALLBACK_POSTS.indexOf(fb));
+        const fb = ALL_FALLBACK_POSTS.find((x) => x.slug === (p as { slug?: string }).slug);
+        if (fb) return fallbackToDbPost(fb, ALL_FALLBACK_POSTS.indexOf(fb));
         return enrich(p);
       });
     }
   }
   // Merge in hardcoded posts missing from the DB (dedupe by slug), newest first.
   const seen = new Set(dbPosts.map((p) => p.slug));
-  const extra = FALLBACK_POSTS.filter((p) => !seen.has(p.slug)).map((p, i) =>
+  const extra = ALL_FALLBACK_POSTS.filter((p) => !seen.has(p.slug)).map((p, i) =>
     fallbackToDbPost(p, i)
   );
   const merged = [...dbPosts, ...extra];
@@ -155,7 +163,7 @@ export async function getPostBySlug(slug: string): Promise<DbPost | null> {
     }
   }
   // Fallback: hardcoded posts (full content)
-  const p = FALLBACK_POSTS.find((x) => x.slug === slug);
+  const p = ALL_FALLBACK_POSTS.find((x) => x.slug === slug);
   if (!p) return null;
-  return fallbackToDbPost(p, FALLBACK_POSTS.indexOf(p));
+  return fallbackToDbPost(p, ALL_FALLBACK_POSTS.indexOf(p));
 }

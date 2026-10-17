@@ -16,6 +16,14 @@ export interface LocalVideoSeo {
 
 /** Keyed by the exact public file path, e.g. "/videos/demo-pharmacy-whatsapp.mp4". */
 export const videoSeoMeta: Record<string, LocalVideoSeo> = {
+  "/videos/demo-house-painters-whatsapp.mp4": {
+    niche: "House Painters",
+    channel: "WhatsApp",
+    title: "House Painters WhatsApp AI Demo — Quotes in Minutes, Jobs Booked While You Paint",
+    description:
+      "Meet Hue, a demo WhatsApp AI agent for house painting businesses, asking room counts, collecting job photos, giving honest price ranges from real rates, and booking site visits in minutes — while the painter keeps painting. This 30-second demo shows WhatsApp automation winning painting jobs around the clock: instant replies to quote requests, photo-based estimates, calendar booking, and automatic follow-ups. Want one for your painting business? Get a free custom demo built around your prices, your services, and your booking flow.",
+    posterAlt: "House painters WhatsApp AI agent demo — quotes in minutes, jobs booked while you paint",
+  },
   "/videos/demo-pet-grooming-instagram.mp4": {
     niche: "Pet Grooming Salon",
     channel: "Instagram",
