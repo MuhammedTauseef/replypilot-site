@@ -13,6 +13,8 @@ import Image from "next/image";
 import { DEMO_GROUPS } from "@/lib/demos";
 import { getPublishedDemos } from "@/lib/demos-db";
 import { getPublishedFaqs, getSetting } from "@/lib/settings";
+import { getPublishedPosts } from "@/lib/blog";
+import { getPublishedVideos } from "@/lib/videos";
 
 /** Homepage — self-referencing canonical (the root layout sets none). */
 export const metadata: Metadata = {
@@ -92,6 +94,8 @@ export default async function Home() {
   const heroSub = await getSetting("hero_sub", "Practical AI systems that turn customer interest into action.");
   const announcement = await getSetting("announcement_bar", "");
   const contactEmail = await getSetting("contact_email", "muhammadtauseef714@gmail.com");
+  const latestPosts = (await getPublishedPosts()).slice(0, 3);
+  const latestVideos = (await getPublishedVideos()).slice(0, 3);
   const demosByGroup = (group: "website" | "whatsapp" | "instagram") =>
     allDemos.filter((d) => d.group === group);
   return (
@@ -601,6 +605,98 @@ export default async function Home() {
                   <p>{f.answer}</p>
                 </details>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* LATEST ARTICLES + VIDEOS */}
+        <section className="block" id="latest" aria-labelledby="latest-title">
+          <div className="wrap">
+            <div className="section-head">
+              <div>
+                <div className="kicker">Fresh this week</div>
+                <h2 className="display" id="latest-title">
+                  Latest articles &amp; demo videos.
+                </h2>
+              </div>
+              <p className="section-intro">
+                New guides and live demos, published regularly — practical
+                ideas you can use in your own business.
+              </p>
+            </div>
+            <div style={{ display: "grid", gap: 32 }}>
+              {latestPosts.length > 0 && (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                    <h3 style={{ margin: 0 }}>Latest articles</h3>
+                    <a href="/blog" style={{ fontSize: ".9rem" }}>All articles →</a>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+                    {latestPosts.map((p) => (
+                      <a
+                        key={p.slug}
+                        href={`/blog/${p.slug}`}
+                        style={{
+                          border: "1px solid var(--border, #e2e2e2)",
+                          borderRadius: 12,
+                          padding: 16,
+                          textDecoration: "none",
+                          color: "inherit",
+                          background: "var(--card, #fff)",
+                        }}
+                      >
+                        <div style={{ fontSize: ".75rem", color: "#6b7280", marginBottom: 6 }}>
+                          {new Date(p.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                        </div>
+                        <strong style={{ display: "block", marginBottom: 6 }}>{p.title}</strong>
+                        {p.excerpt && (
+                          <span style={{ fontSize: ".85rem", color: "#6b7280", display: "block" }}>
+                            {p.excerpt.length > 110 ? p.excerpt.slice(0, 110) + "…" : p.excerpt}
+                          </span>
+                        )}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {latestVideos.length > 0 && (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                    <h3 style={{ margin: 0 }}>Latest demo videos</h3>
+                    <a href="/videos" style={{ fontSize: ".9rem" }}>All videos →</a>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+                    {latestVideos.map((v) => (
+                      <a
+                        key={v.id}
+                        href="/videos"
+                        style={{
+                          border: "1px solid var(--border, #e2e2e2)",
+                          borderRadius: 12,
+                          overflow: "hidden",
+                          textDecoration: "none",
+                          color: "inherit",
+                          background: "var(--card, #fff)",
+                        }}
+                      >
+                        {v.poster && (
+                          <img
+                            src={v.poster}
+                            alt={v.title}
+                            style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block" }}
+                          />
+                        )}
+                        <div style={{ padding: 12 }}>
+                          <strong style={{ display: "block", fontSize: ".9rem" }}>{v.title}</strong>
+                          {v.niche && (
+                            <span style={{ fontSize: ".8rem", color: "#6b7280" }}>{v.niche}</span>
+                          )}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
