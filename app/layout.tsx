@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import CookieConsent from "@/components/CookieConsent";
@@ -47,6 +47,12 @@ export const metadata: Metadata = {
       "Turn your website into an AI sales & support agent. Free custom demo.",
     images: ["https://replypilot-site.vercel.app/og-image.jpg"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

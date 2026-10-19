@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import MobileNav from "@/components/MobileNav";
 
 /**
  * Slim site header for content pages (/blog, /videos).
@@ -29,6 +30,7 @@ export default function PageHeader() {
             Get Your AI Agent
           </Link>
           <ThemeToggle />
+          <MobileNav />
         </nav>
       </div>
     </header>
