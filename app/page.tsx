@@ -782,6 +782,13 @@ export default async function Home() {
               >
                 LinkedIn
               </a>
+              <a
+                href="https://www.instagram.com/replypoilt.2273654"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
+              </a>
             </div>
           </div>
           <div className="foot-base">
