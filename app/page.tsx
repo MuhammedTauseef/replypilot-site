@@ -112,10 +112,11 @@ export default async function Home() {
 
       <header className="site-header">
         <div className="wrap">
-          <a className="brand" href="#top" aria-label="ReplyPilot home">
+          <a className="brand" href="/" aria-label="ReplyPilot home">
             <span className="brand-mark">R</span>REPLYPILOT
           </a>
           <nav className="site-nav" aria-label="Primary navigation">
+            <a className="nav-link" href="/">Home</a>
             <a className="nav-link" href="/about" target="_blank" rel="noopener">About</a>
             <a className="nav-link" href="#services">Services</a>
             <a className="nav-link" href="#demos">Demos</a>

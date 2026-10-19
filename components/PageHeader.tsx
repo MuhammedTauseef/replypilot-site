@@ -13,6 +13,9 @@ export default function PageHeader() {
           <span className="brand-mark">R</span>REPLYPILOT
         </Link>
         <nav className="site-nav" aria-label="Primary navigation">
+          <Link className="nav-link" href="/">
+            Home
+          </Link>
           <Link className="nav-link" href="/blog">
             Blog
           </Link>
