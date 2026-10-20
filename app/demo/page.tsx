@@ -6,7 +6,7 @@ import TrackedLink from "@/components/TrackedLink";
 export const metadata: Metadata = {
   title: "Live AI Demo — Try ReplyPilot in Action",
   description:
-    "Try a live ReplyPilot AI agent right now. Pick from 13 demo businesses — salon, restaurant, real estate, dental clinic and more — and chat with their AI assistant.",
+    "Try a live ReplyPilot AI agent right now. Pick from 13 demo businesses — salon, restaurant, real estate, dental clinic — and chat with their AI.",
   alternates: { canonical: "https://replypilot-site.vercel.app/demo" },
   openGraph: {
     title: "Live AI Demo — Try ReplyPilot in Action",

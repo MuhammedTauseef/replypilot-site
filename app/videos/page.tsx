@@ -7,7 +7,7 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Demo Videos — AI Agents in Action | ReplyPilot",
   description:
-    "Watch ReplyPilot's AI sales agents in action: 30-second demos for boutiques, restaurants, salons, real estate, dental clinics, gyms, blogs, car dealerships, hotels, and fitness stores — WhatsApp, Instagram, website, and e-commerce automation.",
+    "Watch ReplyPilot's AI sales agents in action: 30-second demos for boutiques, restaurants, salons, real estate, dental clinics, gyms, and more.",
   keywords: [
     "AI agent demo videos",
     "WhatsApp automation demo",

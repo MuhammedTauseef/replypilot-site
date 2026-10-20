@@ -770,11 +770,14 @@ export default async function Home() {
               <a href="#demos">Live demos</a>
               <a href="/videos">Demo videos</a>
               <a href="/blog">Blog</a>
+              <a href="/faq">FAQ</a>
               <a href="#process">Process</a>
               <a href="#pricing">Pricing</a>
             </div>
             <div className="foot-col">
               <h4>Contact</h4>
+              <a href="/contact">Contact</a>
+              <a href="/demo">Book a demo</a>
               <a href="#contact">Contact form</a>
               <a
                 href="https://www.linkedin.com/in/muhammadtauseef9"
@@ -797,6 +800,7 @@ export default async function Home() {
             <span className="foot-legal">
               <a href="/privacy">Privacy</a>
               <a href="/terms">Terms</a>
+              <a href="/disclaimer">Disclaimer</a>
             </span>
             <span>Demos are fictional samples, not client case studies.</span>
           </div>

@@ -7,7 +7,7 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Blog — AI Automation Tips for Small Businesses | ReplyPilot",
   description:
-    "Practical, education-first guides on AI automation for small businesses: WhatsApp automation, Instagram DM automation, AI chatbots, e-commerce assistants, lead capture, and n8n workflows.",
+    "AI automation guides for small businesses: WhatsApp automation, Instagram DM automation, AI chatbots, lead capture, and n8n workflows.",
   keywords: [
     "AI automation blog",
     "WhatsApp automation",
