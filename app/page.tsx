@@ -213,7 +213,7 @@ export default async function Home() {
                           borderRadius: 12,
                           padding: 16,
                           textDecoration: "none",
-                          color: "inherit",
+                          color: "#111827",
                           background: "var(--card, #fff)",
                         }}
                       >
@@ -247,7 +247,7 @@ export default async function Home() {
                           borderRadius: 12,
                           overflow: "hidden",
                           textDecoration: "none",
-                          color: "inherit",
+                          color: "#111827",
                           background: "var(--card, #fff)",
                         }}
                       >
