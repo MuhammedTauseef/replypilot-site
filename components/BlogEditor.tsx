@@ -1,12 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export type Block =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "img"; src: string; alt: string };
+
+/**
+ * Real upload control for image blocks: a genuine <button type="button">
+ * that programmatically opens a hidden file input, so the control is
+ * operable by mouse, keyboard and browser automation alike.
+ * (A bare <label> wrapping a display:none input exposes no button role
+ * and no targetable file input — that was the dead-upload bug.)
+ */
+function ImageUploadButton({
+  uploading,
+  onPick,
+}: {
+  uploading: boolean;
+  onPick: (f: File) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <button
+        type="button"
+        disabled={uploading}
+        onClick={() => fileRef.current?.click()}
+        style={{
+          background: "#f59e0b",
+          color: "#111827",
+          padding: "8px 16px",
+          borderRadius: 8,
+          border: "none",
+          fontWeight: 600,
+          cursor: uploading ? "wait" : "pointer",
+          fontSize: ".85rem",
+          opacity: uploading ? 0.6 : 1,
+        }}
+      >
+        {uploading ? "Uploading…" : "📤 Upload image"}
+      </button>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        tabIndex={-1}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          opacity: 0,
+          overflow: "hidden",
+        }}
+        disabled={uploading}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) onPick(f);
+          e.target.value = "";
+        }}
+      />
+    </>
+  );
+}
 
 /** Block-based blog post editor: paragraphs, headings, lists, images. */
 export default function BlogEditor({
@@ -103,32 +162,11 @@ export default function BlogEditor({
                 value={b.src}
                 onChange={(e) => update(i, { ...b, src: e.target.value })}
               />
-              <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                <label
-                  style={{
-                    background: "#f59e0b",
-                    color: "#111827",
-                    padding: "8px 16px",
-                    borderRadius: 8,
-                    fontWeight: 600,
-                    cursor: uploading === i ? "wait" : "pointer",
-                    fontSize: ".85rem",
-                    opacity: uploading === i ? 0.6 : 1,
-                  }}
-                >
-                  {uploading === i ? "Uploading…" : "📤 Upload image"}
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif"
-                    style={{ display: "none" }}
-                    disabled={uploading === i}
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f) uploadImage(i, f, b);
-                      e.target.value = "";
-                    }}
-                  />
-                </label>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, position: "relative" }}>
+                <ImageUploadButton
+                  uploading={uploading === i}
+                  onPick={(f) => uploadImage(i, f, b)}
+                />
                 {uploadError && <span style={{ color: "#b3261e", fontSize: ".8rem" }}>{uploadError}</span>}
               </div>
               {b.src && (
