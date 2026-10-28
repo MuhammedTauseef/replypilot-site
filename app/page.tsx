@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BrandMark from "@/components/BrandMark";
 import RotatingWord from "@/components/RotatingWord";
 import ContactForm from "@/components/ContactForm";
 import DemoRequestButton from "@/components/DemoRequestButton";
@@ -113,7 +114,7 @@ export default async function Home() {
       <header className="site-header">
         <div className="wrap">
           <a className="brand" href="/" aria-label="ReplyPilot home">
-            <span className="brand-mark">R</span>REPLYPILOT
+            <BrandMark />REPLYPILOT
           </a>
           <nav className="site-nav" aria-label="Primary navigation">
             <a className="nav-link" href="/">Home</a>
@@ -756,7 +757,7 @@ export default async function Home() {
           <div className="foot-grid">
             <div className="foot-brand">
               <a className="brand" href="#top" aria-label="ReplyPilot home">
-                <span className="brand-mark">R</span>REPLYPILOT
+                <BrandMark />REPLYPILOT
               </a>
               <p>
                 ReplyPilot — AI automation by Muhammad Tauseef. Available

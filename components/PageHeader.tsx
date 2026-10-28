@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandMark from "@/components/BrandMark";
 import ThemeToggle from "@/components/ThemeToggle";
 import MobileNav from "@/components/MobileNav";
 
@@ -11,7 +12,7 @@ export default function PageHeader() {
     <header className="site-header">
       <div className="wrap">
         <Link className="brand" href="/" aria-label="ReplyPilot home">
-          <span className="brand-mark">R</span>REPLYPILOT
+          <BrandMark />REPLYPILOT
         </Link>
         <nav className="site-nav" aria-label="Primary navigation">
           <Link className="nav-link" href="/">
