@@ -336,46 +336,97 @@ export default async function BlogPostPage({ params }: Props) {
   //   - h3 question headings (some without a trailing "?"),
   //   - h2 question headings ending with "?" (e.g. the landscapers article),
   //   - fully-bold paragraph questions like "**How much does it cost?**"
-  //     followed by answer paragraphs.
-  // The answer to a question is ALL consecutive non-question <p> blocks.
-  // An h2 that does NOT look like a question ends the FAQ section.
-  // Only visible on-page content is used — nothing invented.
+  //     followed by answer paragraphs,
+  //   - plain paragraph questions ending with "?" followed by answer
+  //     paragraphs (the current editor format — articles carry no "**"),
+  //   - "Question: ...? Answer: ..." merged into a single paragraph,
+  //   - a short question merged with its answer in one paragraph
+  //     ("How much does it cost? Prices vary ...").
+  // The answer to a question is the consecutive non-question <p> blocks that
+  // follow it. For the plain-paragraph formats, collection stops once the
+  // answer reaches ~400 characters, so the article's closing paragraphs
+  // (which follow the FAQ section without a heading) are not absorbed into
+  // the last answer. An h2/h3 that does NOT look like a question ends the
+  // FAQ section. Only visible on-page content is used — nothing invented.
   const faqSchema = (() => {
     const blocks = post.content || [];
     const faqIdx = blocks.findIndex(
       (b) => (b.type === "h2" || b.type === "h3") && /frequently asked questions/i.test(b.text)
     );
     if (faqIdx === -1) return null;
-    const isQuestion = (b: Block) => {
-      const t = ((b as { text?: string }).text || "").trim();
-      if (!t) return false;
-      if (b.type === "h3") return true;
-      if (b.type === "h2" && /\?\s*$/.test(t)) return true;
-      if (b.type === "p" && /^\*\*[\s\S]*?\?\s*\*\*$/.test(t)) return true;
-      return false;
+    const blockText = (b: Block) => ((b as { text?: string }).text || "").trim();
+    const QUESTION_START =
+      /^(what|how|why|when|where|which|who|whom|whose|is|are|was|were|can|could|do|does|did|should|will|would|may|might)\b/i;
+    type Detected = {
+      name: string;
+      firstAnswer: string | null;
+      kind: "heading" | "bold" | "plain" | "merged";
     };
-    const cleanQuestion = (b: Block) =>
-      (((b as { text?: string }).text || "").trim().replace(/^\*\*\s*|\s*\*\*$/g, ""));
-    const questions: { "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }[] = [];
-    for (let i = faqIdx + 1; i < blocks.length; i++) {
-      const b = blocks[i];
-      if ((b.type === "h2" || b.type === "h3") && !isQuestion(b)) break; // FAQ section ended
-      if (isQuestion(b)) {
-        const answerParts: string[] = [];
-        for (let j = i + 1; j < blocks.length; j++) {
-          const ab = blocks[j];
-          if (ab.type === "p" && !isQuestion(ab)) answerParts.push((ab.text || "").trim());
-          else break; // next question / heading / list / media ends this answer
-        }
-        if (answerParts.length) {
-          questions.push({
-            "@type": "Question",
-            name: cleanQuestion(b),
-            acceptedAnswer: { "@type": "Answer", text: answerParts.join("\n\n") },
-          });
+    const detectQuestion = (b: Block): Detected | null => {
+      const t = blockText(b);
+      if (!t) return null;
+      if (b.type === "h3") return { name: t, firstAnswer: null, kind: "heading" };
+      if (b.type === "h2" && /\?\s*$/.test(t)) return { name: t, firstAnswer: null, kind: "heading" };
+      if (b.type !== "p") return null;
+      if (/^\*\*[\s\S]*?\?\s*\*\*$/.test(t)) {
+        return { name: t.replace(/^\*\*\s*|\s*\*\*$/g, ""), firstAnswer: null, kind: "bold" };
+      }
+      const labelled = t.match(/^Question:\s*(.+?\?)\s*Answer:\s*([\s\S]+)$/);
+      if (labelled) {
+        return { name: labelled[1].trim(), firstAnswer: labelled[2].trim(), kind: "merged" };
+      }
+      const qEnd = t.indexOf("?");
+      if (qEnd > 0) {
+        const prefix = t.slice(0, qEnd + 1);
+        const rest = t.slice(qEnd + 1).trim();
+        if (
+          prefix.length <= 200 &&
+          !prefix.slice(0, -1).includes(".") &&
+          QUESTION_START.test(prefix) &&
+          rest.length >= 30
+        ) {
+          return { name: prefix, firstAnswer: rest, kind: "merged" };
         }
       }
+      if (/\?\s*$/.test(t) && t.length <= 200 && !t.slice(0, -1).includes(". ")) {
+        return { name: t, firstAnswer: null, kind: "plain" };
+      }
+      return null;
+    };
+    const PLAIN_KINDS = new Set(["plain", "merged"]);
+    const questions: { "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }[] = [];
+    let current: { name: string; parts: string[]; kind: Detected["kind"] } | null = null;
+    const flush = () => {
+      if (current && current.parts.length) {
+        questions.push({
+          "@type": "Question",
+          name: current.name,
+          acceptedAnswer: { "@type": "Answer", text: current.parts.join("\n\n") },
+        });
+      }
+      current = null;
+    };
+    for (let i = faqIdx + 1; i < blocks.length; i++) {
+      const b = blocks[i];
+      const q = detectQuestion(b);
+      if ((b.type === "h2" || b.type === "h3") && !q) break; // FAQ section ended
+      if (q) {
+        flush();
+        current = { name: q.name, parts: q.firstAnswer ? [q.firstAnswer] : [], kind: q.kind };
+      } else if (b.type === "p" && current) {
+        if (
+          PLAIN_KINDS.has(current.kind) &&
+          current.parts.length &&
+          current.parts.join("").length >= 400
+        ) {
+          break; // answer complete — remaining paragraphs are post-FAQ prose
+        }
+        current.parts.push(blockText(b));
+      } else if (b.type === "ul" || b.type === "img" || b.type === "video") {
+        if (current && PLAIN_KINDS.has(current.kind)) break;
+      }
     }
+    flush();
     if (!questions.length) return null;
     return {
       "@context": "https://schema.org",
