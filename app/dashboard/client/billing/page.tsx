@@ -2,7 +2,7 @@ import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 import PriceValue from "@/components/PriceValue";
 
-/** /dashboard/client/billing — pay the go-live balance and manage the care plan. */
+/** /dashboard/client/billing — pay the build deposit, then the go-live balance, and manage the care plan. */
 export default function BillingPage() {
   return (
     <main>
@@ -21,6 +21,24 @@ export default function BillingPage() {
             Your build is split into two payments, plus the optional monthly
             care plan. Pay securely through Whop.
           </p>
+
+          <div
+            style={{
+              border: "1px solid #e5e7eb",
+              borderRadius: 12,
+              padding: 24,
+              marginBottom: 16,
+            }}
+          >
+            <h2 style={{ fontSize: "1.2rem", marginBottom: 8 }}>
+              Build deposit — <PriceValue>$125</PriceValue> one-time
+            </h2>
+            <p style={{ color: "#4b5563", marginBottom: 16 }}>
+              Due first, before work starts on your agent. The go-live
+              balance below is only due once your finished agent goes live.
+            </p>
+            <CheckoutButton linkKey="deposit" label={<>Pay $125 deposit</>} />
+          </div>
 
           <div
             style={{

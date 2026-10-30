@@ -3,6 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText } from "ai";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { resolveAgentSystemPrompt } from "@/lib/agent-business";
+
+// gemini-3.8-flash responses can legitimately take 45s+ when Google is
+// overloaded (measured 2026-10-30), so the route gets the full platform
+// window; the in-call abort below stays the hard stop inside it.
+export const maxDuration = 60;
 
 /** Chat with the client's own generated agent (preview mode). */
 export async function POST(req: NextRequest) {
@@ -22,12 +28,18 @@ export async function POST(req: NextRequest) {
 
     const { data: client } = await supabase
       .from("clients")
-      .select("agent_config")
+      .select(
+        "agent_config, business_name, industry, website, business_description, whatsapp_number, services, faqs"
+      )
       .eq("user_id", user.id)
       .single();
 
+    // Stored config prompt wins. When the config is empty (e.g. after
+    // "Start again" reset it) but the business details are still saved,
+    // resolveAgentSystemPrompt rebuilds the prompt from those details so
+    // the preview keeps answering as the client's own business.
     const systemPrompt = String(
-      client?.agent_config?.system_prompt ||
+      resolveAgentSystemPrompt(client ?? {}) ||
         "You are a friendly AI assistant for a small business. Be helpful and concise."
     ).slice(0, 8000);
 
@@ -47,10 +59,13 @@ export async function POST(req: NextRequest) {
 
     const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    // Hard 30s ceiling (same pattern as /api/chat): without it a slow model
-    // call leaves the preview UI on "typing..." forever.
+    // Hard 55s ceiling (same pattern as /api/chat): without it a slow model
+    // call leaves the preview UI on "typing..." forever. 55s, not 30s:
+    // gemini-3.8-flash under Google-side overload routinely answers in
+    // 30–50s (measured 46s for a one-line prompt on 2026-10-30), so a 30s
+    // cut killed slow-but-alive replies on both chat routes.
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
+    const timeout = setTimeout(() => controller.abort(), 55_000);
     try {
       const { text } = await generateText({
         model: google("gemini-3.8-flash"),
@@ -68,7 +83,7 @@ export async function POST(req: NextRequest) {
       const isTimeout =
         e instanceof Error && (e.name === "AbortError" || e.message.includes("abort"));
       if (isTimeout) {
-        console.error("onboarding chat timed out (30s)");
+        console.error("onboarding chat timed out (55s)");
         return NextResponse.json({
           reply:
             "That took longer than expected — please try sending your message again.",

@@ -83,7 +83,9 @@ describe("chat API safety patterns", () => {
   it("chat route has timeout", () => {
     const code = src("app/api/chat/route.ts");
     expect(code).toContain("AbortController");
-    expect(code).toContain("30_000");
+    // 55s ceiling (raised from 30s on 2026-10-30: gemini-3.8-flash under
+    // Google-side overload routinely answers in 30–50s).
+    expect(code).toContain("55_000");
   });
 
   it("chat route requires authentication", () => {

@@ -117,3 +117,78 @@ export function mergeBusinessIntoConfig(
     generated_at: new Date().toISOString(),
   };
 }
+
+/** A clients row (or any object carrying the same fields) as a prompt source. */
+export interface ClientPromptSource {
+  business_name?: unknown;
+  industry?: unknown;
+  website?: unknown;
+  business_description?: unknown;
+  whatsapp_number?: unknown;
+  services?: unknown;
+  faqs?: unknown;
+  agent_config?: Record<string, unknown> | null;
+}
+
+/**
+ * Business fields from a clients row: row columns first, agent_config as
+ * fallback — the same precedence /api/agent-config uses. Values are
+ * re-sanitised with the same caps as sanitizeBusinessFields.
+ */
+export function businessFieldsFromClient(
+  client: ClientPromptSource
+): BusinessFields {
+  const cfg = (client.agent_config ?? {}) as Record<string, unknown>;
+  const pick = (row: unknown, fromCfg: unknown, max: number): string =>
+    str(typeof row === "string" && row.trim() ? row : fromCfg, max);
+  const list = (row: unknown, fromCfg: unknown): unknown[] =>
+    Array.isArray(row) ? row : Array.isArray(fromCfg) ? fromCfg : [];
+
+  return {
+    business_name: pick(client.business_name, cfg.business_name, 120),
+    industry: pick(client.industry, cfg.industry, 120),
+    website: pick(client.website, cfg.website, 200),
+    business_description: pick(
+      client.business_description,
+      cfg.business_description,
+      2000
+    ),
+    whatsapp_number: pick(client.whatsapp_number, cfg.whatsapp_number, 40),
+    services: list(client.services, cfg.services)
+      .map((s) => {
+        const item = (s ?? {}) as Record<string, unknown>;
+        return { name: str(item.name, 120), price: str(item.price, 60) };
+      })
+      .filter((s) => s.name || s.price),
+    faqs: list(client.faqs, cfg.faqs)
+      .map((f) => {
+        const item = (f ?? {}) as Record<string, unknown>;
+        return { q: str(item.q, 300), a: str(item.a, 1000) };
+      })
+      .filter((f) => f.q || f.a),
+  };
+}
+
+/**
+ * The system prompt a client's preview/live chat should run with:
+ *  1. the stored agent_config.system_prompt, when one exists (unchanged
+ *     behaviour for fully generated agents);
+ *  2. otherwise — e.g. after "Start again" reset agent_config to {} while
+ *     the business details stayed saved — a prompt rebuilt on the fly from
+ *     those saved business fields, so the preview still answers as the
+ *     client's own business instead of a generic assistant;
+ *  3. null when neither exists (caller falls back to its generic prompt).
+ */
+export function resolveAgentSystemPrompt(
+  client: ClientPromptSource
+): string | null {
+  const cfg = (client.agent_config ?? {}) as Record<string, unknown>;
+  const stored = cfg.system_prompt;
+  if (typeof stored === "string" && stored.trim()) return stored;
+
+  const fields = businessFieldsFromClient(client);
+  if (!fields.business_name || !fields.industry || !fields.whatsapp_number) {
+    return null;
+  }
+  return buildSystemPrompt(fields);
+}

@@ -19,7 +19,18 @@ export async function GET() {
     if (!data?.agent_config) {
       return NextResponse.json({ error: "No agent yet — complete onboarding first." }, { status: 404 });
     }
-    return NextResponse.json({ agent_config: data.agent_config, agent_status: data.agent_status });
+    // After "Start again" the config is an empty object while the business
+    // details stay saved on the row — fill the identity fields from the row
+    // so the preview header/greeting show the real business, not
+    // "Your business". Stored config values always win.
+    const cfg = { ...(data.agent_config as Record<string, unknown>) };
+    if (!cfg.business_name && data.business_name) {
+      cfg.business_name = data.business_name;
+    }
+    if (!cfg.greeting && data.business_name) {
+      cfg.greeting = `Hi! Thanks for reaching out to ${data.business_name}. How can I help you today?`;
+    }
+    return NextResponse.json({ agent_config: cfg, agent_status: data.agent_status });
   } catch (e) {
     console.error("preview error:", e);
     return NextResponse.json({ error: "Could not load." }, { status: 500 });

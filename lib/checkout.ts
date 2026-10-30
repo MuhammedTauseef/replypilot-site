@@ -9,11 +9,11 @@
 export const WHOP_CHECKOUT = {
   /**
    * ReplyPilot Build — Deposit: one-time $125 (50% upfront).
-   * ⚠️ VERIFY BEFORE ENABLING: the user first created this plan as
-   * RECURRING $125/month by mistake and was guided (2026-10-08 ~11:25 PKT)
-   * to switch the top dropdown to ONE-TIME. Confirm in the Whop dashboard
-   * that the plan shows "$125 one-time" (not "$125.00 / month") before
-   * wiring this link into the site — otherwise buyers get charged monthly.
+   * History: the user first created this plan as RECURRING $125/month by
+   * mistake and switched it to ONE-TIME on 2026-10-08. Re-verified live
+   * 2026-10-30 before wiring the billing-page button: the public product
+   * page shows a bare "$125" (the recurring Care Plan page shows
+   * "$99 / month" by contrast), so the plan is one-time and safe to wire.
    */
   deposit:
     "https://whop.com/replypilot-site-ea3d/replypilot-build-deposit-cf",

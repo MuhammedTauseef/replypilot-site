@@ -47,6 +47,11 @@ const GEMINI_MODEL = "gemini-3.8-flash";
 const MAX_HISTORY = 12;
 const MAX_INPUT = 800;
 
+// gemini-3.8-flash responses can legitimately take 45s+ when Google is
+// overloaded (measured 2026-10-30), so the route gets the full platform
+// window; the in-call abort below stays the hard stop inside it.
+export const maxDuration = 60;
+
 type ChatMessage = { role: "user" | "assistant"; text: string };
 type Persona = { name?: unknown; business?: unknown; blurb?: unknown };
 
@@ -389,9 +394,13 @@ export async function POST(req: Request) {
   try {
     // NOTE: the @ai-sdk/google provider reads GOOGLE_GENERATIVE_AI_API_KEY
     // by default — we pass our GEMINI_API_KEY explicitly so the key is found.
-    // 30s timeout: Gemini hanging must never hang the request forever.
+    // 55s timeout: Gemini hanging must never hang the request forever, but
+    // 30s was too tight — under Google-side overload gemini-3.8-flash
+    // routinely answers in 30–50s (measured 46s for a one-line prompt on
+    // 2026-10-30, and its tool steps multiply that), so the old cut killed
+    // slow-but-alive replies. 55s keeps a hard stop inside maxDuration=60.
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
+    const timeout = setTimeout(() => controller.abort(), 55_000);
     const google = createGoogleGenerativeAI({ apiKey });
     let text: string | undefined;
     try {
@@ -434,7 +443,7 @@ export async function POST(req: Request) {
     const msg = err instanceof Error ? err.message : String(err);
     const isTimeout = err instanceof Error && (err.name === "AbortError" || msg.includes("abort"));
     console.error(
-      isTimeout ? "chat route timed out (30s):" : "chat route failed:",
+      isTimeout ? "chat route timed out (55s):" : "chat route failed:",
       msg.slice(0, 300)
     );
     return NextResponse.json({
