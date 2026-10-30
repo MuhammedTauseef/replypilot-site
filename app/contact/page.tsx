@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
+import ContactForm from "@/components/ContactForm";
 import { getStaticPage } from "@/lib/pages";
 import type { Block } from "@/lib/blog";
 
@@ -69,12 +70,16 @@ export default async function ContactPage() {
             Let&apos;s talk about your business.
           </h1>
           <p style={{ color: "#4b5563" }}>
-            The fastest way to reach us is email. We reply within one business
-            day.
+            Send us a message with the form below, or email us directly —
+            whatever is easier. We reply within one business day.
           </p>
 
           <div className="legal-body">
             {blocks.map(renderBlock)}
+          </div>
+
+          <div style={{ marginTop: 40 }}>
+            <ContactForm formLocation="contact-page" />
           </div>
         </div>
       </section>

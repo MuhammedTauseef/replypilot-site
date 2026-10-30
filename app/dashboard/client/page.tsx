@@ -104,7 +104,13 @@ export default function ClientDashboardPage() {
 
           <h2 style={{ fontSize: "1.4rem", marginBottom: 16 }}>Recent payments</h2>
           {data.payments.length === 0 ? (
-            <p style={{ color: "#9ca3af" }}>No payments yet.</p>
+            <p style={{ color: "#9ca3af" }}>
+              No payments yet. When you pay for your agent setup, go-live, or care
+              plan, the payments will be listed here.{" "}
+              <Link href="/dashboard/client/billing" style={{ color: "#b45309", fontWeight: 600 }}>
+                Go to billing →
+              </Link>
+            </p>
           ) : (
             <div style={{ border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
               {data.payments.map((p, i) => (

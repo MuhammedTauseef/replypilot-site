@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/LogoutButton";
+import DeleteEnquiryButton from "@/components/DeleteEnquiryButton";
 
 type Lead = {
   id: string;
@@ -72,7 +73,7 @@ async function DashboardContent() {
             your account.
           </p>
         </div>
-        <LogoutButton />
+        <LogoutButton redirectTo="/login" />
       </div>
 
       <div
@@ -101,7 +102,7 @@ async function DashboardContent() {
         <div className="price-card" style={{ padding: 26 }}>
           <div className="service-num">Next step</div>
           <Link
-            href="/#contact"
+            href="/onboarding"
             className="btn btn-gold"
             style={{ minHeight: 46, padding: "0 18px", fontSize: ".92rem" }}
           >
@@ -138,6 +139,7 @@ async function DashboardContent() {
               <th>Sent</th>
               <th>Business</th>
               <th>Message</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -148,6 +150,9 @@ async function DashboardContent() {
                 </td>
                 <td>{l.business_type || "—"}</td>
                 <td className="msg">{l.message}</td>
+                <td>
+                  <DeleteEnquiryButton leadId={l.id} />
+                </td>
               </tr>
             ))}
           </tbody>

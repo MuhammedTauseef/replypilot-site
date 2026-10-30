@@ -33,7 +33,7 @@ export default function DashboardHeader() {
             Pricing
           </Link>
           <AuthNav />
-          <Link className="nav-cta" href="/#contact">
+          <Link className="nav-cta" href="/onboarding">
             Get Your AI Agent
           </Link>
           <ThemeToggle />

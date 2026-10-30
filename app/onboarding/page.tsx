@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface ServiceItem {
@@ -28,6 +28,28 @@ export default function OnboardingPage() {
   const [services, setServices] = useState<ServiceItem[]>([{ name: "", price: "" }]);
   const [faqs, setFaqs] = useState<FaqItem[]>([{ q: "", a: "" }]);
   const [whatsapp, setWhatsapp] = useState("");
+  const [loadedExisting, setLoadedExisting] = useState(false);
+
+  // Returning clients edit the agent they already have: pre-fill the wizard
+  // from their stored business details so "Edit details" is a true update,
+  // not a blank form that silently overwrites.
+  useEffect(() => {
+    fetch("/api/agent-config")
+      .then((r) => r.json())
+      .then((d) => {
+        const b = d?.business;
+        if (!b || !b.business_name) return;
+        setBusinessName(b.business_name || "");
+        setIndustry(b.industry || "");
+        setWebsite(b.website || "");
+        setDescription(b.business_description || "");
+        setWhatsapp(b.whatsapp_number || "");
+        if (Array.isArray(b.services) && b.services.length > 0) setServices(b.services);
+        if (Array.isArray(b.faqs) && b.faqs.length > 0) setFaqs(b.faqs);
+        setLoadedExisting(true);
+      })
+      .catch(() => {});
+  }, []);
 
   const validStep = () => {
     if (step === 0) return businessName.trim().length > 1 && industry.trim().length > 1;
@@ -88,6 +110,21 @@ export default function OnboardingPage() {
             Tell us about your business — your AI agent is generated automatically.
             Takes about 10 minutes.
           </p>
+
+          {loadedExisting && (
+            <p
+              style={{
+                background: "rgba(245,158,11,.12)",
+                border: "1px solid rgba(245,158,11,.45)",
+                borderRadius: 10,
+                padding: "12px 16px",
+                marginBottom: 24,
+              }}
+            >
+              We loaded your current agent&rsquo;s details below — edit anything
+              and finish the steps to update it.
+            </p>
+          )}
 
           {/* Stepper */}
           <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>

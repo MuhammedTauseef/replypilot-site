@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-/** Admin sign-out button (Client Component). */
-export default function LogoutButton() {
+/** Sign-out button (Client Component). Admin surfaces land on /admin/login;
+ * client surfaces pass redirectTo="/login". */
+export default function LogoutButton({ redirectTo = "/admin/login" }: { redirectTo?: string }) {
   const [busy, setBusy] = useState(false);
 
   async function onClick() {
@@ -21,7 +22,7 @@ export default function LogoutButton() {
       // Even if sign-out fails, navigate away; the proxy re-checks the session.
     }
     // Full reload so the session state is re-evaluated cleanly.
-    window.location.href = "/admin/login";
+    window.location.href = redirectTo;
   }
 
   return (

@@ -1,5 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getServiceClient } from "@/lib/supabase/service";
+import { deleteOwnLead, type ScopedDeleteFn } from "@/lib/client-data";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,5 +90,51 @@ export async function POST(req: Request) {
     );
   }
 
+  return NextResponse.json({ ok: true });
+}
+
+/** DELETE /api/leads?id=... — delete one of the signed-in user's own
+ * enquiries (the dashboard overview list). Service client with the
+ * owner scope inside the query (`where id = ? and user_id = auth
+ * user`), the /api/profile PATCH pattern — a client can only ever
+ * remove an enquiry that belongs to their own account. Anonymous
+ * contact-form enquiries (user_id null) can never match. */
+export async function DELETE(req: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+
+  const id = req.nextUrl.searchParams.get("id") || "";
+  const service = getServiceClient();
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      { status: 503 }
+    );
+  }
+
+  const runDelete: ScopedDeleteFn = async (table, ownerColumn, ownerId, rowId) => {
+    const { count, error } = await service
+      .from(table)
+      .delete({ count: "exact" })
+      .eq("id", rowId)
+      .eq(ownerColumn, ownerId);
+    return { count, error: error ? { message: error.message } : null };
+  };
+
+  const result = await deleteOwnLead(runDelete, user.id, id);
+  if (!result.ok) {
+    if (result.reason === "invalid") {
+      return NextResponse.json({ error: "Missing enquiry id." }, { status: 400 });
+    }
+    if (result.reason === "not-found") {
+      return NextResponse.json({ error: "Enquiry not found." }, { status: 404 });
+    }
+    return NextResponse.json({ error: "Failed to delete enquiry." }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }

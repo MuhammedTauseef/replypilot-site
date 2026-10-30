@@ -33,18 +33,51 @@ export async function POST(req: NextRequest) {
 
     const { message, history } = await req.json();
 
-    const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
-    const { text } = await generateText({
-      model: google("gemini-3.8-flash"),
-      system: systemPrompt,
-      messages: [
-        ...(Array.isArray(history) ? history : []),
-        { role: "user" as const, content: String(message || "").slice(0, 1000) },
-      ],
-      maxOutputTokens: 300,
-    });
+    // Cap the history server-side too (the client sends the last 8 turns):
+    // an unbounded history makes the model call slow or stall.
+    const safeHistory = (Array.isArray(history) ? history : [])
+      .slice(-8)
+      .filter(
+        (m) =>
+          m &&
+          (m.role === "user" || m.role === "assistant") &&
+          typeof m.content === "string"
+      )
+      .map((m) => ({ role: m.role as "user" | "assistant", content: m.content.slice(0, 1000) }));
 
-    return NextResponse.json({ reply: text.trim() });
+    const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
+
+    // Hard 30s ceiling (same pattern as /api/chat): without it a slow model
+    // call leaves the preview UI on "typing..." forever.
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+    try {
+      const { text } = await generateText({
+        model: google("gemini-3.8-flash"),
+        system: systemPrompt,
+        messages: [
+          ...safeHistory,
+          { role: "user" as const, content: String(message || "").slice(0, 1000) },
+        ],
+        maxOutputTokens: 300,
+        abortSignal: controller.signal,
+      });
+
+      return NextResponse.json({ reply: text.trim() });
+    } catch (e) {
+      const isTimeout =
+        e instanceof Error && (e.name === "AbortError" || e.message.includes("abort"));
+      if (isTimeout) {
+        console.error("onboarding chat timed out (30s)");
+        return NextResponse.json({
+          reply:
+            "That took longer than expected — please try sending your message again.",
+        });
+      }
+      throw e;
+    } finally {
+      clearTimeout(timeout);
+    }
   } catch (e) {
     console.error("onboarding chat error:", e);
     return NextResponse.json({ error: "Chat failed." }, { status: 500 });
