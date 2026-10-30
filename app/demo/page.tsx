@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/PageHeader";
 import DemoPlayground from "@/components/DemoPlayground";
 import PriceValue from "@/components/PriceValue";
 import TrackedLink from "@/components/TrackedLink";
@@ -32,7 +33,9 @@ export const metadata: Metadata = {
  */
 export default function DemoPage() {
   return (
-    <main>
+    <>
+      <PageHeader />
+      <main>
       <section className="hero" style={{ padding: 0 }}>
         <div
           className="wrap hero-inner"
@@ -97,6 +100,7 @@ export default function DemoPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

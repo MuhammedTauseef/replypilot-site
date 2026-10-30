@@ -12,6 +12,8 @@ import {
 } from "@/components/BlogCTA";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getPublishedPosts, getPostBySlug, type Block } from "@/lib/blog";
+import { splitBoldSegments } from "@/lib/inline-format";
+import type { ReactNode } from "react";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -28,7 +30,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(slug);
   if (!post) return { title: "Post not found — ReplyPilot" };
   return {
-    title: `${post.title} | ReplyPilot Blog`,
+    // No " | ReplyPilot Blog" suffix: it inflated every article title by
+    // 18 chars and pushed most past the 60-char SEO limit (audit 2026-10-30:
+    // 82 of 137 pages over). The stored title already names the topic; the
+    // og:title below likewise uses the bare title.
+    title: post.title,
     description: post.excerpt,
     keywords: post.keywords,
     alternates: {
@@ -49,6 +55,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/** Render text with **bold** pairs converted to <strong>.
+ * Text without markers returns the original string untouched, so
+ * unaffected content renders byte-identically to before. */
+function renderFormatted(text: string, keyPrefix: string): ReactNode {
+  const segments = splitBoldSegments(text);
+  if (segments.length === 1 && !segments[0].bold) return segments[0].text;
+  return segments.map((seg, k) =>
+    seg.bold ? (
+      <strong key={`${keyPrefix}-b${k}`}>{seg.text}</strong>
+    ) : (
+      <span key={`${keyPrefix}-s${k}`}>{seg.text}</span>
+    )
+  );
+}
+
 /** Render paragraph/list text with [label](url) converted to real links.
  * SEC-006 fix (2026-10-16): allowlist href protocols to block javascript: URLs. */
 function renderInline(text: string, keyPrefix: string) {
@@ -59,7 +80,11 @@ function renderInline(text: string, keyPrefix: string) {
       const href = m[2];
       // Only allow safe protocols — drop anything else (e.g. javascript:)
       if (!/^(https?:\/\/|\/|#|mailto:)/.test(href)) {
-        return <span key={`${keyPrefix}-${j}`}>{m[1]}</span>;
+        return (
+          <span key={`${keyPrefix}-${j}`}>
+            {renderFormatted(m[1], `${keyPrefix}-${j}`)}
+          </span>
+        );
       }
       const external = /^https?:\/\//.test(href);
       return (
@@ -70,20 +95,24 @@ function renderInline(text: string, keyPrefix: string) {
             ? { target: "_blank", rel: "noopener noreferrer" }
             : {})}
         >
-          {m[1]}
+          {renderFormatted(m[1], `${keyPrefix}-${j}`)}
         </a>
       );
     }
-    return <span key={`${keyPrefix}-${j}`}>{part}</span>;
+    return (
+      <span key={`${keyPrefix}-${j}`}>
+        {renderFormatted(part, `${keyPrefix}-${j}`)}
+      </span>
+    );
   });
 }
 
 function renderBlock(block: Block, i: number) {
   switch (block.type) {
     case "h2":
-      return <h2 key={i}>{block.text}</h2>;
+      return <h2 key={i}>{renderFormatted(block.text, `h2-${i}`)}</h2>;
     case "h3":
-      return <h3 key={i}>{block.text}</h3>;
+      return <h3 key={i}>{renderFormatted(block.text, `h3-${i}`)}</h3>;
     case "ul":
       return (
         <ul key={i}>

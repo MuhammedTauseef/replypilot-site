@@ -5099,7 +5099,7 @@ posts.push(
 {
   slug: "whatsapp-automation-bridal-shops",
   title: "WhatsApp Automation for Bridal Shops: Bookings & Follow-Ups",
-  excerpt: "Answer dress-trial and price enquiries in seconds, book trial appointments in chat, and follow up with brides automatically — while you stay in the fitting room.",
+  excerpt: "Answer dress-trial and price enquiries in seconds, book trial appointments in chat, and follow up with brides — while you stay in the fitting room.",
   date: "October 12, 2026",
   readTime: "12 min read",
   keywords: ["WhatsApp automation for bridal shops", "bridal shop WhatsApp chatbot", "automate bridal trial bookings"],
@@ -5901,7 +5901,7 @@ posts.push(
 );
 
 posts.push(
-{ slug: "ai-chatbot-bookstores", title: "AI Chatbot for Bookstores: Picks, Availability & Pickups", excerpt: "An AI chatbot for bookstores answers availability questions, recommends books by genre, and coordinates order pickups — while you serve the readers already in your shop.", date: "October 12, 2026", readTime: "11 min read", keywords: ["AI chatbot for bookstores", "bookstore chatbot", "AI assistant for bookshops"], content: [
+{ slug: "ai-chatbot-bookstores", title: "AI Chatbot for Bookstores: Picks, Availability & Pickups", excerpt: "An AI chatbot for bookstores answers availability questions, recommends books by genre, and coordinates order pickups — while you serve readers in your shop.", date: "October 12, 2026", readTime: "11 min read", keywords: ["AI chatbot for bookstores", "bookstore chatbot", "AI assistant for bookshops"], content: [
 { type: "img", src: "/blog/ai-chatbot-bookstores.jpg", alt: "Independent bookstore owner overwhelmed by unread availability messages on his phone while impatient customers queue at the counter", caption: "Every unanswered “do you have this?” is a reader buying elsewhere" },
 { type: "p", text: "Saturday morning, 11:40. Your shop is full, three people wait at the counter, and your phone buzzes again. “Do you have the new Colleen Hoover in paperback?” A reader browsed your website at midnight and messaged you there too. You love these questions — they mean sales — but you cannot answer them and serve the room at the same time. An AI chatbot for bookstores means a chat assistant on your website or WhatsApp that answers availability questions, suggests books by genre, and coordinates order pickups. For bookstore owners, the best approach is a chatbot trained on your inventory, because it handles the repetitive “do you have this title?” messages while your staff serves the people already in the store. Tools like ReplyPilot (AI automation for small-business messaging — WhatsApp, Instagram DM, website chat) are built exactly for this kind of work. This article shows you what a bookstore chatbot can and cannot do, how it checks your shelves, where it beats social media DMs, and how to set one up in your first 30 days." },
 { type: "h2", text: "“Do You Have This Title?” — The Question That Never Stops" },
@@ -6091,7 +6091,7 @@ posts.push(
 { type: "h3", text: "Does it work for contact lens reorders too?" },
 { type: "p", text: "Yes — repeat lens orders are one of its best tasks. The patient confirms their usual lenses in seconds, any hour, and the order queues for your team. Timed nudges when their reorder interval passes keep wearers buying from you instead of drifting to online subscriptions." },
 ] },
-{ slug: "ai-chatbot-pharmacies", title: "AI Chatbot for Pharmacies: Refills, Hours & Prescription FAQ", excerpt: "An AI chatbot for pharmacies handles refill requests, store hours, and prescription FAQs around the clock — and always routes clinical questions to your pharmacist.", date: "October 12, 2026", readTime: "11 min read", keywords: ["AI chatbot for pharmacies", "pharmacy chatbot", "AI assistant for independent pharmacies"], content: [
+{ slug: "ai-chatbot-pharmacies", title: "AI Chatbot for Pharmacies: Refills, Hours & Prescription FAQ", excerpt: "An AI chatbot for pharmacies handles refill requests, store hours, and prescription FAQs around the clock — routing clinical questions to your pharmacist.", date: "October 12, 2026", readTime: "11 min read", keywords: ["AI chatbot for pharmacies", "pharmacy chatbot", "AI assistant for independent pharmacies"], content: [
 { type: "img", src: "/blog/ai-chatbot-pharmacies.jpg", alt: "Independent pharmacist juggling ringing refill-request phone calls while a long queue of customers waits at the pharmacy counter", caption: "Your phone rings off the hook while patients wait — a chatbot ends that tug-of-war" },
 { type: "p", text: "Tuesday, 5:15pm. The phone is ringing — refill request. Two people wait at the counter. A third person is trying to ask about their insurance while you are on the call. You are a trained pharmacist, and you are spending your evening as a telephone operator. An AI chatbot for pharmacies means a chat assistant on your website or WhatsApp that handles refill requests, answers store-hours and insurance questions, and routes anything clinical to your pharmacist. For independent pharmacies, the best approach is a chatbot with a hard medical boundary, because it clears the routine queue while never diagnosing, prescribing, or giving medical advice. Tools like ReplyPilot (AI automation for small-business messaging — WhatsApp, Instagram DM, website chat) are built for exactly this kind of front-desk automation. This article shows you what a pharmacy chatbot should handle, where the medical line sits, how refill flows work, and how to launch one safely in 30 days." },
 { type: "p", text: "Watch it working for a pharmacy:" },
@@ -6757,7 +6757,7 @@ posts.push(
 posts.push(
 {
   slug: "whatsapp-automation-caterers",
-  title: "WhatsApp Automation for Caterers: Event Quotes, Tasting Bookings & Repeat Clients on Autopilot",
+  title: "WhatsApp Automation for Caterers",
   excerpt: "Answer event quote requests in seconds, book tasting appointments in chat, and win repeat clients automatically — while your team stays in the kitchen.",
   date: "October 14, 2026",
   readTime: "12 min read",
@@ -6851,7 +6851,7 @@ posts.push(
 },
 {
   slug: "whatsapp-automation-electricians",
-  title: "WhatsApp Automation for Electricians: Emergency Call Triage, Quotes & Job Booking Without the Phone Tag",
+  title: "WhatsApp Automation for Electricians",
   excerpt: "Triage emergency calls in seconds, quote standard jobs instantly, and book work automatically — even when you're up a ladder with both hands full.",
   date: "October 14, 2026",
   readTime: "12 min read",
@@ -6941,7 +6941,7 @@ posts.push(
 posts.push(
 {
   slug: "whatsapp-automation-pest-control-companies",
-  title: "WhatsApp Automation for Pest Control Companies: Triage, Bookings & Repeat Treatments on Autopilot",
+  title: "WhatsApp Automation for Pest Control Companies",
   excerpt: "Sort urgent pest jobs from routine ones in seconds, book inspections in chat, and keep contracts renewing — while your team is out treating homes.",
   date: "October 14, 2026",
   readTime: "12 min read",
@@ -7034,7 +7034,7 @@ posts.push(
 posts.push(
 {
   slug: "whatsapp-automation-locksmiths",
-  title: "WhatsApp Automation for Locksmiths: 2am Lockouts, Clear Quotes & Repeat Work Without Missing a Call",
+  title: "WhatsApp Automation for Locksmiths",
   excerpt: "Answer lockout calls in seconds, verify ownership safely, and quote clearly in chat — while your hands are busy on the next lock.",
   date: "October 14, 2026",
   readTime: "12 min read",
@@ -7127,7 +7127,7 @@ posts.push(
 posts.push(
 {
   slug: "ai-chatbot-roofing-companies",
-  title: "AI Chatbot for Roofing Companies: Storm Leads, Honest Estimates & Booked Inspections Around the Clock",
+  title: "AI Chatbot for Roofing Companies",
   excerpt: "Catch storm-damage leads the minute they land, give honest estimate ranges, and book roof inspections in chat — while your crew is up on a roof.",
   date: "October 14, 2026",
   readTime: "12 min read",

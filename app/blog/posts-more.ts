@@ -8,7 +8,7 @@ import type { Post } from "./posts";
 export const morePosts: Post[] = [
   {
     slug: "whatsapp-automation-house-painters",
-    title: "WhatsApp Automation for House Painters: Quotes in Minutes, Jobs Booked While You Paint",
+    title: "WhatsApp Automation for House Painters",
     excerpt: "House painters lose jobs to slow replies. WhatsApp automation sends quotes in minutes, books jobs while you paint, and follows up automatically.",
     date: "October 17, 2026",
     readTime: "15 min read",

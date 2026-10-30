@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PageHeader from "@/components/PageHeader";
 import { notFound } from "next/navigation";
 import { getPublishedDemos, getDemoBySlugDb } from "@/lib/demos-db";
 import DemoPlayground from "@/components/DemoPlayground";
@@ -84,7 +85,9 @@ export default async function DemoDetailPage({ params }: { params: Promise<{ slu
   const articleLink = DEMO_ARTICLE_LINKS[slug];
 
   return (
-    <main>
+    <>
+      <PageHeader />
+      <main>
       <section className="hero" style={{ padding: 0 }}>
         <div
           className="wrap hero-inner"
@@ -172,6 +175,7 @@ export default async function DemoDetailPage({ params }: { params: Promise<{ slu
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

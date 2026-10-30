@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/PageHeader";
 import { getStaticPage } from "@/lib/pages";
 import type { Block } from "@/lib/blog";
 
@@ -57,7 +58,9 @@ export default async function DisclaimerPage() {
   const blocks = page?.content?.length ? page.content : fallbackBlocks;
 
   return (
-    <main>
+    <>
+      <PageHeader />
+      <main>
       <section className="block">
         <div className="wrap legal-body" style={{ maxWidth: 760 }}>
           <span className="eyebrow">Legal</span>
@@ -65,6 +68,7 @@ export default async function DisclaimerPage() {
           {blocks.map(renderBlock)}
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

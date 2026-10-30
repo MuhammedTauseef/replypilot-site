@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import { getStaticPage } from "@/lib/pages";
 import type { Block } from "@/lib/blog";
@@ -82,7 +83,9 @@ export default async function AboutPage() {
   const title = page?.title || "About — ReplyPilot";
 
   return (
-    <main>
+    <>
+      <PageHeader />
+      <main>
       <section className="block">
         <div className="wrap" style={{ maxWidth: 760 }}>
           <span className="eyebrow">About</span>
@@ -138,6 +141,7 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

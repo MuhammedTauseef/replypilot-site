@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import { safeJsonLd } from "@/lib/json-ld";
 
@@ -84,7 +85,9 @@ export default function FaqPage() {
   };
 
   return (
-    <main>
+    <>
+      <PageHeader />
+      <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
@@ -117,6 +120,7 @@ export default function FaqPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
