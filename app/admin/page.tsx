@@ -423,6 +423,9 @@ export default function AdminPage() {
           <a href="/admin/demos" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             Demos →
           </a>
+          <a href="/admin/faqs" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            FAQs →
+          </a>
           <a href="/admin/settings" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             Settings →
           </a>
@@ -431,6 +434,9 @@ export default function AdminPage() {
           </a>
           <a href="/admin/payments" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             Payments →
+          </a>
+          <a href="/admin/users" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
+            Users →
           </a>
           <a href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: ".9rem" }}>
             ← Home

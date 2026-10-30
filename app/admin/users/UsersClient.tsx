@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 type UserRow = {
   id: string;
@@ -20,6 +21,8 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [pendingRole, setPendingRole] = useState<{ user: UserRow; role: "admin" | "client" } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<UserRow | null>(null);
 
   async function load() {
     setLoading(true);
@@ -40,8 +43,10 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
     load();
   }, []);
 
-  async function setRole(u: UserRow, role: "admin" | "client") {
-    if (!confirm(`${role === "admin" ? "Promote" : "Demote"} ${u.email} ${role === "admin" ? "to admin" : "to client"}?`)) return;
+  async function doSetRole() {
+    const pending = pendingRole;
+    if (!pending || busy) return;
+    const { user: u, role } = pending;
     setBusy(u.id);
     try {
       const res = await fetch("/api/admin/users", {
@@ -52,22 +57,27 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Role update failed.");
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, role } : x)));
+      setPendingRole(null);
     } catch (e) {
+      setPendingRole(null);
       alert(e instanceof Error ? e.message : "Role update failed.");
     } finally {
       setBusy(null);
     }
   }
 
-  async function deleteUser(u: UserRow) {
-    if (!confirm(`Delete ${u.email}? This removes their account and all associated data. This cannot be undone.`)) return;
+  async function doDeleteUser() {
+    const u = pendingDelete;
+    if (!u || busy) return;
     setBusy(u.id);
     try {
       const res = await fetch(`/api/admin/users?user_id=${encodeURIComponent(u.id)}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Delete failed.");
       setUsers((prev) => prev.filter((x) => x.id !== u.id));
+      setPendingDelete(null);
     } catch (e) {
+      setPendingDelete(null);
       alert(e instanceof Error ? e.message : "Delete failed.");
     } finally {
       setBusy(null);
@@ -114,7 +124,7 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
                         <button
                           className="btn-small"
                           disabled={busy === u.id}
-                          onClick={() => setRole(u, "client")}
+                          onClick={() => setPendingRole({ user: u, role: "client" })}
                         >
                           Demote
                         </button>
@@ -122,7 +132,7 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
                         <button
                           className="btn-small"
                           disabled={busy === u.id}
-                          onClick={() => setRole(u, "admin")}
+                          onClick={() => setPendingRole({ user: u, role: "admin" })}
                         >
                           Make admin
                         </button>
@@ -131,7 +141,7 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
                       <button
                         className="btn-small btn-danger"
                         disabled={busy === u.id}
-                        onClick={() => deleteUser(u)}
+                        onClick={() => setPendingDelete(u)}
                       >
                         Delete
                       </button>
@@ -143,6 +153,36 @@ export default function UsersClient({ currentUserId }: { currentUserId: string }
           })}
         </tbody>
       </table>
+      <ConfirmDialog
+        open={pendingRole !== null}
+        title={pendingRole ? (pendingRole.role === "admin" ? "Promote to admin?" : "Demote to client?") : ""}
+        message={
+          pendingRole
+            ? `${pendingRole.role === "admin" ? "Promote" : "Demote"} ${pendingRole.user.email} ${pendingRole.role === "admin" ? "to admin" : "to client"}?`
+            : ""
+        }
+        confirmLabel={pendingRole?.role === "admin" ? "Promote" : "Demote"}
+        busy={busy !== null}
+        onConfirm={doSetRole}
+        onCancel={() => {
+          if (!busy) setPendingRole(null);
+        }}
+      />
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete user?"
+        message={
+          pendingDelete
+            ? `Delete ${pendingDelete.email}? This removes their account and all associated data. This cannot be undone.`
+            : ""
+        }
+        confirmLabel="Delete"
+        busy={busy !== null}
+        onConfirm={doDeleteUser}
+        onCancel={() => {
+          if (!busy) setPendingDelete(null);
+        }}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 interface PageRow {
   slug: string;
@@ -14,6 +15,8 @@ interface PageRow {
 export default function AdminPagesPage() {
   const [rows, setRows] = useState<PageRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingDelete, setPendingDelete] = useState<PageRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = () => {
     fetch("/api/admin/pages")
@@ -26,10 +29,14 @@ export default function AdminPagesPage() {
   };
   useEffect(load, []);
 
-  async function onDelete(slug: string, title: string) {
-    if (!window.confirm(`Delete page "${title}"? This cannot be undone.`)) return;
-    const res = await fetch(`/api/admin/pages?slug=${slug}`, { method: "DELETE" });
+  async function doDelete() {
+    const row = pendingDelete;
+    if (!row || deleting) return;
+    setDeleting(true);
+    const res = await fetch(`/api/admin/pages?slug=${row.slug}`, { method: "DELETE" });
     const d = await res.json();
+    setDeleting(false);
+    setPendingDelete(null);
     if (!res.ok) {
       alert(d.error || "Could not delete.");
       return;
@@ -83,7 +90,7 @@ export default function AdminPagesPage() {
                 </td>
                 <td style={{ whiteSpace: "nowrap" }}>
                   <Link href={`/admin/pages/${r.slug}`} style={{ marginRight: 12 }}>Edit</Link>
-                  <button onClick={() => onDelete(r.slug, r.title)} style={{ color: "#b3261e", background: "none", border: "none", cursor: "pointer" }}>
+                  <button onClick={() => setPendingDelete(r)} style={{ color: "#b3261e", background: "none", border: "none", cursor: "pointer" }}>
                     Delete
                   </button>
                 </td>
@@ -92,6 +99,17 @@ export default function AdminPagesPage() {
           </tbody>
         </table>
       )}
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete page?"
+        message={pendingDelete ? `Delete page "${pendingDelete.title}"? This cannot be undone.` : ""}
+        confirmLabel="Delete"
+        busy={deleting}
+        onConfirm={doDelete}
+        onCancel={() => {
+          if (!deleting) setPendingDelete(null);
+        }}
+      />
     </main>
   );
 }

@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 interface Row {
   id: string;
@@ -17,6 +18,8 @@ interface Row {
 export default function AdminDemosPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingDelete, setPendingDelete] = useState<Row | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = () => {
     fetch("/api/admin/demos")
@@ -29,9 +32,13 @@ export default function AdminDemosPage() {
   };
   useEffect(load, []);
 
-  async function onDelete(id: string, name: string) {
-    if (!window.confirm(`Delete demo "${name}"? This cannot be undone.`)) return;
-    const res = await fetch(`/api/admin/demos?id=${id}`, { method: "DELETE" });
+  async function doDelete() {
+    const row = pendingDelete;
+    if (!row || deleting) return;
+    setDeleting(true);
+    const res = await fetch(`/api/admin/demos?id=${row.id}`, { method: "DELETE" });
+    setDeleting(false);
+    setPendingDelete(null);
     if (!res.ok) {
       alert("Could not delete.");
       return;
@@ -87,7 +94,7 @@ export default function AdminDemosPage() {
                 </td>
                 <td style={{ whiteSpace: "nowrap" }}>
                   <Link href={`/admin/demos/${r.id}`} style={{ marginRight: 12 }}>Edit</Link>
-                  <button onClick={() => onDelete(r.id, r.name)} style={{ color: "#b3261e", background: "none", border: "none", cursor: "pointer" }}>
+                  <button onClick={() => setPendingDelete(r)} style={{ color: "#b3261e", background: "none", border: "none", cursor: "pointer" }}>
                     Delete
                   </button>
                 </td>
@@ -96,6 +103,17 @@ export default function AdminDemosPage() {
           </tbody>
         </table>
       )}
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete demo?"
+        message={pendingDelete ? `Delete demo "${pendingDelete.name}"? This cannot be undone.` : ""}
+        confirmLabel="Delete"
+        busy={deleting}
+        onConfirm={doDelete}
+        onCancel={() => {
+          if (!deleting) setPendingDelete(null);
+        }}
+      />
     </main>
   );
 }

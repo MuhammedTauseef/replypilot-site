@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 /** Delete button for a pending Buffer Queue item (confirm first). */
 export default function DeleteQueueButton({
@@ -13,13 +14,11 @@ export default function DeleteQueueButton({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   async function onDelete() {
     if (busy) return;
-    const ok = window.confirm(
-      `Remove "${title}" from the buffer queue? It will not be published. This cannot be undone.`
-    );
-    if (!ok) return;
+    setConfirming(false);
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/blog/queue?id=${id}`, {
@@ -39,9 +38,10 @@ export default function DeleteQueueButton({
   }
 
   return (
+    <>
     <button
       type="button"
-      onClick={onDelete}
+      onClick={() => setConfirming(true)}
       disabled={busy}
       title="Remove from the buffer queue"
       style={{
@@ -55,5 +55,17 @@ export default function DeleteQueueButton({
     >
       {busy ? "…" : "Delete"}
     </button>
+    <ConfirmDialog
+      open={confirming}
+      title="Remove from the buffer queue?"
+      message={`Remove "${title}" from the buffer queue? It will not be published. This cannot be undone.`}
+      confirmLabel="Remove"
+      busy={busy}
+      onConfirm={onDelete}
+      onCancel={() => {
+        if (!busy) setConfirming(false);
+      }}
+    />
+    </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 /** Small delete button for the admin dashboard (leads + bookings). */
 export default function DeleteButton({
@@ -13,11 +14,11 @@ export default function DeleteButton({
   label: string;
 }) {
   const [busy, setBusy] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   async function onDelete() {
     if (busy) return;
-    const ok = window.confirm(`Delete this ${type} from ${label}? This cannot be undone.`);
-    if (!ok) return;
+    setConfirming(false);
     setBusy(true);
     try {
       const res = await fetch("/api/admin/delete", {
@@ -34,9 +35,10 @@ export default function DeleteButton({
   }
 
   return (
+    <>
     <button
       type="button"
-      onClick={onDelete}
+      onClick={() => setConfirming(true)}
       disabled={busy}
       aria-label={`Delete ${type}`}
       title={`Delete this ${type}`}
@@ -53,5 +55,17 @@ export default function DeleteButton({
     >
       {busy ? "…" : "Delete"}
     </button>
+    <ConfirmDialog
+      open={confirming}
+      title={`Delete this ${type}?`}
+      message={`Delete this ${type} from ${label}? This cannot be undone.`}
+      confirmLabel="Delete"
+      busy={busy}
+      onConfirm={onDelete}
+      onCancel={() => {
+        if (!busy) setConfirming(false);
+      }}
+    />
+    </>
   );
 }

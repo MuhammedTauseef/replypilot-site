@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 type Faq = {
   id: string;
@@ -19,6 +20,8 @@ export default function FaqsClient() {
   const [a, setA] = useState("");
   const [published, setPublished] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<Faq | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -100,16 +103,22 @@ export default function FaqsClient() {
     }
   }
 
-  async function remove(f: Faq) {
-    if (!confirm(`Delete this FAQ?\n\n"${f.question}"`)) return;
+  async function doRemove() {
+    const f = pendingDelete;
+    if (!f || deleting) return;
+    setDeleting(true);
     try {
       const res = await fetch(`/api/admin/faqs?id=${encodeURIComponent(f.id)}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Delete failed.");
       setFaqs((prev) => prev.filter((x) => x.id !== f.id));
       if (editing?.id === f.id) startNew();
+      setPendingDelete(null);
     } catch (e) {
+      setPendingDelete(null);
       alert(e instanceof Error ? e.message : "Delete failed.");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -178,12 +187,23 @@ export default function FaqsClient() {
                 <button className="btn-small" onClick={() => togglePublish(f)}>
                   {f.published ? "Unpublish" : "Publish"}
                 </button>
-                <button className="btn-small btn-danger" onClick={() => remove(f)}>Delete</button>
+                <button className="btn-small btn-danger" onClick={() => setPendingDelete(f)}>Delete</button>
               </div>
             </div>
           </div>
         ))}
       </div>
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete this FAQ?"
+        message={pendingDelete ? `"${pendingDelete.question}"` : ""}
+        confirmLabel="Delete"
+        busy={deleting}
+        onConfirm={doRemove}
+        onCancel={() => {
+          if (!deleting) setPendingDelete(null);
+        }}
+      />
     </div>
   );
 }
