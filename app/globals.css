@@ -374,6 +374,17 @@ footer{background:var(--navy-2);color:#aeb9d4;padding:64px 0 34px}
 [data-theme="dark"] .auth-alt{color:#aeb9cc}
 [data-theme="dark"] .auth-alt a{color:var(--gold-soft)}
 
+/* ---------- dashboard user-area sub-navigation ---------- */
+.dash-subnav{background:var(--paper-2);border-bottom:1px solid var(--line)}
+.dash-subnav-inner{display:flex;align-items:center;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+.dash-subnav-inner::-webkit-scrollbar{display:none}
+.dash-subnav-link{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:600;font-size:.9rem;
+  padding:9px 14px;border-radius:999px;min-height:40px;display:inline-flex;align-items:center}
+.dash-subnav-link:hover{color:var(--navy);background:var(--light-blue)}
+.dash-subnav-link.active{color:#fff;background:var(--navy)}
+[data-theme="dark"] .dash-subnav-link:hover{color:var(--gold-soft)}
+[data-theme="dark"] .dash-subnav-link.active{color:#111;background:var(--gold)}
+
 /* ---------- admin ---------- */
 .admin-wrap{max-width:1060px;margin:0 auto;padding:60px 22px 90px}
 .admin-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(28px,4vw,48px);box-shadow:var(--shadow);max-width:440px;margin:40px auto}
