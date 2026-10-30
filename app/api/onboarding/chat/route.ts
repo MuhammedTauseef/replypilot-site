@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
           ...safeHistory,
           { role: "user" as const, content: String(message || "").slice(0, 1000) },
         ],
-        maxOutputTokens: 300,
+        maxOutputTokens: 1024,
         abortSignal: controller.signal,
       });
 

@@ -417,7 +417,7 @@ export async function POST(req: Request) {
         tools: { saveLead, handoffToHuman, checkAvailability, bookDemo },
         stopWhen: stepCountIs(4),
         temperature: 0.7,
-        maxOutputTokens: 400,
+        maxOutputTokens: 1024,
         abortSignal: controller.signal,
       });
       text = result.text;
