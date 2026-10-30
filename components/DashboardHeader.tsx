@@ -32,12 +32,12 @@ export default function DashboardHeader() {
           <Link className="nav-link" href="/#pricing">
             Pricing
           </Link>
-          <AuthNav />
+          <AuthNav signOutRedirect="/login" />
           <Link className="nav-cta" href="/onboarding">
             Get Your AI Agent
           </Link>
           <ThemeToggle />
-          <MobileNav />
+          <MobileNav signOutRedirect="/login" />
         </nav>
       </div>
     </header>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 interface Doc {
   id: string;
@@ -17,6 +18,8 @@ export default function DocumentsPage() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [pendingDoc, setPendingDoc] = useState<Doc | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = () => {
     fetch("/api/kb")
@@ -94,8 +97,10 @@ export default function DocumentsPage() {
     }
   };
 
-  const remove = async (doc: Doc) => {
-    if (!confirm(`Delete "${doc.filename}"? Your agent will stop answering from it.`)) return;
+  const doRemove = async () => {
+    const doc = pendingDoc;
+    if (!doc || deleting) return;
+    setDeleting(true);
     setMessage("");
     try {
       const res = await fetch(`/api/kb?group=${encodeURIComponent(doc.id)}`, { method: "DELETE" });
@@ -103,9 +108,13 @@ export default function DocumentsPage() {
       if (!res.ok) throw new Error(data.error || "Delete failed.");
       if (editingKey === doc.id) cancelEdit();
       setMessage("🗑️ Document deleted.");
+      setPendingDoc(null);
       load();
     } catch (e) {
       setMessage(e instanceof Error ? e.message : "Delete failed.");
+      setPendingDoc(null);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -180,7 +189,7 @@ export default function DocumentsPage() {
                   <button onClick={() => startEdit(d)} style={{ background: "none", border: "none", color: "#1d4ed8", fontWeight: 600, cursor: "pointer" }}>
                     Edit
                   </button>
-                  <button onClick={() => remove(d)} style={{ background: "none", border: "none", color: "#dc2626", cursor: "pointer" }}>
+                  <button onClick={() => setPendingDoc(d)} style={{ background: "none", border: "none", color: "#dc2626", cursor: "pointer" }}>
                     Delete
                   </button>
                 </span>
@@ -189,6 +198,21 @@ export default function DocumentsPage() {
           )}
         </div>
       </section>
+      <ConfirmDialog
+        open={pendingDoc !== null}
+        title="Delete document?"
+        message={
+          pendingDoc
+            ? `Delete "${pendingDoc.filename}"? Your agent will stop answering from it.`
+            : ""
+        }
+        confirmLabel="Delete"
+        busy={deleting}
+        onConfirm={doRemove}
+        onCancel={() => {
+          if (!deleting) setPendingDoc(null);
+        }}
+      />
     </main>
   );
 }

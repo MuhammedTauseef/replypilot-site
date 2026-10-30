@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 type AgentConfig = {
   agent_name?: string;
@@ -51,6 +52,7 @@ export default function AgentConfigPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [confirmingReset, setConfirmingReset] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -132,13 +134,8 @@ export default function AgentConfigPage() {
     }
   }
 
-  async function reset() {
-    if (
-      !confirm(
-        "Reset your agent configuration? This clears the agent's name, greeting, tone and generated setup, and puts the status back to draft. Your business details, documents and billing stay as they are."
-      )
-    )
-      return;
+  async function doReset() {
+    if (resetting) return;
     setResetting(true);
     setError(null);
     setSaved(false);
@@ -149,8 +146,10 @@ export default function AgentConfigPage() {
       setConfig({});
       setStatus("draft");
       setSaved(true);
+      setConfirmingReset(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Reset failed.");
+      setConfirmingReset(false);
     } finally {
       setResetting(false);
     }
@@ -406,12 +405,23 @@ export default function AgentConfigPage() {
             conversations and billing are not touched.
           </p>
           <div>
-            <button className="btn-small btn-danger" disabled={resetting} onClick={reset}>
+            <button className="btn-small btn-danger" disabled={resetting} onClick={() => setConfirmingReset(true)}>
               {resetting ? "Resetting…" : "Reset agent configuration"}
             </button>
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={confirmingReset}
+        title="Reset agent configuration?"
+        message="This clears the agent's name, greeting, tone and generated setup, and puts the status back to draft. Your business details, documents and billing stay as they are."
+        confirmLabel="Reset"
+        busy={resetting}
+        onConfirm={doReset}
+        onCancel={() => {
+          if (!resetting) setConfirmingReset(false);
+        }}
+      />
     </main>
   );
 }

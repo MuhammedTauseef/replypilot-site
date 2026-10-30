@@ -23,7 +23,7 @@ const BASE_LINKS: { label: string; href: string; external?: boolean }[] = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammadtauseef9", external: true },
 ];
 
-export default function MobileNav() {
+export default function MobileNav({ signOutRedirect = "/" }: { signOutRedirect?: string }) {
   const [open, setOpen] = useState(false);
   // undefined = still checking, null = signed out, string = role
   const [role, setRole] = useState<string | null | undefined>(undefined);
@@ -92,9 +92,9 @@ export default function MobileNav() {
         new Promise((resolve) => setTimeout(resolve, 5000)),
       ]);
     } catch {
-      // ignore — navigate home anyway
+      // ignore — navigate away anyway
     }
-    window.location.href = "/";
+    window.location.href = signOutRedirect;
   }
 
   const authLink: { label: string; href: string; external?: boolean } =

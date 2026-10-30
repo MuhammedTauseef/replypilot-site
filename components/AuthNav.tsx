@@ -6,8 +6,11 @@ import { createClient } from "@/lib/supabase/client";
 /**
  * Header auth area. Signed out → "Log in".
  * Signed in → "Dashboard" (clients) or "Admin" (admins) + "Sign out".
+ * `signOutRedirect` is where the browser lands after sign-out:
+ * public headers keep the default ("/"); the signed-in dashboard
+ * header passes "/login" so clients return to the client login page.
  */
-export default function AuthNav() {
+export default function AuthNav({ signOutRedirect = "/" }: { signOutRedirect?: string }) {
   // undefined = still checking, null = signed out, string = role
   const [role, setRole] = useState<string | null | undefined>(undefined);
 
@@ -74,9 +77,9 @@ export default function AuthNav() {
         new Promise((resolve) => setTimeout(resolve, 5000)),
       ]);
     } catch {
-      // ignore — navigate home anyway
+      // ignore — navigate away anyway
     }
-    window.location.href = "/";
+    window.location.href = signOutRedirect;
   }
 
   // Still checking: render nothing (not "Log in") to avoid a

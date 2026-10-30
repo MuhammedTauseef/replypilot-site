@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 type Msg = { role: string; text: string };
 type Conversation = {
@@ -21,6 +22,8 @@ export default function ConversationsPage() {
   const [error, setError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
+  const [pendingConv, setPendingConv] = useState<Conversation | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function load(nextOffset: number) {
     setLoading(true);
@@ -43,8 +46,10 @@ export default function ConversationsPage() {
     load(0);
   }, []);
 
-  async function remove(c: Conversation) {
-    if (!confirm("Delete this conversation? This cannot be undone.")) return;
+  async function doRemove() {
+    const c = pendingConv;
+    if (!c || deleting) return;
+    setDeleting(true);
     setActionError(null);
     try {
       const res = await fetch(`/api/conversations?id=${encodeURIComponent(c.id)}`, {
@@ -53,11 +58,15 @@ export default function ConversationsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Delete failed.");
       if (open === c.id) setOpen(null);
+      setPendingConv(null);
       // If the page just emptied and it is not the first page, step back one.
       if (items.length === 1 && offset > 0) load(offset - PAGE_SIZE);
       else load(offset);
     } catch (e) {
       setActionError(e instanceof Error ? e.message : "Delete failed.");
+      setPendingConv(null);
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -167,7 +176,7 @@ export default function ConversationsPage() {
                   ))}
                 </div>
                 <div style={{ marginTop: 12 }}>
-                  <button className="btn-small btn-danger" onClick={() => remove(c)}>
+                  <button className="btn-small btn-danger" onClick={() => setPendingConv(c)}>
                     Delete this conversation
                   </button>
                 </div>
@@ -196,6 +205,18 @@ export default function ConversationsPage() {
           Older →
         </button>
       </div>
+
+      <ConfirmDialog
+        open={pendingConv !== null}
+        title="Delete this conversation?"
+        message="Delete this conversation? This cannot be undone."
+        confirmLabel="Delete"
+        busy={deleting}
+        onConfirm={doRemove}
+        onCancel={() => {
+          if (!deleting) setPendingConv(null);
+        }}
+      />
     </>
   );
 }
