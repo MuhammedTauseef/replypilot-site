@@ -459,6 +459,16 @@ footer{background:var(--navy-2);color:#aeb9d4;padding:64px 0 34px}
 }
 @media (max-width:560px){
   .wrap{width:calc(100% - 32px)}
+  /* Phone header compaction: with the default gaps the header row's
+     min-content (brand 156px + gap 30px + nav 112px ≈ 298px) exceeds
+     the header wrap below ~330px viewport, so the row overflowed its
+     container and the brand could clip on narrow phones (owner
+     screenshot, 2026-10-30). Shrink the brand and the gaps so brand +
+     theme toggle + hamburger always fit inside the wrap. */
+  .site-header .wrap{width:calc(100% - 24px);gap:14px}
+  .site-header .brand{gap:8px;font-size:.95rem;letter-spacing:.05em}
+  .site-header .brand-mark{width:32px;height:32px;font-size:1.05rem}
+  .site-header .site-nav{gap:12px}
   .services-grid,.demo-cards,.steps,.engage-steps{grid-template-columns:1fr}
   .hero-actions .btn{width:100%}
   .hero-statement{font-size:clamp(2.9rem,15vw,4.2rem)}
