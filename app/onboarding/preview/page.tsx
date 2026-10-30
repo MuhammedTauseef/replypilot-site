@@ -109,7 +109,7 @@ export default function PreviewPage() {
             <Link href="/onboarding" className="btn" style={{ padding: "12px 24px", borderRadius: 10, border: "1px solid #d1d5db", textDecoration: "none", color: "#374151", fontWeight: 600 }}>
               ← Edit details
             </Link>
-            <Link href="/checkout" className="btn btn-gold" style={{ padding: "12px 32px", borderRadius: 10, background: "#f59e0b", textDecoration: "none", color: "#111827", fontWeight: 700 }}>
+            <Link href="/dashboard/client/billing" className="btn btn-gold" style={{ padding: "12px 32px", borderRadius: 10, background: "#f59e0b", textDecoration: "none", color: "#111827", fontWeight: 700 }}>
               Looks good — continue to payment →
             </Link>
           </div>
