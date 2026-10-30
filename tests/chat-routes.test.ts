@@ -11,6 +11,11 @@ import path from "path";
  *     after "Start again" emptied agent_config — the route resolves its
  *     system prompt through lib/agent-business (stored prompt wins;
  *     otherwise rebuilt from the saved business row).
+ *  3. Model switch (later 2026-10-30): even the 55s ceiling could not save
+ *     chat — gemini-3.8-flash kept stalling past it (measured 43–65s and
+ *     timeouts on the free tier, while gemini-3.5-flash answered the same
+ *     prompts in ~3s with working function calls). Both chat routes now
+ *     pin gemini-3.5-flash; the 55s ceiling stays as the hard stop.
  */
 
 const root = path.resolve(__dirname, "..");
@@ -48,6 +53,20 @@ describe("chat route timeout ceilings", () => {
     expect(src.indexOf('linkKey="deposit"')).toBeLessThan(
       src.indexOf('linkKey="goLive"')
     );
+  });
+});
+
+describe("chat model pin (2026-10-30 switch off the stalling model)", () => {
+  it("app/api/chat/route.ts pins gemini-3.5-flash, not gemini-3.8-flash", () => {
+    const src = read("app/api/chat/route.ts");
+    expect(src).toContain('const GEMINI_MODEL = "gemini-3.5-flash"');
+    expect(src).not.toContain('GEMINI_MODEL = "gemini-3.8-flash"');
+  });
+
+  it("app/api/onboarding/chat/route.ts pins gemini-3.5-flash, not gemini-3.8-flash", () => {
+    const src = read("app/api/onboarding/chat/route.ts");
+    expect(src).toContain('google("gemini-3.5-flash")');
+    expect(src).not.toContain('google("gemini-3.8-flash")');
   });
 });
 
@@ -125,5 +144,15 @@ describe("POST /api/onboarding/chat — empty-config state", () => {
     const res = await POST(chatReq());
     expect(res.status).toBe(200);
     expect(state.lastGenerateArgs?.system).toBe("STORED PROMPT — do not rebuild");
+  });
+
+  it("calls Gemini on the switched model (gemini-3.5-flash) and returns its reply", async () => {
+    state.clientRow = { ...businessRow, agent_config: {} };
+    const res = await POST(chatReq());
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.reply).toBe("Stub reply from the agent.");
+    const model = state.lastGenerateArgs?.model as { modelId?: string } | undefined;
+    expect(model?.modelId).toBe("gemini-3.5-flash");
   });
 });

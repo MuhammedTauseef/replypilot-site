@@ -5,9 +5,10 @@ import { generateText } from "ai";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { resolveAgentSystemPrompt } from "@/lib/agent-business";
 
-// gemini-3.8-flash responses can legitimately take 45s+ when Google is
-// overloaded (measured 2026-10-30), so the route gets the full platform
-// window; the in-call abort below stays the hard stop inside it.
+// Model switched 2026-10-30: gemini-3.8-flash measured 43–65s+ (incl.
+// timeouts) under Google-side overload, while gemini-3.5-flash answered
+// the same prompts in ~3s. The route keeps the full platform window;
+// the in-call abort below stays the hard stop inside it.
 export const maxDuration = 60;
 
 /** Chat with the client's own generated agent (preview mode). */
@@ -61,14 +62,15 @@ export async function POST(req: NextRequest) {
 
     // Hard 55s ceiling (same pattern as /api/chat): without it a slow model
     // call leaves the preview UI on "typing..." forever. 55s, not 30s:
-    // gemini-3.8-flash under Google-side overload routinely answers in
-    // 30–50s (measured 46s for a one-line prompt on 2026-10-30), so a 30s
-    // cut killed slow-but-alive replies on both chat routes.
+    // the previous model under Google-side overload routinely answered in
+    // 30–65s (measured 2026-10-30), so a 30s cut killed slow-but-alive
+    // replies on both chat routes. This route now calls gemini-3.5-flash
+    // (~3s measured); the ceiling remains the hard stop for true stalls.
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 55_000);
     try {
       const { text } = await generateText({
-        model: google("gemini-3.8-flash"),
+        model: google("gemini-3.5-flash"),
         system: systemPrompt,
         messages: [
           ...safeHistory,
