@@ -557,7 +557,7 @@ export default async function BlogPostPage({ params }: Props) {
                 >
                   Keep reading
                 </h2>
-                <div className="blog-grid" style={{ gridTemplateColumns: "repeat(3,1fr)" }}>
+                <div className="blog-grid">
                   {related.map((r) => (
                     <Link
                       key={r.slug}
